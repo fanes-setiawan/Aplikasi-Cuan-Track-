@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
+import '../../../transaction/presentation/pages/add_transaction_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: AppDimens.lg),
               _buildBalanceCard(),
               const SizedBox(height: AppDimens.lg),
-              _buildActionButtons(),
+              _buildActionButtons(context),
               const SizedBox(height: AppDimens.xl),
               _buildExpenseAnalysis(),
               const SizedBox(height: AppDimens.xl),
@@ -274,15 +275,25 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: _buildActionButton(
-            'Tambah',
-            Icons.add_circle,
-            const Color(0xFFE8F5E9),
-            const Color(0xFF2E7D32),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddTransactionScreen(),
+                ),
+              );
+            },
+            child: _buildActionButton(
+              'Tambah',
+              Icons.add_circle,
+              const Color(0xFFE8F5E9),
+              const Color(0xFF2E7D32),
+            ),
           ),
         ),
         const SizedBox(width: AppDimens.md),

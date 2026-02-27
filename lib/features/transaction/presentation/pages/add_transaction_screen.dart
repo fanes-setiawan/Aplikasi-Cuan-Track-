@@ -1,0 +1,331 @@
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
+import '../../../../core/constants/app_dimens.dart';
+
+class AddTransactionScreen extends StatefulWidget {
+  final bool isIncome;
+  const AddTransactionScreen({super.key, this.isIncome = true});
+
+  @override
+  State<AddTransactionScreen> createState() => _AddTransactionScreenState();
+}
+
+class _AddTransactionScreenState extends State<AddTransactionScreen> {
+  String _amount = "25.000";
+  String _selectedCategory = "Gaji";
+  final List<String> _categories = ["Gaji", "Bonus", "Investasi"];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
+        centerTitle: true,
+        title: Text(
+          widget.isIncome ? 'Tambah Pemasukan' : 'Tambah Pengeluaran',
+          style: AppStyles.heading2,
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: AppDimens.xl),
+                  // Nominal Display
+                  Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'NOMINAL',
+                          style: AppStyles.caption.copyWith(
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        const SizedBox(height: AppDimens.sm),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            Text(
+                              'Rp',
+                              style: AppStyles.heading1.copyWith(
+                                color: AppColors.primary,
+                                fontSize: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              _amount,
+                              style: AppStyles.heading1.copyWith(
+                                color: AppColors.primary,
+                                fontSize: 48,
+                              ),
+                            ),
+                            Container(
+                              width: 3,
+                              height: 40,
+                              margin: const EdgeInsets.only(left: 4),
+                              color: AppColors.primary,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.xl + 10),
+
+                  // Category Selection
+                  Text(
+                    'Pilih Kategori',
+                    style: AppStyles.bodyText.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        ..._categories.map((cat) => _buildCategoryChip(cat)),
+                        _buildAddCategoryButton(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Date Selection
+                  _buildInputTile(
+                    label: 'TANGGAL',
+                    value: 'Hari ini, 24 Okt 2023',
+                    icon: Icons.calendar_today_outlined,
+                    onTap: () {
+                      // TODO: Show date picker
+                    },
+                  ),
+                  const SizedBox(height: AppDimens.md),
+
+                  // Note Input
+                  _buildInputTile(
+                    label: '',
+                    value: 'Tambah catatan...',
+                    icon: Icons.notes,
+                    isNote: true,
+                    onTap: () {
+                      // TODO: Focus note input
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Custom Numeric Keypad
+          _buildNumericKeypad(),
+          // Save Button
+          Padding(
+            padding: const EdgeInsets.all(AppDimens.md),
+            child: SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                onPressed: () {
+                  // TODO: Save Transaction
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  'Simpan Transaksi',
+                  style: AppStyles.bodyText.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String label) {
+    bool isSelected = _selectedCategory == label;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedCategory = label),
+      child: Container(
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFE8F5E9) : Colors.white,
+          borderRadius: BorderRadius.circular(AppDimens.round),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.divider,
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              label == "Gaji"
+                  ? Icons.payments_outlined
+                  : label == "Bonus"
+                  ? Icons.stars_outlined
+                  : Icons.show_chart_outlined,
+              size: 18,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: AppStyles.bodyText.copyWith(
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddCategoryButton() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: AppColors.divider, style: BorderStyle.none),
+      ),
+      child: Icon(
+        Icons.add_circle_outline,
+        color: AppColors.textSecondary.withOpacity(0.3),
+        size: 32,
+      ),
+    );
+  }
+
+  Widget _buildInputTile({
+    required String label,
+    required String value,
+    required IconData icon,
+    bool isNote = false,
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(AppDimens.md),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppDimens.radiusM),
+          border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.textSecondary, size: 24),
+            const SizedBox(width: AppDimens.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (label.isNotEmpty)
+                    Text(
+                      label,
+                      style: AppStyles.caption.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textSecondary.withOpacity(0.6),
+                      ),
+                    ),
+                  Text(
+                    value,
+                    style: AppStyles.bodyText.copyWith(
+                      color: isNote
+                          ? AppColors.textSecondary.withOpacity(0.5)
+                          : AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (!isNote)
+              const Icon(
+                Icons.chevron_right,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNumericKeypad() {
+    return Container(
+      color: const Color(0xFFF8FAFB),
+      child: Column(
+        children: [
+          _buildKeyboardRow(['1', '2', '3']),
+          _buildKeyboardRow(['4', '5', '6']),
+          _buildKeyboardRow(['7', '8', '9']),
+          _buildKeyboardRow(['.', '0', 'DEL']),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildKeyboardRow(List<String> keys) {
+    return Row(children: keys.map((key) => _buildKey(key)).toList());
+  }
+
+  Widget _buildKey(String key) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          // TODO: Keyboard logic
+        },
+        child: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColors.divider.withOpacity(0.2),
+              width: 0.5,
+            ),
+          ),
+          child: Center(
+            child: key == 'DEL'
+                ? const Icon(
+                    Icons.backspace_outlined,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  )
+                : Text(
+                    key,
+                    style: AppStyles.heading2.copyWith(
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+          ),
+        ),
+      ),
+    );
+  }
+}
