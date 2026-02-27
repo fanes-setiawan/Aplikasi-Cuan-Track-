@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_assets.dart';
+import '../../../auth/presentation/pages/login_screen.dart';
 import '../cubit/onboarding_cubit.dart';
 
 class OnboardingModel {
@@ -73,8 +74,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _finishOnboarding() {
-    // TODO: Navigate to Auth or Home Screen
-    // Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
   }
 
   @override
