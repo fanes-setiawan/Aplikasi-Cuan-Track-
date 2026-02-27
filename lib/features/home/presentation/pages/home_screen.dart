@@ -4,6 +4,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
+import '../../../main/presentation/pages/main_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: AppDimens.xl),
               _buildExpenseAnalysis(),
               const SizedBox(height: AppDimens.xl),
-              _buildRecentTransactions(),
+              _buildRecentTransactions(context),
             ],
           ),
         ),
@@ -292,7 +293,7 @@ class HomeScreen extends StatelessWidget {
               'Tambah',
               Icons.add_circle,
               const Color(0xFFE8F5E9),
-              const Color(0xFF2E7D32),
+              const Color(0xFF1B5E20),
             ),
           ),
         ),
@@ -311,9 +312,10 @@ class HomeScreen extends StatelessWidget {
             child: _buildActionButton(
               'Catat',
               Icons.edit_document,
-              const Color(0xFFE8F5E9),
-              const Color(0xFF2E7D32),
+              Colors.white,
+              const Color(0xFF1B5E20),
               isOutlined: true,
+              borderColor: const Color(0xFFE8F5E9),
             ),
           ),
         ),
@@ -327,13 +329,16 @@ class HomeScreen extends StatelessWidget {
     Color bgColor,
     Color textColor, {
     bool isOutlined = false,
+    Color? borderColor,
   }) {
     return Container(
       height: 60,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
-        border: isOutlined ? Border.all(color: AppColors.divider) : null,
+        border: isOutlined
+            ? Border.all(color: borderColor ?? AppColors.divider, width: 1.5)
+            : null,
       ),
       child: Center(
         child: Row(
@@ -472,18 +477,23 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentTransactions() {
+  Widget _buildRecentTransactions(BuildContext context) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Transaksi Terakhir', style: AppStyles.heading2),
-            Text(
-              'Lihat Semua',
-              style: AppStyles.caption.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+                MainScreen.switchTab(1);
+              },
+              child: Text(
+                'Lihat Semua',
+                style: AppStyles.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

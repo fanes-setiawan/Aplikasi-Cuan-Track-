@@ -8,7 +8,13 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
 
 class MainScreen extends StatefulWidget {
+  static final GlobalKey<_MainScreenState> mainScreenKey =
+      GlobalKey<_MainScreenState>();
   const MainScreen({super.key});
+
+  static void switchTab(int index) {
+    mainScreenKey.currentState?._updateIndex(index);
+  }
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -23,6 +29,12 @@ class _MainScreenState extends State<MainScreen> {
     const BudgetScreen(),
     const ProfileScreen(),
   ];
+
+  void _updateIndex(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +52,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
+          onTap: _updateIndex,
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
           selectedItemColor: AppColors.primary,
