@@ -13,8 +13,17 @@ class AddTransactionScreen extends StatefulWidget {
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String _amount = "25.000";
-  String _selectedCategory = "Gaji";
-  final List<String> _categories = ["Gaji", "Bonus", "Investasi"];
+  late String _selectedCategory;
+  late List<String> _categories;
+
+  @override
+  void initState() {
+    super.initState();
+    _categories = widget.isIncome
+        ? ["Gaji", "Bonus", "Investasi"]
+        : ["Makan", "Transport", "Belanja"];
+    _selectedCategory = _categories[0];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +198,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ? Icons.payments_outlined
                   : label == "Bonus"
                   ? Icons.stars_outlined
-                  : Icons.show_chart_outlined,
+                  : label == "Investasi"
+                  ? Icons.show_chart_outlined
+                  : label == "Makan"
+                  ? Icons.restaurant
+                  : label == "Transport"
+                  ? Icons.directions_car
+                  : Icons.shopping_bag,
               size: 18,
               color: isSelected ? AppColors.primary : AppColors.textSecondary,
             ),

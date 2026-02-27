@@ -298,12 +298,23 @@ class HomeScreen extends StatelessWidget {
         ),
         const SizedBox(width: AppDimens.md),
         Expanded(
-          child: _buildActionButton(
-            'Catat',
-            Icons.edit_document,
-            Colors.white,
-            const Color(0xFF2E7D32),
-            isOutlined: true,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const AddTransactionScreen(isIncome: false),
+                ),
+              );
+            },
+            child: _buildActionButton(
+              'Catat',
+              Icons.edit_document,
+              const Color(0xFFE8F5E9),
+              const Color(0xFF2E7D32),
+              isOutlined: true,
+            ),
           ),
         ),
       ],
