@@ -1,10 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../../../core/utils/local_auth_helper.dart';
 
 class BiometricActivationScreen extends StatelessWidget {
   const BiometricActivationScreen({super.key});
+
+  Future<void> _authenticate(BuildContext context) async {
+    final bool available = await LocalAuthHelper.isBiometricAvailable();
+    if (!available) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Biometrik tidak tersedia di perangkat ini'),
+          ),
+        );
+      }
+      return;
+    }
+
+    final bool success = await LocalAuthHelper.authenticate(
+      reason: 'Scan sidik jari Anda untuk mengaktifkan fitur ini',
+    );
+
+    if (success) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('biometricEnabled', true);
+
+      if (context.mounted) {
+        Navigator.pop(context, true);
+      }
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Autentikasi gagal, silakan coba lagi')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +180,7 @@ class BiometricActivationScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => _authenticate(context),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF27AE60),
                         shape: RoundedRectangleBorder(

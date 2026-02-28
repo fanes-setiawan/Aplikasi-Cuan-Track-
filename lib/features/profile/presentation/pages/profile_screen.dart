@@ -5,6 +5,7 @@ import '../../../../core/constants/app_dimens.dart';
 import 'payment_methods_screen.dart';
 import 'custom_categories_screen.dart';
 import 'security_settings_screen.dart';
+import 'notification_settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -126,6 +127,20 @@ class ProfileScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const SecuritySettingsScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _buildProfileMenuItem(
+                    icon: Icons.notifications_none_outlined,
+                    title: 'Notifikasi',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const NotificationSettingsScreen(),
                         ),
                       );
                     },

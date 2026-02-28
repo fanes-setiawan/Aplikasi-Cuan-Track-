@@ -12,38 +12,90 @@ class PaymentSelectionSheet extends StatefulWidget {
 
 class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
   String _selectedCategory = 'Rekening Bank';
+  String _searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
+
   final List<Map<String, dynamic>> _providers = [
     {
       'name': 'Bank BCA',
+      'category': 'Rekening Bank',
       'icon': Icons.account_balance,
       'color': const Color(0xFFEFF6FF),
       'iconColor': const Color(0xFF2563EB),
     },
     {
       'name': 'Bank Mandiri',
+      'category': 'Rekening Bank',
       'icon': Icons.account_balance,
       'color': const Color(0xFFFFFBEB),
       'iconColor': const Color(0xFFD97706),
     },
     {
+      'name': 'Bank BNI',
+      'category': 'Rekening Bank',
+      'icon': Icons.account_balance,
+      'color': const Color(0xFFFDF2F2),
+      'iconColor': const Color(0xFFE11D48),
+    },
+    {
+      'name': 'Bank BRI',
+      'category': 'Rekening Bank',
+      'icon': Icons.account_balance,
+      'color': const Color(0xFFEFF6FF),
+      'iconColor': const Color(0xFF1E40AF),
+    },
+    {
       'name': 'GoPay',
+      'category': 'E-Wallet',
       'icon': Icons.account_balance_wallet,
       'color': const Color(0xFFECFDF5),
       'iconColor': const Color(0xFF059669),
     },
     {
       'name': 'OVO',
+      'category': 'E-Wallet',
       'icon': Icons.account_balance_wallet,
       'color': const Color(0xFFFAF5FF),
       'iconColor': const Color(0xFF7C3AED),
     },
     {
       'name': 'Dana',
+      'category': 'E-Wallet',
       'icon': Icons.account_balance_wallet,
       'color': const Color(0xFFEFF6FF),
       'iconColor': const Color(0xFF2563EB),
     },
+    {
+      'name': 'ShopeePay',
+      'category': 'E-Wallet',
+      'icon': Icons.account_balance_wallet,
+      'color': const Color(0xFFFFF7ED),
+      'iconColor': const Color(0xFFEA580C),
+    },
+    {
+      'name': 'Tunai Pribadi',
+      'category': 'Tunai',
+      'icon': Icons.payments_outlined,
+      'color': const Color(0xFFF0FDF4),
+      'iconColor': const Color(0xFF27AE60),
+    },
   ];
+
+  List<Map<String, dynamic>> get _filteredProviders {
+    return _providers.where((p) {
+      final matchesCategory = p['category'] == _selectedCategory;
+      final matchesSearch = p['name'].toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      );
+      return matchesCategory && matchesSearch;
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,14 +130,12 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      'Pilih Metode Pembayaran Baru',
+                      'Pilih Metode Pembayaran',
                       style: AppStyles.heading2.copyWith(fontSize: 18),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 48,
-                ), // Padding to balance the close button
+                const SizedBox(width: 48),
               ],
             ),
           ),
@@ -122,54 +172,83 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                   // Search Bar
                   Container(
                     height: 52,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FAFB),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: AppColors.divider),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (val) {
+                        setState(() {
+                          _searchQuery = val;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Cari penyedia layanan...',
+                        hintStyle: AppStyles.bodyTextSecondary.copyWith(
+                          color: AppColors.textHint,
+                        ),
+                        prefixIcon: const Icon(
                           Icons.search,
                           color: AppColors.textHint,
                           size: 20,
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Cari penyedia layanan...',
-                          style: AppStyles.bodyTextSecondary.copyWith(
-                            color: AppColors.textHint,
-                          ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 14,
                         ),
-                      ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Penyedia Populer Section
+                  // Penyedia Section
                   Text(
-                    'Penyedia Populer',
+                    'Penyedia Layanan',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _providers.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final provider = _providers[index];
-                      return _buildProviderItem(
-                        provider['name'],
-                        provider['icon'],
-                        provider['color'],
-                        provider['iconColor'],
-                      );
-                    },
-                  ),
+                  if (_filteredProviders.isEmpty)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 48,
+                              color: AppColors.textHint.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Penyedia tidak ditemukan',
+                              style: AppStyles.bodyTextSecondary.copyWith(
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _filteredProviders.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final provider = _filteredProviders[index];
+                        return _buildProviderItem(
+                          provider['name'],
+                          provider['icon'],
+                          provider['color'],
+                          provider['iconColor'],
+                        );
+                      },
+                    ),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -191,7 +270,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                   elevation: 0,
                 ),
                 child: Text(
-                  'Lanjut',
+                  'Batal',
                   style: AppStyles.bodyText.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -211,6 +290,9 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       onTap: () {
         setState(() {
           _selectedCategory = title;
+          // Clear search when switching categories
+          _searchQuery = '';
+          _searchController.clear();
         });
       },
       child: Container(
@@ -223,6 +305,15 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
             color: isSelected ? const Color(0xFF27AE60) : AppColors.divider,
             width: isSelected ? 2 : 1,
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF27AE60).withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Column(
           children: [
@@ -257,32 +348,43 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
     Color bgColor,
     Color iconColor,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.divider.withOpacity(0.5)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(12),
+    return InkWell(
+      onTap: () {
+        // Logic to return selected provider
+        Navigator.pop(context, name);
+      },
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: iconColor, size: 22),
             ),
-            child: Icon(icon, color: iconColor, size: 22),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              name,
-              style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                name,
+                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          const Icon(Icons.chevron_right, color: AppColors.textHint, size: 20),
-        ],
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textHint,
+              size: 20,
+            ),
+          ],
+        ),
       ),
     );
   }

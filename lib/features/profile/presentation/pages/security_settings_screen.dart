@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -13,8 +14,32 @@ class SecuritySettingsScreen extends StatefulWidget {
 
 class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   bool _pinEnabled = true;
-  bool _biometricEnabled = true;
+  bool _biometricEnabled = false;
   String _autoLockDuration = '1 Menit';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _pinEnabled = prefs.getBool('pinEnabled') ?? true;
+      _biometricEnabled = prefs.getBool('biometricEnabled') ?? false;
+      _autoLockDuration = prefs.getString('autoLockDuration') ?? '1 Menit';
+    });
+  }
+
+  Future<void> _saveSetting(String key, dynamic value) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (value is bool) {
+      await prefs.setBool(key, value);
+    } else if (value is String) {
+      await prefs.setString(key, value);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +68,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               title: 'Kunci PIN',
               subtitle: 'Minta PIN saat aplikasi dibuka',
               value: _pinEnabled,
-              onChanged: (val) => setState(() => _pinEnabled = val),
+              onChanged: (val) {
+                setState(() => _pinEnabled = val);
+                _saveSetting('pinEnabled', val);
+              },
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
@@ -62,16 +90,20 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               title: 'Sidik Jari / Face ID',
               subtitle: 'Login lebih cepat dan aman',
               value: _biometricEnabled,
-              onChanged: (val) {
+              onChanged: (val) async {
                 if (val) {
-                  Navigator.push(
+                  final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const BiometricActivationScreen(),
                     ),
                   );
+                  if (result == true) {
+                    setState(() => _biometricEnabled = true);
+                  }
                 } else {
-                  setState(() => _biometricEnabled = val);
+                  setState(() => _biometricEnabled = false);
+                  _saveSetting('biometricEnabled', false);
                 }
               },
               iconColor: const Color(0xFF27AE60),
@@ -227,6 +259,15 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     required Color iconColor,
     required Color iconBgColor,
   }) {
+    final List<String> durations = [
+      'Segera',
+      '1 Menit',
+      '5 Menit',
+      '15 Menit',
+      '30 Menit',
+      'Tidak Pernah',
+    ];
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -258,28 +299,42 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFB),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  _autoLockDuration,
-                  style: AppStyles.bodyTextSecondary.copyWith(
-                    color: const Color(0xFF27AE60),
-                    fontWeight: FontWeight.bold,
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              setState(() => _autoLockDuration = value);
+              _saveSetting('autoLockDuration', value);
+            },
+            itemBuilder: (BuildContext context) {
+              return durations.map((String duration) {
+                return PopupMenuItem<String>(
+                  value: duration,
+                  child: Text(duration, style: AppStyles.bodyTextSecondary),
+                );
+              }).toList();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8FAFB),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    _autoLockDuration,
+                    style: AppStyles.bodyTextSecondary.copyWith(
+                      color: const Color(0xFF27AE60),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Color(0xFF27AE60),
-                  size: 20,
-                ),
-              ],
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Color(0xFF27AE60),
+                    size: 20,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
