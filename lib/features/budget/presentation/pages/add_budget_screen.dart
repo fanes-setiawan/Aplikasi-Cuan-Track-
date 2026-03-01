@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../domain/entities/budget_entity.dart';
+import '../bloc/add_budget_bloc.dart';
+import '../bloc/add_budget_event.dart';
+import '../bloc/add_budget_state.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -13,9 +19,8 @@ class AddBudgetScreen extends StatefulWidget {
 class _AddBudgetScreenState extends State<AddBudgetScreen> {
   String _selectedPeriod = 'Bulanan';
   bool _remindMe = true;
-  final TextEditingController _amountController = TextEditingController(
-    text: '2000000',
-  );
+  String _selectedCategory = 'Makanan & Minuman';
+  final TextEditingController _amountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,176 +51,199 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
         centerTitle: true,
         title: Text('Tambah Anggaran', style: AppStyles.heading2),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppDimens.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              'LIMIT ANGGARAN',
-              style: AppStyles.caption.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Rp',
-                  style: AppStyles.heading1.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    controller: _amountController,
-                    keyboardType: TextInputType.number,
-                    style: AppStyles.heading1.copyWith(fontSize: 40),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Divider(thickness: 1),
-            const SizedBox(height: 32),
-            Text(
-              'PILIH KATEGORI',
-              style: AppStyles.caption.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFB),
-                borderRadius: BorderRadius.circular(AppDimens.radiusM),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: 'Makanan & Minuman',
-                  isExpanded: true,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.textSecondary,
-                  ),
-                  items:
-                      [
-                        'Makanan & Minuman',
-                        'Transportasi',
-                        'Belanja',
-                        'Hiburan',
-                      ].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Row(
-                            children: [
-                              Icon(
-                                value == 'Makanan & Minuman'
-                                    ? Icons.restaurant
-                                    : value == 'Transportasi'
-                                    ? Icons.directions_car
-                                    : value == 'Belanja'
-                                    ? Icons.shopping_bag
-                                    : Icons.theater_comedy,
-                                color: AppColors.primary,
-                                size: 20,
-                              ),
-                              const SizedBox(width: 12),
-                              Text(value, style: AppStyles.bodyText),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                  onChanged: (_) {},
+      body: BlocListener<AddBudgetBloc, AddBudgetState>(
+        listener: (context, state) {
+          if (state is AddBudgetSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Anggaran berhasil disimpan!')),
+            );
+            Navigator.pop(context);
+          } else if (state is AddBudgetError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Gagal: ${state.message}')));
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimens.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                'LIMIT ANGGARAN',
+                style: AppStyles.caption.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
                 ),
               ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              'PERIODE',
-              style: AppStyles.caption.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.1,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFB),
-                borderRadius: BorderRadius.circular(AppDimens.radiusM),
-              ),
-              child: Row(
+              const SizedBox(height: 16),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  _buildPeriodItem('Mingguan'),
-                  _buildPeriodItem('Bulanan'),
-                  _buildPeriodItem('Tahunan'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFB),
-                borderRadius: BorderRadius.circular(AppDimens.radiusL),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1FAE5),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.notifications_active_outlined,
-                      color: AppColors.primary,
+                  Text(
+                    'Rp',
+                    style: AppStyles.heading1.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 24,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Ingatkan Saya',
-                          style: AppStyles.bodyText.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Notifikasi saat mencapai 80% limit',
-                          style: AppStyles.caption.copyWith(fontSize: 10),
-                        ),
-                      ],
+                    child: TextField(
+                      controller: _amountController,
+                      keyboardType: TextInputType.number,
+                      style: AppStyles.heading1.copyWith(fontSize: 40),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
                     ),
-                  ),
-                  Switch(
-                    value: _remindMe,
-                    onChanged: (val) {
-                      setState(() {
-                        _remindMe = val;
-                      });
-                    },
-                    activeColor: Colors.white,
-                    activeTrackColor: AppColors.primary,
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 100),
-          ],
+              const Divider(thickness: 1),
+              const SizedBox(height: 32),
+              Text(
+                'PILIH KATEGORI',
+                style: AppStyles.caption.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFB),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedCategory,
+                    isExpanded: true,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down,
+                      color: AppColors.textSecondary,
+                    ),
+                    items:
+                        [
+                          'Makanan & Minuman',
+                          'Transportasi',
+                          'Belanja',
+                          'Hiburan',
+                        ].map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  value == 'Makanan & Minuman'
+                                      ? Icons.restaurant
+                                      : value == 'Transportasi'
+                                      ? Icons.directions_car
+                                      : value == 'Belanja'
+                                      ? Icons.shopping_bag
+                                      : Icons.theater_comedy,
+                                  color: AppColors.primary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 12),
+                                Text(value, style: AppStyles.bodyText),
+                              ],
+                            ),
+                          );
+                        }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() {
+                          _selectedCategory = val;
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              Text(
+                'PERIODE',
+                style: AppStyles.caption.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.1,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFB),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                ),
+                child: Row(
+                  children: [
+                    _buildPeriodItem('Mingguan'),
+                    _buildPeriodItem('Bulanan'),
+                    _buildPeriodItem('Tahunan'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 32),
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8FAFB),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusL),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD1FAE5),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.notifications_active_outlined,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ingatkan Saya',
+                            style: AppStyles.bodyText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Notifikasi saat mencapai 80% limit',
+                            style: AppStyles.caption.copyWith(fontSize: 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Switch(
+                      value: _remindMe,
+                      onChanged: (val) {
+                        setState(() {
+                          _remindMe = val;
+                        });
+                      },
+                      activeColor: Colors.white,
+                      activeTrackColor: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Padding(
@@ -223,22 +251,32 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
         child: SizedBox(
           width: double.infinity,
           height: 56,
-          child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppDimens.radiusM),
-              ),
-              elevation: 0,
-            ),
-            child: Text(
-              'Simpan Anggaran',
-              style: AppStyles.bodyText.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          child: BlocBuilder<AddBudgetBloc, AddBudgetState>(
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: state is AddBudgetLoading ? null : _saveBudget,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                  ),
+                  elevation: 0,
+                ),
+                child: state is AddBudgetLoading
+                    ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : Text(
+                        'Simpan Anggaran',
+                        style: AppStyles.bodyText.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+              );
+            },
           ),
         ),
       ),
@@ -281,5 +319,25 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
         ),
       ),
     );
+  }
+
+  void _saveBudget() {
+    final amount = double.tryParse(_amountController.text) ?? 0;
+    if (amount <= 0) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final budget = BudgetEntity(
+      id: '',
+      userId: user.uid,
+      categoryName: _selectedCategory,
+      amount: amount,
+      period: _selectedPeriod,
+      remindMe: _remindMe,
+      createdAt: DateTime.now(),
+    );
+
+    context.read<AddBudgetBloc>().add(SaveBudgetEvent(budget));
   }
 }

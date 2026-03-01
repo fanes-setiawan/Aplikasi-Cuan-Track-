@@ -42,7 +42,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     super.initState();
     _categories = widget.isIncome
         ? ["Gaji", "Bonus", "Investasi"]
-        : ["Makan", "Transport", "Belanja"];
+        : ["Makanan & Minuman", "Transportasi", "Belanja", "Hiburan"];
     _selectedCategory = _categories[0];
   }
 
@@ -297,10 +297,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ? Icons.stars_outlined
                   : label == "Investasi"
                   ? Icons.show_chart_outlined
-                  : label == "Makan"
+                  : label == "Makanan & Minuman"
                   ? Icons.restaurant
-                  : label == "Transport"
+                  : label == "Transportasi"
                   ? Icons.directions_car
+                  : label == "Hiburan"
+                  ? Icons.theater_comedy
                   : Icons.shopping_bag,
               size: 18,
               color: isSelected ? AppColors.primary : AppColors.textSecondary,

@@ -27,9 +27,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     "Gaji": Icons.payments_outlined,
     "Bonus": Icons.stars_outlined,
     "Investasi": Icons.show_chart_outlined,
-    "Makan": Icons.restaurant,
-    "Transport": Icons.directions_car,
+    "Makanan & Minuman": Icons.restaurant,
+    "Makan": Icons.restaurant, // Legacy
+    "Transportasi": Icons.directions_car,
+    "Transport": Icons.directions_car, // Legacy
     "Belanja": Icons.shopping_bag,
+    "Hiburan": Icons.theater_comedy,
   };
 
   @override

@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+import '../bloc/budget_bloc.dart';
+import '../bloc/budget_event.dart';
+import '../bloc/budget_state.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import 'add_budget_screen.dart';
 
-class BudgetScreen extends StatelessWidget {
+class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
+
+  @override
+  State<BudgetScreen> createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends State<BudgetScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<BudgetBloc>().add(LoadBudgets(user.uid));
+    }
+  }
+
+  String _formatCurrency(double amount) {
+    return NumberFormat.currency(
+      locale: 'id',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    ).format(amount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,165 +52,185 @@ class BudgetScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Create New Budget Button
-            Padding(
-              padding: const EdgeInsets.all(AppDimens.md),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddBudgetScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF27AE60),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                    ),
-                    elevation: 4,
-                    shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.add, color: Colors.white),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Buat Anggaran Baru',
-                        style: AppStyles.bodyText.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+      body: BlocBuilder<BudgetBloc, BudgetState>(
+        builder: (context, state) {
+          if (state is BudgetLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            // Budget Summary
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimens.md,
-                vertical: 8,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          if (state is BudgetError) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+
+          if (state is BudgetLoaded) {
+            final double totalProgress = state.totalBudget > 0
+                ? state.totalSpent / state.totalBudget
+                : 0.0;
+            final int totalPercent = (totalProgress * 100).toInt();
+
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'TOTAL ANGGARAN',
-                        style: AppStyles.caption.copyWith(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.1,
+                  // Create New Budget Button
+                  Padding(
+                    padding: const EdgeInsets.all(AppDimens.md),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AddBudgetScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF27AE60),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusM,
+                            ),
+                          ),
+                          elevation: 4,
+                          shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.add, color: Colors.white),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Buat Anggaran Baru',
+                              style: AppStyles.bodyText.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Rp 8.500.000',
-                        style: AppStyles.heading2.copyWith(fontSize: 24),
-                      ),
-                    ],
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'TERPAKAI',
-                        style: AppStyles.caption.copyWith(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.1,
+
+                  // Budget Summary
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.md,
+                      vertical: 8,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'TOTAL ANGGARAN',
+                              style: AppStyles.caption.copyWith(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _formatCurrency(state.totalBudget),
+                              style: AppStyles.heading2.copyWith(fontSize: 24),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '65%',
-                        style: AppStyles.heading2.copyWith(
-                          fontSize: 24,
-                          color: const Color(0xFF27AE60),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'TERPAKAI',
+                              style: AppStyles.caption.copyWith(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.1,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '$totalPercent%',
+                              style: AppStyles.heading2.copyWith(
+                                fontSize: 24,
+                                color: totalPercent >= 90
+                                    ? const Color(0xFFEF4444)
+                                    : (totalPercent >= 80
+                                          ? const Color(0xFFF97316)
+                                          : const Color(0xFF27AE60)),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+
+                  const SizedBox(height: AppDimens.lg),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.md,
+                    ),
+                    child: Text(
+                      'ANGGARAN AKTIF',
+                      style: AppStyles.caption.copyWith(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimens.md),
+
+                  // Budget Items
+                  if (state.budgets.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(AppDimens.lg),
+                      child: Center(
+                        child: Text(
+                          'Belum ada anggaran yang dibuat. Mulai buat sekarang!',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                  else
+                    ...state.budgets.map((budget) {
+                      final spent = state.spentAmounts[budget.id] ?? 0.0;
+                      double progress = budget.amount > 0
+                          ? spent / budget.amount
+                          : 0.0;
+                      if (progress > 1.0) progress = 1.0;
+                      final percent = (progress * 100).toInt();
+
+                      return _buildBudgetItem(
+                        title: budget.categoryName,
+                        spent: _formatCurrency(spent),
+                        total: _formatCurrency(budget.amount),
+                        progress: progress,
+                        percent: '$percent%',
+                        icon: _getIconForCategory(budget.categoryName),
+                        iconBgColor: _getBgColorForCategory(
+                          budget.categoryName,
+                        ),
+                        iconColor: _getColorForCategory(budget.categoryName),
+                        progressColor: progress >= 0.9
+                            ? const Color(0xFFEF4444)
+                            : (progress >= 0.8
+                                  ? const Color(0xFFF97316)
+                                  : const Color(0xFF27AE60)),
+                      );
+                    }).toList(),
+
+                  const SizedBox(height: AppDimens.xl),
                 ],
               ),
-            ),
+            );
+          }
 
-            const SizedBox(height: AppDimens.lg),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-              child: Text(
-                'ANGGARAN AKTIF',
-                style: AppStyles.caption.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
-            const SizedBox(height: AppDimens.md),
-
-            // Budget Items
-            _buildBudgetItem(
-              title: 'Makanan',
-              spent: 'Rp 1.200.000',
-              total: 'Rp 2.500.000',
-              progress: 0.48,
-              percent: '48%',
-              icon: Icons.restaurant,
-              iconBgColor: const Color(0xFFFFF7ED),
-              iconColor: const Color(0xFFEA580C),
-              progressColor: const Color(0xFF27AE60),
-            ),
-            _buildBudgetItem(
-              title: 'Transportasi',
-              spent: 'Rp 850.000',
-              total: 'Rp 1.000.000',
-              progress: 0.85,
-              percent: '85%',
-              icon: Icons.directions_car,
-              iconBgColor: const Color(0xFFEFF6FF),
-              iconColor: const Color(0xFF2563EB),
-              progressColor: const Color(0xFFF97316),
-              highlightColor: const Color(0xFFFFF7ED),
-            ),
-            _buildBudgetItem(
-              title: 'Belanja',
-              spent: 'Rp 1.450.000',
-              total: 'Rp 1.500.000',
-              progress: 0.96,
-              percent: '96%',
-              icon: Icons.shopping_bag,
-              iconBgColor: const Color(0xFFF5F3FF),
-              iconColor: const Color(0xFF7C3AED),
-              progressColor: const Color(0xFFEF4444),
-              highlightColor: const Color(0xFFFEF2F2),
-            ),
-            _buildBudgetItem(
-              title: 'Hiburan',
-              spent: 'Rp 300.000',
-              total: 'Rp 1.000.000',
-              progress: 0.30,
-              percent: '30%',
-              icon: Icons.theater_comedy,
-              iconBgColor: const Color(0xFFFDF2F8),
-              iconColor: const Color(0xFFDB2777),
-              progressColor: const Color(0xFF27AE60),
-              highlightColor: const Color(0xFFF0FDF4),
-            ),
-            const SizedBox(height: AppDimens.xl),
-          ],
-        ),
+          return const SizedBox.shrink();
+        },
       ),
     );
   }
@@ -351,5 +400,50 @@ class BudgetScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  IconData _getIconForCategory(String category) {
+    switch (category) {
+      case 'Makanan & Minuman':
+        return Icons.restaurant;
+      case 'Transportasi':
+        return Icons.directions_car;
+      case 'Belanja':
+        return Icons.shopping_bag;
+      case 'Hiburan':
+        return Icons.theater_comedy;
+      default:
+        return Icons.category;
+    }
+  }
+
+  Color _getColorForCategory(String category) {
+    switch (category) {
+      case 'Makanan & Minuman':
+        return const Color(0xFFEA580C);
+      case 'Transportasi':
+        return const Color(0xFF2563EB);
+      case 'Belanja':
+        return const Color(0xFF7C3AED);
+      case 'Hiburan':
+        return const Color(0xFFDB2777);
+      default:
+        return const Color(0xFF475569);
+    }
+  }
+
+  Color _getBgColorForCategory(String category) {
+    switch (category) {
+      case 'Makanan & Minuman':
+        return const Color(0xFFFFF7ED);
+      case 'Transportasi':
+        return const Color(0xFFEFF6FF);
+      case 'Belanja':
+        return const Color(0xFFF5F3FF);
+      case 'Hiburan':
+        return const Color(0xFFFDF2F8);
+      default:
+        return const Color(0xFFF1F5F9);
+    }
   }
 }

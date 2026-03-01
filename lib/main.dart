@@ -8,6 +8,8 @@ import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/transaction/presentation/bloc/add_transaction_bloc.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
+import 'features/budget/presentation/bloc/budget_bloc.dart';
+import 'features/budget/presentation/bloc/add_budget_bloc.dart';
 import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 
@@ -36,6 +38,8 @@ class MyApp extends StatelessWidget {
           create: (_) => di.sl<AddTransactionBloc>(),
         ),
         BlocProvider<HistoryBloc>(create: (_) => di.sl<HistoryBloc>()),
+        BlocProvider<BudgetBloc>(create: (_) => di.sl<BudgetBloc>()),
+        BlocProvider<AddBudgetBloc>(create: (_) => di.sl<AddBudgetBloc>()),
       ],
       child: MaterialApp(
         title: 'Cuan Track',
