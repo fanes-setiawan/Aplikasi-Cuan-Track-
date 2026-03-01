@@ -1,14 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_event.dart';
+import '../bloc/auth_state.dart';
+import '../../../main/presentation/pages/main_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,127 +63,184 @@ class RegisterScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDimens.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Texts
-              Text(
-                'Mulai Perjalanan\nFinansialmu',
-                style: AppStyles.heading1.copyWith(fontSize: 28),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Authenticated) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MainScreen()),
+              (route) => false,
+            );
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: AppColors.error,
               ),
-              const SizedBox(height: AppDimens.sm),
-              Text(
-                'Buat akun untuk mulai mengelola keuanganmu dengan lebih baik hari ini.',
-                style: AppStyles.bodyTextSecondary.copyWith(height: 1.5),
-              ),
-              const SizedBox(height: AppDimens.xl),
+            );
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is AuthLoading;
 
-              // Form Fields
-              const CustomTextField(
-                label: 'Nama Lengkap',
-                hintText: 'Masukkan nama lengkap',
-                prefixIcon: Icons.person_outline,
-              ),
-              const SizedBox(height: AppDimens.md),
-              const CustomTextField(
-                label: 'Email',
-                hintText: 'nama@email.com',
-                prefixIcon: Icons.email_outlined,
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: AppDimens.md),
-              const CustomTextField(
-                label: 'Password',
-                hintText: '••••••••',
-                prefixIcon: Icons.lock_outline,
-                isPassword: true,
-              ),
-              const SizedBox(height: AppDimens.md),
-              const CustomTextField(
-                label: 'Konfirmasi Password',
-                hintText: '••••••••',
-                prefixIcon: Icons.history_outlined,
-                isPassword: true,
-              ),
-              const SizedBox(height: AppDimens.xl),
-
-              // Register Button
-              CustomButton(
-                text: 'Daftar',
-                onPressed: () {
-                  // TODO: Implement Registration Logic
-                },
-              ),
-              const SizedBox(height: AppDimens.xl),
-
-              // Divider "ATAU DAFTAR DENGAN"
-              Row(
+          return SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppDimens.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(child: Divider(color: AppColors.divider)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppDimens.md,
-                    ),
-                    child: Text(
-                      'ATAU DAFTAR DENGAN',
-                      style: AppStyles.caption.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: AppColors.divider)),
-                ],
-              ),
-              const SizedBox(height: AppDimens.xl),
-
-              // Google Register Button
-              CustomButton(
-                text: 'Daftar dengan Google',
-                onPressed: () {
-                  // TODO: Implement Google Sign in
-                },
-                isOutlined: true,
-                backgroundColor: AppColors.divider,
-                icon: SvgPicture.asset(
-                  AppAssets.iconGoogle,
-                  width: 20,
-                  height: 20,
-                ),
-              ),
-              const SizedBox(height: AppDimens.xl),
-
-              // Login Link
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                  // Header Texts
                   Text(
-                    'Sudah punya akun? ',
-                    style: AppStyles.bodyTextSecondary,
+                    'Mulai Perjalanan\nFinansialmu',
+                    style: AppStyles.heading1.copyWith(fontSize: 28),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(
-                        context,
-                      ); // Goes back to Login if navigated from there
-                    },
-                    child: Text(
-                      'Masuk',
-                      style: AppStyles.bodyText.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: AppDimens.sm),
+                  Text(
+                    'Buat akun untuk mulai mengelola keuanganmu dengan lebih baik hari ini.',
+                    style: AppStyles.bodyTextSecondary.copyWith(height: 1.5),
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Form Fields
+                  CustomTextField(
+                    label: 'Nama Lengkap',
+                    hintText: 'Masukkan nama lengkap',
+                    prefixIcon: Icons.person_outline,
+                    controller: _nameController,
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  CustomTextField(
+                    label: 'Email',
+                    hintText: 'nama@email.com',
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    controller: _emailController,
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  CustomTextField(
+                    label: 'Password',
+                    hintText: '••••••••',
+                    prefixIcon: Icons.lock_outline,
+                    isPassword: true,
+                    controller: _passwordController,
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  CustomTextField(
+                    label: 'Konfirmasi Password',
+                    hintText: '••••••••',
+                    prefixIcon: Icons.history_outlined,
+                    isPassword: true,
+                    controller: _confirmPasswordController,
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Register Button
+                  isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : CustomButton(
+                          text: 'Daftar',
+                          onPressed: () {
+                            final email = _emailController.text.trim();
+                            final password = _passwordController.text;
+                            final confirmPassword =
+                                _confirmPasswordController.text;
+
+                            if (email.isEmpty ||
+                                password.isEmpty ||
+                                confirmPassword.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Semua field harus diisi'),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (password != confirmPassword) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Password tidak cocok'),
+                                  backgroundColor: AppColors.error,
+                                ),
+                              );
+                              return;
+                            }
+
+                            context.read<AuthBloc>().add(
+                              RegisterEvent(email, password),
+                            );
+                          },
+                        ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Divider "ATAU DAFTAR DENGAN"
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: AppColors.divider)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.md,
+                        ),
+                        child: Text(
+                          'ATAU DAFTAR DENGAN',
+                          style: AppStyles.caption.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
                       ),
+                      Expanded(child: Divider(color: AppColors.divider)),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Google Register Button
+                  CustomButton(
+                    text: 'Daftar dengan Google',
+                    onPressed: () {
+                      context.read<AuthBloc>().add(LoginWithGoogleEvent());
+                    },
+                    isOutlined: true,
+                    backgroundColor: AppColors.divider,
+                    icon: SvgPicture.asset(
+                      AppAssets.iconGoogle,
+                      width: 20,
+                      height: 20,
                     ),
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+
+                  // Login Link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Sudah punya akun? ',
+                        style: AppStyles.bodyTextSecondary,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(
+                            context,
+                          ); // Goes back to Login if navigated from there
+                        },
+                        child: Text(
+                          'Masuk',
+                          style: AppStyles.bodyText.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

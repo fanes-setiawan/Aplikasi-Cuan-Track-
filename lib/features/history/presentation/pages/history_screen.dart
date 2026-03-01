@@ -1,11 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../../home/domain/entities/transaction_entity.dart';
+import '../bloc/history_bloc.dart';
+import '../bloc/history_event.dart';
+import '../bloc/history_state.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   final bool showBackButton;
   const HistoryScreen({super.key, this.showBackButton = false});
+
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  DateTime _selectedDate = DateTime.now();
+  String _userId = '';
+
+  final Map<String, IconData> _categoryIconMap = {
+    "Gaji": Icons.payments_outlined,
+    "Bonus": Icons.stars_outlined,
+    "Investasi": Icons.show_chart_outlined,
+    "Makan": Icons.restaurant,
+    "Transport": Icons.directions_car,
+    "Belanja": Icons.shopping_bag,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userId = user.uid;
+      context.read<HistoryBloc>().add(ChangeMonthEvent(_userId, _selectedDate));
+    }
+  }
+
+  void _changeMonth(int offset) {
+    setState(() {
+      _selectedDate = DateTime(
+        _selectedDate.year,
+        _selectedDate.month + offset,
+        1,
+      );
+      if (_userId.isNotEmpty) {
+        context.read<HistoryBloc>().add(
+          ChangeMonthEvent(_userId, _selectedDate),
+        );
+      }
+    });
+  }
+
+  String _formatCurrency(double amount) {
+    return NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    ).format(amount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +73,7 @@ class HistoryScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-        leading: showBackButton
+        leading: widget.showBackButton
             ? IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_new,
@@ -36,180 +94,116 @@ class HistoryScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Month Selector
-            Container(
-              margin: const EdgeInsets.all(AppDimens.md),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(
-                    Icons.chevron_left,
-                    color: AppColors.textSecondary,
-                  ),
-                  Text(
-                    'Oktober 2023',
-                    style: AppStyles.bodyText.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Icon(
-                    Icons.chevron_right,
-                    color: AppColors.textSecondary,
-                  ),
-                ],
-              ),
-            ),
+      body: BlocBuilder<HistoryBloc, HistoryState>(
+        builder: (context, state) {
+          if (state is HistoryInitial || state is HistoryLoading) {
+            return Column(
+              children: [
+                _buildMonthSelector(),
+                const Expanded(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
+            );
+          }
 
-            // Search and Filter
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-              child: Row(
+          if (state is HistoryError) {
+            return Center(child: Text(state.message));
+          }
+
+          if (state is HistoryLoaded) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                        border: Border.all(color: AppColors.divider),
+                  _buildMonthSelector(),
+                  // Summary Card
+                  Container(
+                    margin: const EdgeInsets.all(AppDimens.md),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF1B5E20), Color(0xFF2E7D32)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusL),
+                    ),
+                    child: IntrinsicHeight(
                       child: Row(
                         children: [
-                          const Icon(
-                            Icons.search,
-                            color: AppColors.textHint,
-                            size: 20,
+                          Expanded(
+                            child: _buildSummaryItem(
+                              'TOTAL PEMASUKAN',
+                              _formatCurrency(state.totalIncome),
+                            ),
                           ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Cari transaksi...',
-                            style: AppStyles.bodyTextSecondary.copyWith(
-                              color: AppColors.textHint,
+                          VerticalDivider(
+                            color: Colors.white.withOpacity(0.3),
+                            thickness: 1,
+                            width: 32,
+                          ),
+                          Expanded(
+                            child: _buildSummaryItem(
+                              'TOTAL PENGELUARAN',
+                              _formatCurrency(state.totalExpense),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: AppDimens.md),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                      border: Border.all(color: AppColors.divider),
-                    ),
-                    child: const Icon(Icons.tune, color: AppColors.textPrimary),
-                  ),
+
+                  _buildTransactionList(state.transactions),
+                  const SizedBox(height: AppDimens.xl * 2),
                 ],
               ),
-            ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
 
-            // Summary Card
-            Container(
-              margin: const EdgeInsets.all(AppDimens.md),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1B5E20), Color(0xFF2E7D32)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(AppDimens.radiusL),
-              ),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: _buildSummaryItem(
-                        'TOTAL PEMASUKAN',
-                        'Rp 8.420.000',
-                      ),
-                    ),
-                    VerticalDivider(
-                      color: Colors.white.withOpacity(0.3),
-                      thickness: 1,
-                      width: 32,
-                    ),
-                    Expanded(
-                      child: _buildSummaryItem(
-                        'TOTAL PENGELUARAN',
-                        'Rp 3.150.000',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  Widget _buildMonthSelector() {
+    final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(_selectedDate);
+    return Container(
+      margin: const EdgeInsets.all(AppDimens.md),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppDimens.radiusM),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => _changeMonth(-1),
+            child: const Icon(
+              Icons.chevron_left,
+              color: AppColors.textSecondary,
             ),
-
-            _buildSectionHeader('HARI INI', '25 Okt 2023'),
-            _buildHistoryItem(
-              'Makan Siang - Bakso',
-              '12:30 • Food',
-              '-Rp 25.000',
-              const Color(0xFFFFECE0),
-              const Color(0xFFFF8A00),
-              Icons.restaurant,
+          ),
+          Text(
+            monthStr,
+            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+          ),
+          GestureDetector(
+            onTap: () => _changeMonth(1),
+            child: const Icon(
+              Icons.chevron_right,
+              color: AppColors.textSecondary,
             ),
-            _buildHistoryItem(
-              'Grab Car - Kantor',
-              '08:15 • Transport',
-              '-Rp 45.000',
-              const Color(0xFFE3F2FD),
-              const Color(0xFF2196F3),
-              Icons.directions_car,
-            ),
-
-            _buildSectionHeader('KEMARIN', '24 Okt 2023'),
-            _buildHistoryItem(
-              'Bonus Project',
-              '16:45 • Income',
-              '+Rp 1.500.000',
-              const Color(0xFFE8F5E9),
-              const Color(0xFF4CAF50),
-              Icons.payments_outlined,
-              isExpense: false,
-            ),
-            _buildHistoryItem(
-              'Minimarket',
-              '14:20 • Shopping',
-              '-Rp 112.500',
-              const Color(0xFFF3E5F5),
-              const Color(0xFF9C27B0),
-              Icons.shopping_bag,
-            ),
-
-            _buildSectionHeader('20 OKT 2023', ''),
-            _buildHistoryItem(
-              'Gaji Bulanan',
-              '09:00 • Income',
-              '+Rp 6.500.000',
-              const Color(0xFFE8F5E9),
-              const Color(0xFF4CAF50),
-              Icons.account_balance,
-              isExpense: false,
-            ),
-            const SizedBox(height: AppDimens.xl),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -238,42 +232,89 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(String title, String date) {
+  Widget _buildTransactionList(List<TransactionEntity> transactions) {
+    if (transactions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppDimens.xl * 2),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset('assets/images/img_emty.svg', width: 200),
+              const SizedBox(height: AppDimens.lg),
+              Text(
+                "Data masih kosong",
+                style: AppStyles.bodyText.copyWith(
+                  color: AppColors.textHint,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Grouping by date
+    final Map<String, List<TransactionEntity>> grouped = {};
+    for (var t in transactions) {
+      final dateStr = DateFormat('dd MMM yyyy', 'id_ID').format(t.date);
+      if (grouped.containsKey(dateStr)) {
+        grouped[dateStr]!.add(t);
+      } else {
+        grouped[dateStr] = [t];
+      }
+    }
+
+    final List<Widget> listWidgets = [];
+    grouped.forEach((dateStr, trxs) {
+      listWidgets.add(_buildSectionHeader(dateStr));
+      for (var t in trxs) {
+        listWidgets.add(_buildHistoryItem(t));
+      }
+    });
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: listWidgets,
+    );
+  }
+
+  Widget _buildSectionHeader(String date) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(AppDimens.md, 12, AppDimens.md, 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            title,
+            date.toUpperCase(),
             style: AppStyles.caption.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.textSecondary,
               letterSpacing: 1.1,
             ),
           ),
-          if (date.isNotEmpty)
-            Text(
-              date,
-              style: AppStyles.caption.copyWith(
-                fontSize: 10,
-                color: AppColors.textHint,
-              ),
-            ),
         ],
       ),
     );
   }
 
-  Widget _buildHistoryItem(
-    String title,
-    String subtitle,
-    String amount,
-    Color iconBgColor,
-    Color iconColor,
-    IconData icon, {
-    bool isExpense = true,
-  }) {
+  Widget _buildHistoryItem(TransactionEntity t) {
+    final isExpense = t.type == 'expense';
+    final amountColor = isExpense
+        ? const Color(0xFFE57373)
+        : const Color(0xFF66BB6A);
+    final amountSign = isExpense ? "-" : "+";
+    final timeStr = DateFormat('HH:mm', 'id_ID').format(t.date);
+
+    final icon = _categoryIconMap[t.categoryName] ?? Icons.category;
+    final iconBgColor = isExpense
+        ? const Color(0xFFFFECE0)
+        : const Color(0xFFE8F5E9);
+    final iconColor = isExpense
+        ? const Color(0xFFFF8A00)
+        : const Color(0xFF4CAF50);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: 6),
       padding: const EdgeInsets.all(AppDimens.md),
@@ -297,14 +338,18 @@ class HistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  t.title.isNotEmpty
+                      ? t.title
+                      : ((t.notes?.isNotEmpty == true)
+                            ? t.notes!
+                            : (t.categoryName ?? 'Transasksi')),
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  subtitle,
+                  '$timeStr • ${t.categoryName}',
                   style: AppStyles.caption.copyWith(
                     fontSize: 10,
                     color: AppColors.textHint,
@@ -314,11 +359,9 @@ class HistoryScreen extends StatelessWidget {
             ),
           ),
           Text(
-            amount,
+            '$amountSign${_formatCurrency(t.amount)}',
             style: AppStyles.bodyText.copyWith(
-              color: isExpense
-                  ? const Color(0xFFE57373)
-                  : const Color(0xFF66BB6A),
+              color: amountColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -328,6 +371,11 @@ class HistoryScreen extends StatelessWidget {
   }
 
   void _showReportPreview(BuildContext context) {
+    final state = context.read<HistoryBloc>().state;
+    if (state is! HistoryLoaded) return;
+
+    final balance = state.totalIncome - state.totalExpense;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -392,25 +440,12 @@ class HistoryScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'OKTOBER 2023',
+                              DateFormat(
+                                'MMMM yyyy',
+                                'id_ID',
+                              ).format(state.currentMonth).toUpperCase(),
                               style: AppStyles.caption.copyWith(
                                 letterSpacing: 1.2,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Dicetak pada',
-                              style: AppStyles.caption.copyWith(fontSize: 10),
-                            ),
-                            Text(
-                              '25 Okt 2023, 15:45',
-                              style: AppStyles.bodyTextSecondary.copyWith(
-                                fontSize: 11,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -429,7 +464,7 @@ class HistoryScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Rp 5.270.000',
+                      _formatCurrency(balance),
                       style: AppStyles.heading1.copyWith(fontSize: 32),
                     ),
                     const SizedBox(height: 24),
@@ -462,14 +497,18 @@ class HistoryScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            flex: 7,
+                            flex: state.totalIncome > 0
+                                ? (state.totalIncome).toInt()
+                                : 1,
                             child: Container(
                               height: 12,
                               color: const Color(0xFF27AE60),
                             ),
                           ),
                           Expanded(
-                            flex: 3,
+                            flex: state.totalExpense > 0
+                                ? (state.totalExpense).toInt()
+                                : 1,
                             child: Container(
                               height: 12,
                               color: const Color(0xFFEB5757),
@@ -483,40 +522,14 @@ class HistoryScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Rp 8.420.000',
+                          _formatCurrency(state.totalIncome),
                           style: AppStyles.caption.copyWith(fontSize: 10),
                         ),
                         Text(
-                          'Rp 3.150.000',
+                          _formatCurrency(state.totalExpense),
                           style: AppStyles.caption.copyWith(fontSize: 10),
                         ),
                       ],
-                    ),
-
-                    const SizedBox(height: 32),
-                    Text(
-                      'PENGELUARAN TERBESAR',
-                      style: AppStyles.caption.copyWith(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.1,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildReportDetailItem(
-                      'Shopping',
-                      'Rp 1.250.000',
-                      const Color(0xFF9B51E0),
-                    ),
-                    _buildReportDetailItem(
-                      'Food & Drinks',
-                      'Rp 845.000',
-                      const Color(0xFFF2994A),
-                    ),
-                    _buildReportDetailItem(
-                      'Transport',
-                      'Rp 420.000',
-                      const Color(0xFF2D9CDB),
                     ),
                   ],
                 ),
@@ -563,28 +576,6 @@ class HistoryScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildReportDetailItem(String label, String amount, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 12),
-          Text(label, style: AppStyles.bodyTextSecondary),
-          const Spacer(),
-          Text(
-            amount,
-            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
     );
   }
 }

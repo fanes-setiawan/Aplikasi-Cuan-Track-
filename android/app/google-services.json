@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "957707881137",
+    "firebase_url": "https://mefolio-web-default-rtdb.firebaseio.com",
+    "project_id": "mefolio-web",
+    "storage_bucket": "mefolio-web.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957707881137:android:478c1cfa91ecbb25d97090",
+        "android_client_info": {
+          "package_name": "com.example.finlog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgBxbNGhySkISdlYf8uA6JigtVnq2tWgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957707881137:android:d2bbaa73a4ca780ad97090",
+        "android_client_info": {
+          "package_name": "com.fanes.cuan_track"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgBxbNGhySkISdlYf8uA6JigtVnq2tWgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

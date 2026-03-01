@@ -10,6 +10,10 @@ import '../../../../core/constants/app_assets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/local_auth_helper.dart';
 import '../../../auth/presentation/pages/pin_lock_screen.dart';
+import '../../../auth/presentation/pages/login_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
@@ -149,68 +153,79 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          IndexedStack(index: _currentIndex, children: _pages),
-          if (_isAppLocked)
-            Positioned.fill(
-              child: PinLockScreen(
-                showBiometric: _biometricEnabled,
-                onPinCompleted: _handlePinCompleted,
-                onBiometricPressed: _authenticateBiometric,
-                onForgotPin: () {
-                  // Handle forgot PIN
-                },
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Unauthenticated) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+            (route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            IndexedStack(index: _currentIndex, children: _pages),
+            if (_isAppLocked)
+              Positioned.fill(
+                child: PinLockScreen(
+                  showBiometric: _biometricEnabled,
+                  onPinCompleted: _handlePinCompleted,
+                  onBiometricPressed: _authenticateBiometric,
+                  onForgotPin: () {
+                    // Handle forgot PIN
+                  },
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
+        bottomNavigationBar: _isAppLocked
+            ? null
+            : Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, -5),
+                    ),
+                  ],
+                ),
+                child: BottomNavigationBar(
+                  currentIndex: _currentIndex,
+                  onTap: _updateIndex,
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: Colors.white,
+                  selectedItemColor: AppColors.primary,
+                  unselectedItemColor: AppColors.textSecondary,
+                  selectedFontSize: 12,
+                  unselectedFontSize: 12,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: _buildIcon(AppAssets.iconHome, false),
+                      activeIcon: _buildIcon(AppAssets.iconHome, true),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: _buildIcon(AppAssets.iconHistory, false),
+                      activeIcon: _buildIcon(AppAssets.iconHistory, true),
+                      label: 'History',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: _buildIcon(AppAssets.iconBudget, false),
+                      activeIcon: _buildIcon(AppAssets.iconBudget, true),
+                      label: 'Budget',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: _buildIcon(AppAssets.iconProfile, false),
+                      activeIcon: _buildIcon(AppAssets.iconProfile, true),
+                      label: 'Profile',
+                    ),
+                  ],
+                ),
+              ),
       ),
-      bottomNavigationBar: _isAppLocked
-          ? null
-          : Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
-                  ),
-                ],
-              ),
-              child: BottomNavigationBar(
-                currentIndex: _currentIndex,
-                onTap: _updateIndex,
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: Colors.white,
-                selectedItemColor: AppColors.primary,
-                unselectedItemColor: AppColors.textSecondary,
-                selectedFontSize: 12,
-                unselectedFontSize: 12,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: _buildIcon(AppAssets.iconHome, false),
-                    activeIcon: _buildIcon(AppAssets.iconHome, true),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: _buildIcon(AppAssets.iconHistory, false),
-                    activeIcon: _buildIcon(AppAssets.iconHistory, true),
-                    label: 'History',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: _buildIcon(AppAssets.iconBudget, false),
-                    activeIcon: _buildIcon(AppAssets.iconBudget, true),
-                    label: 'Budget',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: _buildIcon(AppAssets.iconProfile, false),
-                    activeIcon: _buildIcon(AppAssets.iconProfile, true),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
-            ),
     );
   }
 

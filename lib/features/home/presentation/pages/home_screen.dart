@@ -1,35 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
 import '../../../main/presentation/pages/main_screen.dart';
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
+import '../bloc/home_state.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _userName = 'User';
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userName = user.displayName ?? user.email?.split('@').first ?? 'User';
+      context.read<HomeBloc>().add(StartListeningTransactions(user.uid));
+    }
+  }
+
+  String _formatCurrency(double amount) {
+    return NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    ).format(amount);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDimens.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
-              const SizedBox(height: AppDimens.lg),
-              _buildBalanceCard(),
-              const SizedBox(height: AppDimens.lg),
-              _buildActionButtons(context),
-              const SizedBox(height: AppDimens.xl),
-              _buildExpenseAnalysis(),
-              const SizedBox(height: AppDimens.xl),
-              _buildRecentTransactions(context),
-            ],
-          ),
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            double totalBalance = 0;
+            double monthlyIncome = 0;
+            double monthlyExpenses = 0;
+            List recentTrx = [];
+            Map<String, double> expenseData = {};
+            bool isLoading = state is HomeLoading || state is HomeInitial;
+
+            if (state is HomeLoaded) {
+              totalBalance = state.totalBalance;
+              monthlyIncome = state.monthlyIncome;
+              monthlyExpenses = state.monthlyExpenses;
+              recentTrx = state.recentTransactions;
+              expenseData = state.expenseChartData;
+            }
+
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppDimens.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(context),
+                  const SizedBox(height: AppDimens.lg),
+                  isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : _buildBalanceCard(
+                          totalBalance,
+                          monthlyIncome,
+                          monthlyExpenses,
+                        ),
+                  const SizedBox(height: AppDimens.lg),
+                  _buildActionButtons(context),
+                  const SizedBox(height: AppDimens.xl),
+                  _buildExpenseAnalysis(expenseData),
+                  const SizedBox(height: AppDimens.xl),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (recentTrx.isEmpty)
+                    const Center(child: Text('Belum ada transaksi.'))
+                  else
+                    _buildRecentTransactions(context, recentTrx),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -51,7 +114,7 @@ class HomeScreen extends StatelessWidget {
               'Selamat Pagi,',
               style: AppStyles.bodyTextSecondary.copyWith(fontSize: 12),
             ),
-            Text('Halo, User!', style: AppStyles.heading2),
+            Text('Halo, $_userName!', style: AppStyles.heading2),
           ],
         ),
         const Spacer(),
@@ -82,7 +145,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBalanceCard() {
+  Widget _buildBalanceCard(double totalBalance, double income, double expense) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -180,17 +243,10 @@ class HomeScreen extends StatelessWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        'Rp ',
-                        style: AppStyles.heading2.copyWith(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        '25.000.000',
+                        _formatCurrency(totalBalance),
                         style: AppStyles.heading1.copyWith(
                           color: Colors.white,
-                          fontSize: 40,
+                          fontSize: 36,
                           letterSpacing: -1,
                         ),
                       ),
@@ -209,7 +265,7 @@ class HomeScreen extends StatelessWidget {
                         Expanded(
                           child: _buildBalanceStat(
                             'PEMASUKAN',
-                            'Rp 8.420.000',
+                            _formatCurrency(income),
                             const Color(0xFFA7FFEB),
                           ),
                         ),
@@ -223,7 +279,7 @@ class HomeScreen extends StatelessWidget {
                         Expanded(
                           child: _buildBalanceStat(
                             'PENGELUARAN',
-                            'Rp 3.150.000',
+                            _formatCurrency(expense),
                             const Color(0xFFFFE0B2),
                           ),
                         ),
@@ -359,7 +415,75 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildExpenseAnalysis() {
+  Widget _buildExpenseAnalysis(Map<String, double> expenseData) {
+    if (expenseData.isEmpty) {
+      return Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Analisis Pengeluaran', style: AppStyles.heading2),
+              const Icon(
+                Icons.info_outline,
+                color: AppColors.textSecondary,
+                size: 20,
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppDimens.lg),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset('assets/images/img_emty.svg', width: 150),
+                  const SizedBox(height: AppDimens.md),
+                  Text(
+                    "Belum ada pengeluaran bulan ini",
+                    style: AppStyles.bodyText.copyWith(
+                      color: AppColors.textHint,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    final totalExpense = expenseData.values.fold(0.0, (sum, val) => sum + val);
+
+    // Sort and limit to top 3 + Others
+    final sortedEntries = expenseData.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
+
+    final List<Color> chartColors = [
+      const Color(0xFF1B5E20),
+      const Color(0xFF2ECC71),
+      const Color(0xFFA5D6A7),
+      const Color(0xFF81C784),
+      const Color(0xFFC8E6C9),
+    ];
+
+    List<double> ratios = [];
+    List<Color> itemColors = [];
+    List<Widget> legendItems = [];
+
+    int colorIndex = 0;
+    for (var entry in sortedEntries) {
+      final percentage = entry.value / totalExpense;
+      final percentStr = '${(percentage * 100).toStringAsFixed(0)}%';
+      final color = chartColors[colorIndex % chartColors.length];
+
+      ratios.add(percentage);
+      itemColors.add(color);
+      legendItems.add(_buildLegendItem(entry.key, percentStr, color));
+
+      colorIndex++;
+    }
+
     return Column(
       children: [
         Row(
@@ -382,27 +506,9 @@ class HomeScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Mock Donut Chart
-              _buildMockDonutChart(),
+              _buildDonutChart(ratios, itemColors),
               const SizedBox(width: AppDimens.xl),
-              // Legend
-              Expanded(
-                child: Column(
-                  children: [
-                    _buildLegendItem('Food', '45%', const Color(0xFF1B5E20)),
-                    _buildLegendItem(
-                      'Transport',
-                      '30%',
-                      const Color(0xFF2ECC71),
-                    ),
-                    _buildLegendItem(
-                      'Shopping',
-                      '25%',
-                      const Color(0xFFA5D6A7),
-                    ),
-                  ],
-                ),
-              ),
+              Expanded(child: Column(children: legendItems)),
             ],
           ),
         ),
@@ -410,7 +516,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMockDonutChart() {
+  Widget _buildDonutChart(List<double> ratios, List<Color> colors) {
     return SizedBox(
       width: 120,
       height: 120,
@@ -418,14 +524,7 @@ class HomeScreen extends StatelessWidget {
         children: [
           CustomPaint(
             size: const Size(120, 120),
-            painter: DonutChartPainter(
-              ratios: [0.45, 0.30, 0.25],
-              colors: [
-                const Color(0xFF1B5E20),
-                const Color(0xFF2ECC71),
-                const Color(0xFFA5D6A7),
-              ],
-            ),
+            painter: DonutChartPainter(ratios: ratios, colors: colors),
           ),
           Center(
             child: Column(
@@ -442,6 +541,19 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildLegendItem(String label, String percent, Color color) {
+    IconData iconData = Icons.shopping_bag;
+    if (label.toLowerCase().contains("makan") ||
+        label.toLowerCase().contains("food")) {
+      iconData = Icons.restaurant;
+    } else if (label.toLowerCase().contains("transport")) {
+      iconData = Icons.directions_car;
+    } else if (label.toLowerCase().contains("belanja") ||
+        label.toLowerCase().contains("shopping")) {
+      iconData = Icons.shopping_bag;
+    } else if (label.toLowerCase().contains("tagihan")) {
+      iconData = Icons.receipt;
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -452,19 +564,17 @@ class HomeScreen extends StatelessWidget {
               color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              label == 'Food'
-                  ? Icons.restaurant
-                  : label == 'Transport'
-                  ? Icons.directions_car
-                  : Icons.shopping_bag,
-              size: 16,
-              color: color,
-            ),
+            child: Icon(iconData, size: 16, color: color),
           ),
           const SizedBox(width: 12),
-          Text(label, style: AppStyles.bodyTextSecondary),
-          const Spacer(),
+          Expanded(
+            child: Text(
+              label,
+              style: AppStyles.bodyTextSecondary,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 8),
           Text(
             percent,
             style: AppStyles.bodyText.copyWith(
@@ -477,7 +587,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentTransactions(BuildContext context) {
+  Widget _buildRecentTransactions(BuildContext context, List transactions) {
     return Column(
       children: [
         Row(
@@ -499,30 +609,56 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: AppDimens.md),
-        _buildTransactionItem(
-          'Makan Siang - Bakso',
-          'HARI INI, 12:30 • FOOD',
-          '-Rp 25.000',
-          Colors.orange[100]!,
-          Colors.orange[900]!,
-          Icons.restaurant,
-        ),
-        _buildTransactionItem(
-          'Bensin Mobil',
-          'KEMARIN, 18:45 • TRANSPORT',
-          '-Rp 150.000',
-          Colors.blue[100]!,
-          Colors.blue[900]!,
-          Icons.directions_car,
-        ),
-        _buildTransactionItem(
-          'Belanja Bulanan',
-          '22 OKT 2023 • SHOPPING',
-          '-Rp 450.000',
-          Colors.purple[100]!,
-          Colors.purple[900]!,
-          Icons.shopping_bag,
-        ),
+        if (transactions.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: AppDimens.xl),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset('assets/images/img_emty.svg', width: 150),
+                  const SizedBox(height: AppDimens.md),
+                  Text(
+                    "Belum ada transaksi terakhir",
+                    style: AppStyles.bodyText.copyWith(
+                      color: AppColors.textHint,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          ...transactions.map((trx) {
+            final isIncome = trx.type == 'income';
+            final amountStr = _formatCurrency(trx.amount);
+            final finalAmountStr = isIncome ? '+$amountStr' : '-$amountStr';
+            final bgColor = isIncome ? Colors.green[100]! : Colors.orange[100]!;
+            final iconColor = isIncome
+                ? Colors.green[900]!
+                : Colors.orange[900]!;
+            final icon = isIncome
+                ? Icons.account_balance_wallet
+                : Icons.shopping_bag;
+
+            // Format Date
+            final dateStr = DateFormat('dd MMM yyyy • HH:mm').format(trx.date);
+
+            return _buildTransactionItem(
+              trx.title.isNotEmpty
+                  ? trx.title
+                  : (trx.notes?.isNotEmpty == true
+                        ? trx.notes!
+                        : (trx.categoryName ?? 'Transaksi')),
+              '$dateStr • ${trx.categoryName?.toUpperCase() ?? 'LAINNYA'}',
+              finalAmountStr,
+              bgColor,
+              iconColor,
+              icon,
+              isIncome,
+            );
+          }).toList(),
       ],
     );
   }
@@ -534,6 +670,7 @@ class HomeScreen extends StatelessWidget {
     Color bgColor,
     Color iconColor,
     IconData icon,
+    bool isIncome,
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppDimens.md),
@@ -571,7 +708,7 @@ class HomeScreen extends StatelessWidget {
           Text(
             amount,
             style: AppStyles.bodyText.copyWith(
-              color: Colors.red[400],
+              color: isIncome ? Colors.green[600] : Colors.red[400],
               fontWeight: FontWeight.bold,
             ),
           ),

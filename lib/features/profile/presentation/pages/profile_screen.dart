@@ -6,6 +6,9 @@ import 'payment_methods_screen.dart';
 import 'custom_categories_screen.dart';
 import 'security_settings_screen.dart';
 import 'notification_settings_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../../../features/auth/presentation/bloc/auth_event.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -164,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Implement Logout
+                    context.read<AuthBloc>().add(LogoutEvent());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFFF5F5),

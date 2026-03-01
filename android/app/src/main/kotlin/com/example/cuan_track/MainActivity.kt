@@ -1,4 +1,4 @@
-package com.example.cuan_track
+package com.fanes.cuan_track
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 
