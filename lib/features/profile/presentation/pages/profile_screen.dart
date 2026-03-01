@@ -4,6 +4,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import 'payment_methods_screen.dart';
 import 'custom_categories_screen.dart';
+import 'account_info_screen.dart';
 import 'security_settings_screen.dart';
 import 'notification_settings_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,7 +94,14 @@ class ProfileScreen extends StatelessWidget {
                   _buildProfileMenuItem(
                     icon: Icons.person_outline,
                     title: 'Informasi Akun',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AccountInfoScreen(),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 12),
                   _buildProfileMenuItem(

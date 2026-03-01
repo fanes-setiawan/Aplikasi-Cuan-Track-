@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../../core/widgets/custom_button.dart';
+import 'package:cuan_track/features/category/domain/entities/category_entity.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
 
 class AddCategorySheet extends StatefulWidget {
   const AddCategorySheet({super.key});
@@ -213,6 +219,77 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         ),
                       );
                     }).toList(),
+                  ),
+                  const SizedBox(height: 48),
+                  CustomButton(
+                    text: 'Simpan Kategori',
+                    onPressed: () {
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Anda belum login')),
+                        );
+                        return;
+                      }
+
+                      if (_nameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Nama kategori harus diisi'),
+                          ),
+                        );
+                        return;
+                      }
+
+                      String iconName = 'category_outlined';
+                      if (_selectedIcon == Icons.shopping_bag)
+                        iconName = 'expense_shopping';
+                      else if (_selectedIcon == Icons.directions_car)
+                        iconName = 'expense_transport';
+                      else if (_selectedIcon == Icons.home)
+                        iconName = 'expense_home';
+                      else if (_selectedIcon == Icons.favorite)
+                        iconName = 'expense_heart';
+                      else if (_selectedIcon == Icons.local_cafe)
+                        iconName = 'expense_cafe';
+                      else if (_selectedIcon == Icons.restaurant)
+                        iconName = 'expense_food';
+                      else if (_selectedIcon == Icons.airplanemode_active)
+                        iconName = 'expense_travel';
+                      else if (_selectedIcon == Icons.payments)
+                        iconName = 'income_salary';
+                      else if (_selectedIcon == Icons.business_center)
+                        iconName = 'income_business';
+                      else if (_selectedIcon == Icons.school)
+                        iconName = 'expense_education';
+
+                      String colorHex =
+                          '0xFF${_selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+
+                      final newCategory = CategoryEntity(
+                        id: '',
+                        userId: user.uid,
+                        name: _nameController.text.trim(),
+                        type:
+                            'expense', // default user categories to expense for now, unless toggled
+                        iconName: iconName,
+                        colorHex: colorHex,
+                      );
+
+                      context.read<CategoryBloc>().add(
+                        AddCategory(newCategory),
+                      );
+
+                      Navigator.pop(context); // Close sheet
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            '${_nameController.text} berhasil ditambahkan',
+                          ),
+                          backgroundColor: AppColors.primary,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 32),
                 ],

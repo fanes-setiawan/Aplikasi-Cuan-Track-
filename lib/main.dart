@@ -10,6 +10,8 @@ import 'features/transaction/presentation/bloc/add_transaction_bloc.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
 import 'features/budget/presentation/bloc/budget_bloc.dart';
 import 'features/budget/presentation/bloc/add_budget_bloc.dart';
+import 'features/payment_method/presentation/bloc/payment_method_bloc.dart';
+import 'features/category/presentation/bloc/category_bloc.dart';
 import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 
@@ -40,6 +42,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<HistoryBloc>(create: (_) => di.sl<HistoryBloc>()),
         BlocProvider<BudgetBloc>(create: (_) => di.sl<BudgetBloc>()),
         BlocProvider<AddBudgetBloc>(create: (_) => di.sl<AddBudgetBloc>()),
+        BlocProvider<PaymentMethodBloc>(
+          create: (_) => di.sl<PaymentMethodBloc>(),
+        ),
+        BlocProvider<CategoryBloc>(create: (_) => di.sl<CategoryBloc>()),
       ],
       child: MaterialApp(
         title: 'Cuan Track',

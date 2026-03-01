@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
+import 'package:cuan_track/features/payment_method/domain/entities/payment_method_entity.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_bloc.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_event.dart';
 
 class AddPaymentMethodScreen extends StatefulWidget {
   final String providerName;
@@ -179,13 +184,59 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             CustomButton(
               text: 'Simpan Metode Pembayaran',
               onPressed: () {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Anda belum login')),
+                  );
+                  return;
+                }
+
+                if (_nameController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Nama akun harus diisi')),
+                  );
+                  return;
+                }
+
+                String type = 'Tunai';
+                String iconPath = 'payments_outlined';
+                if (widget.providerName.toLowerCase().contains('bank')) {
+                  type = 'Bank';
+                  iconPath = 'account_balance';
+                } else if (widget.providerName.toLowerCase().contains(
+                      'gopay',
+                    ) ||
+                    widget.providerName.toLowerCase().contains('ovo') ||
+                    widget.providerName.toLowerCase().contains('dana')) {
+                  type = 'Dompet Digital';
+                  iconPath = 'account_balance_wallet_outlined';
+                }
+
+                final newMethod = PaymentMethodEntity(
+                  id: '',
+                  userId: user.uid,
+                  name: _nameController.text.trim(),
+                  type: type,
+                  accountNumber: _numberController.text.trim().isEmpty
+                      ? '-'
+                      : _numberController.text.trim(),
+                  balance:
+                      double.tryParse(_balanceController.text.trim()) ?? 0.0,
+                  iconPath: iconPath,
+                );
+
+                context.read<PaymentMethodBloc>().add(
+                  AddPaymentMethod(newMethod),
+                );
+
                 // Save logic here
                 Navigator.pop(context); // Go back to the sheet
                 Navigator.pop(context); // Go back to the methods screen
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      '${widget.providerName} berhasil ditambahkan',
+                      '${_nameController.text} berhasil ditambahkan',
                     ),
                     backgroundColor: AppColors.primary,
                   ),

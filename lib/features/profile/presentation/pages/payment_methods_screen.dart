@@ -1,12 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_bloc.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_event.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_state.dart';
 import 'payment_selection_sheet.dart';
 import 'add_payment_method_screen.dart';
 
-class PaymentMethodsScreen extends StatelessWidget {
+class PaymentMethodsScreen extends StatefulWidget {
   const PaymentMethodsScreen({super.key});
+
+  @override
+  State<PaymentMethodsScreen> createState() => _PaymentMethodsScreenState();
+}
+
+class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<PaymentMethodBloc>().add(LoadPaymentMethods(user.uid));
+    }
+  }
+
+  String _formatCurrency(double amount) {
+    return NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    ).format(amount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,91 +54,113 @@ class PaymentMethodsScreen extends StatelessWidget {
         centerTitle: true,
         title: Text('Metode Pembayaran', style: AppStyles.heading2),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: AppDimens.lg),
-            _buildPaymentMethodCard(
-              icon: Icons.account_balance,
-              name: 'Bank BCA',
-              type: 'Utama',
-              amount: 'Rp 2.500.000',
-              iconBgColor: const Color(0xFFEFF6FF),
-              iconColor: const Color(0xFF2563EB),
-            ),
-            _buildPaymentMethodCard(
-              icon: Icons.account_balance_wallet_outlined,
-              name: 'GoPay',
-              type: 'Dompet Digital',
-              amount: 'Rp 750.000',
-              iconBgColor: const Color(0xFFEFF6FF),
-              iconColor: const Color(0xFF2563EB),
-            ),
-            _buildPaymentMethodCard(
-              icon: Icons.payments_outlined,
-              name: 'Cash/Tunai',
-              type: 'Fisik',
-              amount: 'Rp 120.000',
-              iconBgColor: const Color(0xFFF0FDF4),
-              iconColor: const Color(0xFF27AE60),
-            ),
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final String? selectedProvider =
-                        await showModalBottomSheet<String>(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => const PaymentSelectionSheet(),
-                        );
+      body: BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+        builder: (context, state) {
+          if (state is PaymentMethodLoading || state is PaymentMethodInitial) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is PaymentMethodError) {
+            return Center(child: Text("Gagal memuat: ${state.message}"));
+          } else if (state is PaymentMethodLoaded) {
+            final methods = state.paymentMethods;
 
-                    if (selectedProvider != null && context.mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddPaymentMethodScreen(
-                            providerName: selectedProvider,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF27AE60),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: AppDimens.lg),
+                  if (methods.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(AppDimens.lg),
+                      child: Text("Belum ada metode pembayaran."),
+                    )
+                  else
+                    ...methods.map(
+                      (method) => _buildPaymentMethodCard(
+                        icon: _getIconForType(method.iconPath),
+                        name: method.name,
+                        type: method.type,
+                        amount: _formatCurrency(method.balance),
+                        iconBgColor: const Color(0xFFEFF6FF),
+                        iconColor: const Color(0xFF2563EB),
+                      ),
                     ),
-                    elevation: 4,
-                    shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.add_circle, color: Colors.white),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Tambah Metode Baru',
-                        style: AppStyles.bodyText.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                  const SizedBox(height: 32),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimens.md,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 56,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final String? selectedProvider =
+                              await showModalBottomSheet<String>(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) =>
+                                    const PaymentSelectionSheet(),
+                              );
+
+                          if (selectedProvider != null && context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddPaymentMethodScreen(
+                                  providerName: selectedProvider,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF27AE60),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusM,
+                            ),
+                          ),
+                          elevation: 4,
+                          shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.add_circle, color: Colors.white),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Tambah Metode Baru',
+                              style: AppStyles.bodyText.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 32),
+                ],
               ),
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
       ),
     );
+  }
+
+  IconData _getIconForType(String typeOrPath) {
+    if (typeOrPath.contains('wallet')) {
+      return Icons.account_balance_wallet_outlined;
+    } else if (typeOrPath.contains('bank')) {
+      return Icons.account_balance;
+    } else if (typeOrPath.contains('credit')) {
+      return Icons.credit_card;
+    } else {
+      return Icons.payments_outlined;
+    }
   }
 
   Widget _buildPaymentMethodCard({

@@ -22,6 +22,14 @@ import 'features/budget/data/repositories/firestore_budget_repository_impl.dart'
 import 'features/budget/presentation/bloc/budget_bloc.dart';
 import 'features/budget/presentation/bloc/add_budget_bloc.dart';
 
+import 'features/payment_method/domain/repositories/payment_method_repository.dart';
+import 'features/payment_method/data/repositories/firestore_payment_method_repository_impl.dart';
+import 'features/payment_method/presentation/bloc/payment_method_bloc.dart';
+
+import 'features/category/domain/repositories/category_repository.dart';
+import 'features/category/data/repositories/firestore_category_repository_impl.dart';
+import 'features/category/presentation/bloc/category_bloc.dart';
+
 final sl = GetIt.instance; // sl = Service Locator
 
 Future<void> init() async {
@@ -74,4 +82,18 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => AddBudgetBloc(budgetRepository: sl()));
+
+  // --- Features: Payment Methods ---
+  sl.registerLazySingleton<PaymentMethodRepository>(
+    () => FirestorePaymentMethodRepositoryImpl(firestore: sl()),
+  );
+
+  sl.registerFactory(() => PaymentMethodBloc(repository: sl()));
+
+  // --- Features: Custom Categories ---
+  sl.registerLazySingleton<CategoryRepository>(
+    () => FirestoreCategoryRepositoryImpl(firestore: sl()),
+  );
+
+  sl.registerFactory(() => CategoryBloc(repository: sl()));
 }

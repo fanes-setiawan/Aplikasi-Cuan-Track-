@@ -12,6 +12,15 @@ import '../../../home/presentation/bloc/home_event.dart';
 import '../bloc/add_transaction_bloc.dart';
 import '../bloc/add_transaction_event.dart';
 import '../bloc/add_transaction_state.dart';
+import 'package:cuan_track/features/category/domain/entities/category_entity.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_state.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
+import 'package:cuan_track/features/profile/presentation/pages/add_category_sheet.dart';
+import 'package:cuan_track/features/payment_method/domain/entities/payment_method_entity.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_bloc.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_state.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_event.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   final bool isIncome;
@@ -23,27 +32,20 @@ class AddTransactionScreen extends StatefulWidget {
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   String _rawAmount = "0";
-  late String _selectedCategory;
-  late List<String> _categories;
+  CategoryEntity? _selectedCategory;
   DateTime _selectedDate = DateTime.now();
   final TextEditingController _noteController = TextEditingController();
-
-  final Map<String, String> _categoryIconMap = {
-    "Gaji": "income_salary",
-    "Bonus": "income_bonus",
-    "Investasi": "income_invest",
-    "Makan": "expense_food",
-    "Transport": "expense_transport",
-    "Belanja": "expense_shopping",
-  };
+  PaymentMethodEntity? _selectedPaymentMethod;
 
   @override
   void initState() {
     super.initState();
-    _categories = widget.isIncome
-        ? ["Gaji", "Bonus", "Investasi"]
-        : ["Makanan & Minuman", "Transportasi", "Belanja", "Hiburan"];
-    _selectedCategory = _categories[0];
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<PaymentMethodBloc>().add(LoadPaymentMethods(user.uid));
+      context.read<CategoryBloc>().add(LoadCategories(user.uid));
+    }
   }
 
   String get _formattedAmount {
@@ -157,18 +159,161 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         ),
                       ),
                       const SizedBox(height: AppDimens.md),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            ..._categories.map(
-                              (cat) => _buildCategoryChip(cat),
-                            ),
-                            _buildAddCategoryButton(),
-                          ],
-                        ),
+                      BlocBuilder<CategoryBloc, CategoryState>(
+                        builder: (context, state) {
+                          if (state is CategoryLoading ||
+                              state is CategoryInitial) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(AppDimens.md),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          } else if (state is CategoryLoaded) {
+                            final filteredCategories = state.categories
+                                .where(
+                                  (c) =>
+                                      c.type ==
+                                      (widget.isIncome ? 'income' : 'expense'),
+                                )
+                                .toList();
+
+                            if (filteredCategories.isNotEmpty) {
+                              _selectedCategory ??= filteredCategories.first;
+                            }
+
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  ...filteredCategories.map(
+                                    (cat) => _buildCategoryChip(cat),
+                                  ),
+                                  _buildAddCategoryButton(),
+                                ],
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                       const SizedBox(height: AppDimens.xl),
+
+                      // Payment Method Selection
+                      BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
+                        builder: (context, state) {
+                          String value = "Loading...";
+                          if (state is PaymentMethodLoaded) {
+                            if (state.paymentMethods.isNotEmpty) {
+                              _selectedPaymentMethod ??=
+                                  state.paymentMethods.first;
+                              value = _selectedPaymentMethod!.name;
+                            } else {
+                              value = "Belum ada metode";
+                            }
+                          } else if (state is PaymentMethodError) {
+                            value = "Error";
+                          }
+
+                          return _buildInputTile(
+                            label: 'METODE PEMBAYARAN',
+                            value: value,
+                            icon: Icons.account_balance_wallet_outlined,
+                            onTap: () async {
+                              if (state is PaymentMethodLoaded &&
+                                  state.paymentMethods.isNotEmpty) {
+                                final selected =
+                                    await showModalBottomSheet<
+                                      PaymentMethodEntity
+                                    >(
+                                      context: context,
+                                      backgroundColor: Colors.transparent,
+                                      builder: (context) => Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(20),
+                                          ),
+                                        ),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const SizedBox(height: 16),
+                                              Container(
+                                                height: 5,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey[300],
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                'Pilih Metode Pembayaran',
+                                                style: AppStyles.heading2,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              ...state.paymentMethods.map(
+                                                (m) => ListTile(
+                                                  leading: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(8),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                        0xFFEFF6FF,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            8,
+                                                          ),
+                                                    ),
+                                                    child: Icon(
+                                                      m.type == 'Tunai'
+                                                          ? Icons
+                                                                .payments_outlined
+                                                          : Icons
+                                                                .account_balance_wallet,
+                                                      color: const Color(
+                                                        0xFF2563EB,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  title: Text(
+                                                    m.name,
+                                                    style: AppStyles.bodyText
+                                                        .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                  ),
+                                                  subtitle: Text(
+                                                    m.type,
+                                                    style: AppStyles.caption,
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.pop(context, m);
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(height: 32),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                if (selected != null) {
+                                  setState(() {
+                                    _selectedPaymentMethod = selected;
+                                  });
+                                }
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppDimens.md),
 
                       // Date Selection
                       _buildInputTile(
@@ -273,10 +418,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildCategoryChip(String label) {
-    bool isSelected = _selectedCategory == label;
+  Widget _buildCategoryChip(CategoryEntity category) {
+    bool isSelected = _selectedCategory?.id == category.id;
     return GestureDetector(
-      onTap: () => setState(() => _selectedCategory = label),
+      onTap: () => setState(() => _selectedCategory = category),
       child: Container(
         margin: const EdgeInsets.only(right: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -291,25 +436,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         child: Row(
           children: [
             Icon(
-              label == "Gaji"
-                  ? Icons.payments_outlined
-                  : label == "Bonus"
-                  ? Icons.stars_outlined
-                  : label == "Investasi"
-                  ? Icons.show_chart_outlined
-                  : label == "Makanan & Minuman"
-                  ? Icons.restaurant
-                  : label == "Transportasi"
-                  ? Icons.directions_car
-                  : label == "Hiburan"
-                  ? Icons.theater_comedy
-                  : Icons.shopping_bag,
+              _getIconForName(category.iconName),
               size: 18,
               color: isSelected ? AppColors.primary : AppColors.textSecondary,
             ),
             const SizedBox(width: 8),
             Text(
-              label,
+              category.name,
               style: AppStyles.bodyText.copyWith(
                 color: isSelected ? AppColors.primary : AppColors.textSecondary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -321,17 +454,44 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
+  IconData _getIconForName(String name) {
+    if (name.contains('salary')) return Icons.payments_outlined;
+    if (name.contains('business')) return Icons.business_center_outlined;
+    if (name.contains('bonus')) return Icons.stars_outlined;
+    if (name.contains('invest')) return Icons.show_chart_outlined;
+    if (name.contains('food')) return Icons.fastfood_outlined;
+    if (name.contains('transport')) return Icons.directions_car_outlined;
+    if (name.contains('shopping')) return Icons.shopping_bag_outlined;
+    if (name.contains('entertainment')) return Icons.sports_esports_outlined;
+    if (name.contains('home')) return Icons.home_outlined;
+    if (name.contains('heart')) return Icons.favorite_border_outlined;
+    if (name.contains('cafe')) return Icons.local_cafe_outlined;
+    if (name.contains('travel')) return Icons.flight_takeoff_outlined;
+    if (name.contains('education')) return Icons.school_outlined;
+    return Icons.category_outlined;
+  }
+
   Widget _buildAddCategoryButton() {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: AppColors.divider, style: BorderStyle.none),
-      ),
-      child: Icon(
-        Icons.add_circle_outline,
-        color: AppColors.textSecondary.withOpacity(0.3),
-        size: 32,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => const AddCategorySheet(),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: AppColors.divider, style: BorderStyle.none),
+        ),
+        child: Icon(
+          Icons.add_circle_outline,
+          color: AppColors.textSecondary.withOpacity(0.3),
+          size: 32,
+        ),
       ),
     );
   }
@@ -482,8 +642,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       title: widget.isIncome ? "Pemasukan" : "Pengeluaran",
       amount: amountParsed,
       type: widget.isIncome ? 'income' : 'expense',
-      categoryId: _categoryIconMap[_selectedCategory] ?? _selectedCategory,
-      categoryName: _selectedCategory,
+      categoryId: _selectedCategory?.id ?? '',
+      categoryName: _selectedCategory?.name ?? '',
+      paymentMethodId: _selectedPaymentMethod?.id,
       date: _selectedDate,
       notes: _noteController.text.trim(),
     );
