@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class AppHelpers {
@@ -6,19 +7,47 @@ class AppHelpers {
 
   // --- UI Helpers ---
 
-  /// Menampilkan snackbar secara general
+  /// Menampilkan snackbar kustom (Pill shaped, Icon + Text)
   static void showSnackBar(
     BuildContext context,
     String message, {
     bool isError = false,
   }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Colors.red.shade700
-            : const Color(0xFF4CAF50),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
+        content: Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEFEFEF).withOpacity(0.5),
+              borderRadius: BorderRadius.circular(54),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset('assets/logo/logo_app.png', height: 24, width: 24),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF666666),
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

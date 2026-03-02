@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../../core/utils/app_helpers.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text_field.dart';
@@ -186,15 +187,19 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
               onPressed: () {
                 final user = FirebaseAuth.instance.currentUser;
                 if (user == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Anda belum login')),
+                  AppHelpers.showSnackBar(
+                    context,
+                    'Anda belum login',
+                    isError: true,
                   );
                   return;
                 }
 
                 if (_nameController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Nama akun harus diisi')),
+                  AppHelpers.showSnackBar(
+                    context,
+                    'Nama akun harus diisi',
+                    isError: true,
                   );
                   return;
                 }
@@ -233,13 +238,9 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                 // Save logic here
                 Navigator.pop(context); // Go back to the sheet
                 Navigator.pop(context); // Go back to the methods screen
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      '${_nameController.text} berhasil ditambahkan',
-                    ),
-                    backgroundColor: AppColors.primary,
-                  ),
+                AppHelpers.showSnackBar(
+                  context,
+                  '${_nameController.text} berhasil ditambahkan',
                 );
               },
             ),

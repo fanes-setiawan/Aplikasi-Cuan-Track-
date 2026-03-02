@@ -14,6 +14,29 @@ class AuthRepositoryImpl implements AuthRepository {
     return UserEntity(uid: user.uid, email: user.email, name: user.displayName);
   }
 
+  String _mapFirebaseAuthError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'invalid-credential':
+      case 'wrong-password':
+      case 'user-not-found':
+        return 'Email atau password yang Anda masukkan salah.';
+      case 'email-already-in-use':
+        return 'Email ini sudah terdaftar. Silakan gunakan email lain atau login.';
+      case 'weak-password':
+        return 'Password terlalu lemah. Silakan gunakan kombinasi yang lebih kuat.';
+      case 'invalid-email':
+        return 'Format email tidak valid.';
+      case 'user-disabled':
+        return 'Akun ini telah dinonaktifkan. Silakan hubungi admin.';
+      case 'network-request-failed':
+        return 'Koneksi internet bermasalah. Periksa jaringan Anda.';
+      case 'too-many-requests':
+        return 'Terlalu banyak percobaan. Silakan coba lagi nanti.';
+      default:
+        return 'Terjadi kesalahan sistem (${e.code}). Silakan coba lagi.';
+    }
+  }
+
   @override
   Future<UserEntity?> getCurrentUser() async {
     return _mapFirebaseUserToUserEntity(firebaseAuth.currentUser);
@@ -31,9 +54,11 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       final user = _mapFirebaseUserToUserEntity(userCredential.user);
       if (user != null) return user;
-      throw Exception('Failed to get user after login');
+      throw Exception('Gagal mendapatkan data pengguna setelah login.');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseAuthError(e));
     } catch (e) {
-      throw Exception('Login failed: ${e.toString()}');
+      throw Exception('Login gagal. Silakan coba lagi.');
     }
   }
 
@@ -49,16 +74,23 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       final user = _mapFirebaseUserToUserEntity(userCredential.user);
       if (user != null) return user;
-      throw Exception('Failed to get user after registration');
+      throw Exception('Gagal mendapatkan data pengguna setelah registrasi.');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseAuthError(e));
     } catch (e) {
-      throw Exception('Registration failed: ${e.toString()}');
+      throw Exception('Registrasi gagal. Silakan coba lagi.');
     }
   }
 
   @override
   Future<void> logout() async {
-    await _googleSignIn.signOut();
-    await firebaseAuth.signOut();
+    try {
+      await _googleSignIn.signOut();
+      await firebaseAuth.signOut();
+    } catch (e) {
+      // Ignored or handle specifically
+      throw Exception('Gagal logout. Silakan coba lagi.');
+    }
   }
 
   @override
@@ -66,7 +98,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        throw Exception('Google sign-in canceled by user');
+        throw Exception('Login Google dibatalkan oleh pengguna.');
       }
 
       final googleAuth = await googleUser.authentication;
@@ -80,9 +112,11 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       final user = _mapFirebaseUserToUserEntity(userCredential.user);
       if (user != null) return user;
-      throw Exception('Failed to get user after Google login');
+      throw Exception('Gagal mendapatkan data pengguna setelah Login Google.');
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseAuthError(e));
     } catch (e) {
-      throw Exception('Google Login failed: ${e.toString()}');
+      throw Exception('Login Google gagal. Silakan coba lagi.');
     }
   }
 }

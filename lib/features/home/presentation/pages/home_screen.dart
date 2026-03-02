@@ -9,6 +9,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
+import 'expense_analysis_screen.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
@@ -423,10 +424,22 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Analisis Pengeluaran', style: AppStyles.heading2),
-              const Icon(
-                Icons.info_outline,
-                color: AppColors.textSecondary,
-                size: 20,
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ExpenseAnalysisScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Lihat',
+                  style: AppStyles.bodyText.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
@@ -490,10 +503,22 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Analisis Pengeluaran', style: AppStyles.heading2),
-            const Icon(
-              Icons.info_outline,
-              color: AppColors.textSecondary,
-              size: 20,
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ExpenseAnalysisScreen(),
+                  ),
+                );
+              },
+              child: Text(
+                'Lihat',
+                style: AppStyles.bodyText.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

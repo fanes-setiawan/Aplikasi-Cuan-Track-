@@ -10,6 +10,7 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../../../../core/utils/app_helpers.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -66,18 +67,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
+            AppHelpers.showSnackBar(context, 'Registrasi berhasil!');
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const MainScreen()),
               (route) => false,
             );
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppHelpers.showSnackBar(context, state.message, isError: true);
           }
         },
         builder: (context, state) {
@@ -148,21 +145,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (email.isEmpty ||
                                 password.isEmpty ||
                                 confirmPassword.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Semua field harus diisi'),
-                                  backgroundColor: AppColors.error,
-                                ),
+                              AppHelpers.showSnackBar(
+                                context,
+                                'Semua field harus diisi',
+                                isError: true,
                               );
                               return;
                             }
 
                             if (password != confirmPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Password tidak cocok'),
-                                  backgroundColor: AppColors.error,
-                                ),
+                              AppHelpers.showSnackBar(
+                                context,
+                                'Password tidak cocok',
+                                isError: true,
                               );
                               return;
                             }

@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/utils/local_auth_helper.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class BiometricActivationScreen extends StatelessWidget {
   const BiometricActivationScreen({super.key});
@@ -12,10 +13,10 @@ class BiometricActivationScreen extends StatelessWidget {
     final bool available = await LocalAuthHelper.isBiometricAvailable();
     if (!available) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Biometrik tidak tersedia di perangkat ini'),
-          ),
+        AppHelpers.showSnackBar(
+          context,
+          'Biometrik tidak tersedia di perangkat ini',
+          isError: true,
         );
       }
       return;
@@ -34,8 +35,10 @@ class BiometricActivationScreen extends StatelessWidget {
       }
     } else {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Autentikasi gagal, silakan coba lagi')),
+        AppHelpers.showSnackBar(
+          context,
+          'Autentikasi gagal, silakan coba lagi',
+          isError: true,
         );
       }
     }

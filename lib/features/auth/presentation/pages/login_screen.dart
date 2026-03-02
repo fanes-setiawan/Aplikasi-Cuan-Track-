@@ -11,6 +11,7 @@ import '../../../../core/widgets/custom_text_field.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../../../../core/utils/app_helpers.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -63,18 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {
+            AppHelpers.showSnackBar(context, 'Login berhasil!');
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const MainScreen()),
               (route) => false,
             );
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
+            AppHelpers.showSnackBar(context, state.message, isError: true);
           }
         },
         builder: (context, state) {
@@ -147,13 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 LoginEvent(email, password),
                               );
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Email dan password tidak boleh kosong',
-                                  ),
-                                  backgroundColor: AppColors.error,
-                                ),
+                              AppHelpers.showSnackBar(
+                                context,
+                                'Email dan password tidak boleh kosong',
+                                isError: true,
                               );
                             }
                           },

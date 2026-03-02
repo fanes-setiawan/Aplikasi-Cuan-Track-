@@ -4,6 +4,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class AccountInfoScreen extends StatefulWidget {
   const AccountInfoScreen({super.key});
@@ -97,7 +98,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                           child: Icon(
                             Icons.smartphone,
                             size: 60,
-                            color: Colors.white.withValues(alpha: 0.9),
+                            color: Colors.white.withOpacity(0.9),
                           ),
                         ),
                       ),
@@ -161,8 +162,9 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 text: 'Simpan Perubahan',
                 onPressed: () {
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Profil berhasil diperbarui')),
+                  AppHelpers.showSnackBar(
+                    context,
+                    'Profil berhasil diperbarui',
                   );
                 },
               ),

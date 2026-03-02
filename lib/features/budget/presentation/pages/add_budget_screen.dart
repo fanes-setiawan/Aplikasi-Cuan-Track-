@@ -13,6 +13,7 @@ import 'package:cuan_track/features/category/domain/entities/category_entity.dar
 import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_state.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class AddBudgetScreen extends StatefulWidget {
   const AddBudgetScreen({super.key});
@@ -78,14 +79,14 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
       body: BlocConsumer<AddBudgetBloc, AddBudgetState>(
         listener: (context, state) {
           if (state is AddBudgetSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Anggaran berhasil disimpan!')),
-            );
+            AppHelpers.showSnackBar(context, 'Anggaran berhasil disimpan!');
             Navigator.pop(context);
           } else if (state is AddBudgetError) {
-            ScaffoldMessenger.of(
+            AppHelpers.showSnackBar(
               context,
-            ).showSnackBar(SnackBar(content: Text('Gagal: ${state.message}')));
+              'Gagal: ${state.message}',
+              isError: true,
+            );
           }
         },
         builder: (context, state) {

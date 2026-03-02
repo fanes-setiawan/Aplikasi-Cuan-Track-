@@ -14,6 +14,7 @@ import '../../../auth/presentation/pages/login_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
@@ -128,11 +129,10 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       setState(() => _isAppLocked = false);
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('PIN salah, silakan coba lagi'),
-            backgroundColor: Colors.red,
-          ),
+        AppHelpers.showSnackBar(
+          context,
+          'PIN salah, silakan coba lagi',
+          isError: true,
         );
       }
     }

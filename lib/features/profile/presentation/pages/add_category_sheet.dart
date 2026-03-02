@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/widgets/custom_button.dart';
+import '../../../../core/utils/app_helpers.dart';
 import 'package:cuan_track/features/category/domain/entities/category_entity.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
@@ -226,17 +227,19 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                     onPressed: () {
                       final user = FirebaseAuth.instance.currentUser;
                       if (user == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Anda belum login')),
+                        AppHelpers.showSnackBar(
+                          context,
+                          'Anda belum login',
+                          isError: true,
                         );
                         return;
                       }
 
                       if (_nameController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Nama kategori harus diisi'),
-                          ),
+                        AppHelpers.showSnackBar(
+                          context,
+                          'Nama kategori harus diisi',
+                          isError: true,
                         );
                         return;
                       }
@@ -280,15 +283,11 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         AddCategory(newCategory),
                       );
 
-                      Navigator.pop(context); // Close sheet
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${_nameController.text} berhasil ditambahkan',
-                          ),
-                          backgroundColor: AppColors.primary,
-                        ),
+                      AppHelpers.showSnackBar(
+                        context,
+                        'Kategori berhasil ditambahkan',
                       );
+                      Navigator.pop(context); // Close sheet
                     },
                   ),
                   const SizedBox(height: 32),
