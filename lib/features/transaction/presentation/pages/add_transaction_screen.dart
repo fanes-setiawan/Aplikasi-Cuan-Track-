@@ -478,7 +478,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (context) => const AddCategorySheet(),
+          builder: (context) => AddCategorySheet(
+            initialType: widget.isIncome ? 'income' : 'expense',
+          ),
         );
       },
       child: Container(

@@ -14,6 +14,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/home/domain/repositories/transaction_repository.dart';
 import 'features/home/data/repositories/firestore_transaction_repository_impl.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
+import 'features/home/presentation/bloc/analysis/analysis_bloc.dart';
 import 'features/transaction/presentation/bloc/add_transaction_bloc.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
 
@@ -67,6 +68,8 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => HomeBloc(repository: sl()));
+
+  sl.registerFactory(() => AnalysisBloc(transactionRepository: sl()));
 
   sl.registerFactory(() => AddTransactionBloc(repository: sl()));
 

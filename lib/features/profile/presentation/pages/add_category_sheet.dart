@@ -10,7 +10,8 @@ import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dar
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
 
 class AddCategorySheet extends StatefulWidget {
-  const AddCategorySheet({super.key});
+  final String initialType;
+  const AddCategorySheet({super.key, this.initialType = 'expense'});
 
   @override
   State<AddCategorySheet> createState() => _AddCategorySheetState();
@@ -20,6 +21,13 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
   final TextEditingController _nameController = TextEditingController();
   IconData _selectedIcon = Icons.shopping_bag;
   Color _selectedColor = const Color(0xFF27AE60);
+  late String _selectedType;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedType = widget.initialType;
+  }
 
   final List<IconData> _icons = [
     Icons.shopping_bag,
@@ -94,6 +102,78 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Jenis Kategori',
+                    style: AppStyles.caption.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () =>
+                              setState(() => _selectedType = 'expense'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedType == 'expense'
+                                  ? const Color(0xFF27AE60)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: _selectedType == 'expense'
+                                    ? Colors.transparent
+                                    : AppColors.divider,
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Pengeluaran',
+                              style: AppStyles.bodyText.copyWith(
+                                color: _selectedType == 'expense'
+                                    ? Colors.white
+                                    : AppColors.textSecondary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(() => _selectedType = 'income'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedType == 'income'
+                                  ? const Color(0xFF27AE60)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: _selectedType == 'income'
+                                    ? Colors.transparent
+                                    : AppColors.divider,
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Pemasukan',
+                              style: AppStyles.bodyText.copyWith(
+                                color: _selectedType == 'income'
+                                    ? Colors.white
+                                    : AppColors.textSecondary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
                   Text(
                     'Nama Kategori',
                     style: AppStyles.caption.copyWith(
@@ -273,8 +353,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         id: '',
                         userId: user.uid,
                         name: _nameController.text.trim(),
-                        type:
-                            'expense', // default user categories to expense for now, unless toggled
+                        type: _selectedType,
                         iconName: iconName,
                         colorHex: colorHex,
                       );
