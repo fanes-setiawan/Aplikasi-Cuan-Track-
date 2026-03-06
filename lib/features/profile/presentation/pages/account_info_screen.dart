@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -14,18 +15,27 @@ class AccountInfoScreen extends StatefulWidget {
 }
 
 class _AccountInfoScreenState extends State<AccountInfoScreen> {
-  final TextEditingController _nameController = TextEditingController(
-    text: 'User Name',
-  );
-  final TextEditingController _usernameController = TextEditingController(
-    text: 'username_id',
-  );
-  final TextEditingController _emailController = TextEditingController(
-    text: 'user.email@example.com',
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: '+62 812 3456 7890',
-  );
+  late final TextEditingController _nameController;
+  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
+  late final TextEditingController _phoneController;
+  final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    final email = user?.email ?? '';
+    final name =
+        user?.displayName ??
+        (email.contains('@') ? email.split('@')[0] : 'User Name');
+
+    _nameController = TextEditingController(text: name);
+    _usernameController = TextEditingController(
+      text: email.contains('@') ? email.split('@')[0] : 'username',
+    );
+    _emailController = TextEditingController(text: email);
+    _phoneController = TextEditingController(text: user?.phoneNumber ?? '');
+  }
 
   @override
   void dispose() {
@@ -95,11 +105,16 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                         ),
                         child: CircleAvatar(
                           backgroundColor: const Color(0xFFE5C8B0),
-                          child: Icon(
-                            Icons.smartphone,
-                            size: 60,
-                            color: Colors.white.withOpacity(0.9),
-                          ),
+                          backgroundImage: user?.photoURL != null
+                              ? NetworkImage(user!.photoURL!)
+                              : null,
+                          child: user?.photoURL == null
+                              ? Icon(
+                                  Icons.person,
+                                  size: 60,
+                                  color: Colors.white.withOpacity(0.9),
+                                )
+                              : null,
                         ),
                       ),
                       Positioned(

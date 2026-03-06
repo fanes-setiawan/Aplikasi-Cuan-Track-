@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/savings_goal_entity.dart';
+import '../../domain/entities/savings_history_entity.dart';
 
 abstract class SavingsEvent extends Equatable {
   const SavingsEvent();
@@ -24,6 +25,15 @@ class SavingsGoalsUpdated extends SavingsEvent {
 
   @override
   List<Object> get props => [goals];
+}
+
+class SavingsHistoryUpdated extends SavingsEvent {
+  final List<SavingsHistoryEntity> history;
+
+  const SavingsHistoryUpdated(this.history);
+
+  @override
+  List<Object> get props => [history];
 }
 
 class AddSavingsGoal extends SavingsEvent {
@@ -59,4 +69,13 @@ class AddFundsToGoal extends SavingsEvent {
 
   @override
   List<Object> get props => [userId, goalId, amount];
+}
+
+class SavingsErrorEvent extends SavingsEvent {
+  final String message;
+
+  const SavingsErrorEvent(this.message);
+
+  @override
+  List<Object> get props => [message];
 }

@@ -1,3 +1,4 @@
+import 'package:cuan_track/features/main/presentation/pages/main_screen.dart';
 import 'package:cuan_track/core/theme/app_styles.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_event.dart';
@@ -10,36 +11,68 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../onboarding/presentation/pages/onboarding_screen.dart';
 import '../../../auth/presentation/pages/login_screen.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  Future<void> _handleNavigation(BuildContext context) async {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  bool _isSplashDone = false;
+
+  Future<void> _handleNavigation(
+    BuildContext context,
+    AuthState authState,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
     final bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
 
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => hasSeenOnboarding
-              ? const LoginScreen()
-              : const OnboardingScreen(),
-        ),
-      );
+    if (!context.mounted) return;
+
+    Widget nextScreen;
+    if (authState is Authenticated) {
+      nextScreen = const MainScreen();
+    } else if (authState is Unauthenticated || authState is AuthError) {
+      nextScreen = hasSeenOnboarding
+          ? const LoginScreen()
+          : const OnboardingScreen();
+    } else {
+      // Still loading auth status, wait for it
+      return;
     }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => nextScreen),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SplashBloc()..add(SplashStarted()),
-      child: BlocListener<SplashBloc, SplashState>(
-        listener: (context, state) {
-          if (state is SplashLoaded) {
-            _handleNavigation(context);
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<SplashBloc, SplashState>(
+            listener: (context, state) {
+              if (state is SplashLoaded) {
+                setState(() => _isSplashDone = true);
+                _handleNavigation(context, context.read<AuthBloc>().state);
+              }
+            },
+          ),
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (_isSplashDone) {
+                _handleNavigation(context, state);
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           body: Container(
             width: double.infinity,

@@ -188,15 +188,10 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
 
                         // Categories Legend
                         if (state.topCategories.isNotEmpty)
-                          Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
-                            alignment: WrapAlignment.center,
-                            children: state.topCategories.asMap().entries.map((
-                              entry,
-                            ) {
-                              final idx = entry.key;
-                              final cat = entry.value;
+                          Builder(
+                            builder: (context) {
+                              final categories = state.topCategories;
+                              List<Widget> pills = [];
                               final colors = [
                                 const Color(0xFF27AE60),
                                 const Color(0xFF2ECC71),
@@ -204,13 +199,50 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                 const Color(0xFFE67E22),
                                 const Color(0xFFE74C3C),
                               ];
-                              final color = colors[idx % colors.length];
-                              return _buildLegendPill(
-                                '${cat.categoryName}: ${cat.percentage.toStringAsFixed(0)}%',
-                                color,
-                                idx == 0,
+
+                              if (categories.length > 5) {
+                                // Show first 4
+                                for (int i = 0; i < 4; i++) {
+                                  final cat = categories[i];
+                                  pills.add(
+                                    _buildLegendPill(
+                                      '${cat.categoryName}: ${cat.percentage.toStringAsFixed(0)}%',
+                                      colors[i % colors.length],
+                                      i == 0,
+                                    ),
+                                  );
+                                }
+                                // Group others
+                                double othersPercent = 0;
+                                for (int i = 4; i < categories.length; i++) {
+                                  othersPercent += categories[i].percentage;
+                                }
+                                pills.add(
+                                  _buildLegendPill(
+                                    'Lainnya: ${othersPercent.toStringAsFixed(0)}%',
+                                    const Color(0xFF95A5A6),
+                                    false,
+                                  ),
+                                );
+                              } else {
+                                pills = categories.asMap().entries.map((entry) {
+                                  final idx = entry.key;
+                                  final cat = entry.value;
+                                  return _buildLegendPill(
+                                    '${cat.categoryName}: ${cat.percentage.toStringAsFixed(0)}%',
+                                    colors[idx % colors.length],
+                                    idx == 0,
+                                  );
+                                }).toList();
+                              }
+
+                              return Wrap(
+                                spacing: 12,
+                                runSpacing: 12,
+                                alignment: WrapAlignment.center,
+                                children: pills,
                               );
-                            }).toList(),
+                            },
                           ),
                         const SizedBox(height: 48),
 

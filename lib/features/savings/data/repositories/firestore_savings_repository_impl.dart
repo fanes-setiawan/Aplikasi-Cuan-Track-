@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/savings_goal_entity.dart';
+import '../../domain/entities/savings_history_entity.dart';
 
 abstract class SavingsRepository {
   Stream<List<SavingsGoalEntity>> watchSavingsGoals(String userId);
+  Stream<List<SavingsHistoryEntity>> watchSavingsHistory(String userId);
   Future<void> addSavingsGoal(String userId, SavingsGoalEntity goal);
   Future<void> updateSavingsGoal(String userId, SavingsGoalEntity goal);
   Future<void> deleteSavingsGoal(String userId, String goalId);
@@ -24,6 +26,21 @@ class FirestoreSavingsRepositoryImpl implements SavingsRepository {
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             return SavingsGoalEntity.fromMap(doc.data(), doc.id);
+          }).toList();
+        });
+  }
+
+  @override
+  Stream<List<SavingsHistoryEntity>> watchSavingsHistory(String userId) {
+    return firestore
+        .collection('users')
+        .doc(userId)
+        .collection('savings_history')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            return SavingsHistoryEntity.fromMap(doc.data(), doc.id);
           }).toList();
         });
   }
@@ -78,10 +95,24 @@ class FirestoreSavingsRepositoryImpl implements SavingsRepository {
       final newAmount = currentAmount + amount;
 
       final isAchieved = newAmount >= targetAmount;
+      final goalTitle = snapshot.data()?['title'] ?? 'Tabungan';
 
       transaction.update(docRef, {
         'currentAmount': newAmount,
         'isAchieved': isAchieved,
+      });
+
+      final historyRef = firestore
+          .collection('users')
+          .doc(userId)
+          .collection('savings_history')
+          .doc();
+
+      transaction.set(historyRef, {
+        'goalId': goalId,
+        'goalTitle': goalTitle,
+        'amount': amount,
+        'date': FieldValue.serverTimestamp(),
       });
     });
   }

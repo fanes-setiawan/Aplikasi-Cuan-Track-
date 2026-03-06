@@ -768,9 +768,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final totalExpense = expenseData.values.fold(0.0, (sum, val) => sum + val);
 
-    // Sort and limit to top 3 + Others
+    // Sort and group: Top 4 + others as "Lainnya"
     final sortedEntries = expenseData.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
+
+    List<MapEntry<String, double>> displayEntries = [];
+    if (sortedEntries.length > 5) {
+      displayEntries = sortedEntries.sublist(0, 4);
+      double othersSum = 0;
+      for (int i = 4; i < sortedEntries.length; i++) {
+        othersSum += sortedEntries[i].value;
+      }
+      displayEntries.add(MapEntry('Lainnya', othersSum));
+    } else {
+      displayEntries = sortedEntries;
+    }
 
     final List<Color> chartColors = [
       const Color(0xFF1B5E20),
@@ -785,7 +797,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Widget> legendItems = [];
 
     int colorIndex = 0;
-    for (var entry in sortedEntries) {
+    for (var entry in displayEntries) {
       final percentage = entry.value / totalExpense;
       final percentStr = '${(percentage * 100).toStringAsFixed(0)}%';
       final color = chartColors[colorIndex % chartColors.length];
@@ -802,9 +814,15 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Analisis Pengeluaran', style: AppStyles.heading2),
-            GestureDetector(
-              onTap: () {
+            Text(
+              'Analisis Pengeluaran',
+              style: AppStyles.heading2.copyWith(
+                fontSize: 18,
+                color: const Color(0xFF1B5E20),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -812,10 +830,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              child: const Icon(
-                Icons.info_outline,
-                color: AppColors.textHint,
-                size: 24,
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.primary,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'Lihat',
+                style: AppStyles.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],

@@ -9,6 +9,7 @@ import 'security_settings_screen.dart';
 import 'notification_settings_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../../../features/auth/presentation/bloc/auth_event.dart';
 
@@ -17,6 +18,13 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email ?? 'Belum login';
+    final name =
+        user?.displayName ??
+        (email.contains('@') ? email.split('@')[0] : 'User Name');
+    final photoUrl = user?.photoURL;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -54,11 +62,16 @@ class ProfileScreen extends StatelessWidget {
                             child: CircleAvatar(
                               radius: 55,
                               backgroundColor: const Color(0xFFF3E5D8),
-                              child: Icon(
-                                Icons.person,
-                                size: 50,
-                                color: Colors.white.withOpacity(0.8),
-                              ),
+                              backgroundImage: photoUrl != null
+                                  ? NetworkImage(photoUrl)
+                                  : null,
+                              child: photoUrl == null
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 50,
+                                      color: Colors.white.withOpacity(0.8),
+                                    )
+                                  : null,
                             ),
                           ),
                           Positioned(
@@ -81,14 +94,11 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'User Name',
+                        name,
                         style: AppStyles.heading1.copyWith(fontSize: 24),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        'user.email@example.com',
-                        style: AppStyles.bodyTextSecondary,
-                      ),
+                      Text(email, style: AppStyles.bodyTextSecondary),
                     ],
                   ),
                 ),

@@ -1,23 +1,39 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/repositories/firestore_savings_repository_impl.dart';
+import '../../domain/entities/savings_goal_entity.dart';
+import '../../domain/entities/savings_history_entity.dart';
 import 'savings_event.dart';
 import 'savings_state.dart';
 
 class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
   final FirestoreSavingsRepositoryImpl repository;
   StreamSubscription? _savingsSubscription;
+  StreamSubscription? _historySubscription;
+
+  List<SavingsGoalEntity> _currentGoals = [];
+  List<SavingsHistoryEntity> _currentHistory = [];
 
   SavingsBloc({required this.repository}) : super(SavingsInitial()) {
     on<LoadSavingsGoals>(_onLoadSavingsGoals);
     on<SavingsGoalsUpdated>(_onSavingsGoalsUpdated);
+    on<SavingsHistoryUpdated>(_onSavingsHistoryUpdated);
     on<AddSavingsGoal>(_onAddSavingsGoal);
     on<DeleteSavingsGoal>(_onDeleteSavingsGoal);
     on<AddFundsToGoal>(_onAddFundsToGoal);
+    on<SavingsErrorEvent>(_onSavingsErrorEvent);
+  }
+
+  void _onSavingsErrorEvent(
+    SavingsErrorEvent event,
+    Emitter<SavingsState> emit,
+  ) {
+    emit(SavingsError(event.message));
   }
 
   void _onLoadSavingsGoals(LoadSavingsGoals event, Emitter<SavingsState> emit) {
     emit(SavingsLoading());
+
     _savingsSubscription?.cancel();
     _savingsSubscription = repository
         .watchSavingsGoals(event.userId)
@@ -26,7 +42,19 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
             add(SavingsGoalsUpdated(goals));
           },
           onError: (error) {
-            emit(SavingsError(error.toString()));
+            add(const SavingsErrorEvent('Gagal memuat target tabungan'));
+          },
+        );
+
+    _historySubscription?.cancel();
+    _historySubscription = repository
+        .watchSavingsHistory(event.userId)
+        .listen(
+          (history) {
+            add(SavingsHistoryUpdated(history));
+          },
+          onError: (error) {
+            add(const SavingsErrorEvent('Gagal memuat riwayat tabungan'));
           },
         );
   }
@@ -35,7 +63,16 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
     SavingsGoalsUpdated event,
     Emitter<SavingsState> emit,
   ) {
-    emit(SavingsLoaded(event.goals));
+    _currentGoals = event.goals;
+    emit(SavingsLoaded(_currentGoals, _currentHistory));
+  }
+
+  void _onSavingsHistoryUpdated(
+    SavingsHistoryUpdated event,
+    Emitter<SavingsState> emit,
+  ) {
+    _currentHistory = event.history;
+    emit(SavingsLoaded(_currentGoals, _currentHistory));
   }
 
   Future<void> _onAddSavingsGoal(
@@ -96,6 +133,7 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
   @override
   Future<void> close() {
     _savingsSubscription?.cancel();
+    _historySubscription?.cancel();
     return super.close();
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_dimens.dart';
+import 'package:flutter/services.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/local_auth_helper.dart';
@@ -52,9 +53,12 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print('DEBUG: AppLifecycleState changed to: $state');
     if (state == AppLifecycleState.paused) {
       _backgroundTime = DateTime.now();
+      print('DEBUG: App paused at: $_backgroundTime');
     } else if (state == AppLifecycleState.resumed) {
+      print('DEBUG: App resumed. Calling _handleAppResume...');
       _handleAppResume();
     }
   }
@@ -67,18 +71,22 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     if (!pinEnabled && !_biometricEnabled) return;
 
     final String durationStr = prefs.getString('autoLockDuration') ?? 'Segera';
-    if (durationStr == 'Tidak Pernah') return;
+    if (durationStr == 'Tidak Ada') return;
 
     if (_backgroundTime != null) {
       final elapsed = DateTime.now().difference(_backgroundTime!);
       final lockDuration = _parseDuration(durationStr);
+      print('DEBUG: Elapsed time since background: ${elapsed.inSeconds}s');
+      print('DEBUG: Lock duration required: ${lockDuration.inSeconds}s');
 
       if (elapsed >= lockDuration) {
+        print('DEBUG: Locking app...');
         setState(() => _isAppLocked = true);
-        if (_biometricEnabled) {
-          _authenticateBiometric();
-        }
+      } else {
+        print('DEBUG: Not enough time elapsed to lock.');
       }
+    } else {
+      print('DEBUG: _backgroundTime is null, skipping lock check.');
     }
   }
 
@@ -86,14 +94,14 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     switch (durationStr) {
       case 'Segera':
         return Duration.zero;
+      case '15 Detik':
+        return const Duration(seconds: 15);
       case '1 Menit':
         return const Duration(minutes: 1);
       case '5 Menit':
         return const Duration(minutes: 5);
-      case '15 Menit':
-        return const Duration(minutes: 15);
-      case '30 Menit':
-        return const Duration(minutes: 30);
+      case 'Tidak Ada':
+        return const Duration(days: 365); // Large duration for "No Lock"
       default:
         return Duration.zero;
     }
@@ -106,9 +114,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
     if (pinEnabled || _biometricEnabled) {
       setState(() => _isAppLocked = true);
-      if (_biometricEnabled) {
-        _authenticateBiometric();
-      }
     }
   }
 
@@ -124,8 +129,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   Future<void> _handlePinCompleted(String pin) async {
     final prefs = await SharedPreferences.getInstance();
-    final String savedPin =
-        prefs.getString('userPin') ?? '1234'; // Default PIN for now
+    final String savedPin = prefs.getString('userPin') ?? '1234';
 
     if (pin == savedPin) {
       setState(() => _isAppLocked = false);
@@ -154,6 +158,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     });
   }
 
+  DateTime? _lastPressedAt;
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
@@ -166,112 +172,143 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           );
         }
       },
-      child: Scaffold(
-        body: Stack(
-          children: [
-            IndexedStack(index: _currentIndex, children: _pages),
-            if (_isAppLocked)
-              Positioned.fill(
-                child: PinLockScreen(
-                  showBiometric: _biometricEnabled,
-                  onPinCompleted: _handlePinCompleted,
-                  onBiometricPressed: _authenticateBiometric,
-                  onForgotPin: () {
-                    // Handle forgot PIN
-                  },
-                ),
-              ),
-          ],
-        ),
-        bottomNavigationBar: _isAppLocked
-            ? null
-            : Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(AppDimens.radiusXL),
-                    topRight: Radius.circular(AppDimens.radiusXL),
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) async {
+          if (didPop) return;
+
+          // If app is locked, don't allow back button navigation
+          if (_isAppLocked) return;
+
+          // If not on the first tab (Dashboard), go back to it
+          if (_currentIndex != 0) {
+            setState(() {
+              _currentIndex = 0;
+            });
+            return;
+          }
+
+          // If on the first tab, handle double tap to exit
+          final now = DateTime.now();
+          final backButtonHasNotBeenPressedOrSnackBarHasExpired =
+              _lastPressedAt == null ||
+              now.difference(_lastPressedAt!) > const Duration(seconds: 2);
+
+          if (backButtonHasNotBeenPressedOrSnackBarHasExpired) {
+            _lastPressedAt = now;
+            AppHelpers.showSnackBar(context, 'Klik sekali lagi untuk keluar');
+          } else {
+            // Exit the app
+            SystemNavigator.pop();
+          }
+        },
+        child: Scaffold(
+          body: Stack(
+            children: [
+              IndexedStack(index: _currentIndex, children: _pages),
+              if (_isAppLocked)
+                Positioned.fill(
+                  child: PinLockScreen(
+                    showBiometric: _biometricEnabled,
+                    onPinCompleted: _handlePinCompleted,
+                    onBiometricPressed: _authenticateBiometric,
+                    onForgotPin: () {
+                      // Handle forgot PIN
+                    },
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      blurRadius: 20,
-                      offset: const Offset(0, -10),
-                    ),
-                  ],
                 ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(AppDimens.radiusXL),
-                    topRight: Radius.circular(AppDimens.radiusXL),
-                  ),
-                  child: BottomNavigationBar(
-                    currentIndex: _currentIndex,
-                    onTap: _updateIndex,
-                    type: BottomNavigationBarType.fixed,
-                    backgroundColor: Colors.white,
-                    selectedItemColor: AppColors.primary,
-                    unselectedItemColor: AppColors.textSecondary.withOpacity(
-                      0.5,
+            ],
+          ),
+          bottomNavigationBar: _isAppLocked
+              ? null
+              : Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppDimens.radiusXL),
+                      topRight: Radius.circular(AppDimens.radiusXL),
                     ),
-                    selectedFontSize: 12,
-                    unselectedFontSize: 10,
-                    selectedLabelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    elevation: 0,
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: _buildIcon(AppAssets.iconHome, false),
-                        activeIcon: _buildIcon(AppAssets.iconHome, true),
-                        label: 'Beranda',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: _buildIcon(AppAssets.iconHistory, false),
-                        activeIcon: _buildIcon(AppAssets.iconHistory, true),
-                        label: 'Riwayat',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.pie_chart_outline,
-                            size: 24,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        activeIcon: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.pie_chart,
-                            size: 24,
-                            color: Colors.white,
-                          ),
-                        ),
-                        label: 'Stats',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: _buildIcon(AppAssets.iconBudget, false),
-                        activeIcon: _buildIcon(AppAssets.iconBudget, true),
-                        label: 'Anggaran',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: _buildIcon(AppAssets.iconProfile, false),
-                        activeIcon: _buildIcon(AppAssets.iconProfile, true),
-                        label: 'Profil',
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, -10),
                       ),
                     ],
                   ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppDimens.radiusXL),
+                      topRight: Radius.circular(AppDimens.radiusXL),
+                    ),
+                    child: BottomNavigationBar(
+                      currentIndex: _currentIndex,
+                      onTap: _updateIndex,
+                      type: BottomNavigationBarType.fixed,
+                      backgroundColor: Colors.white,
+                      selectedItemColor: AppColors.primary,
+                      unselectedItemColor: AppColors.textSecondary.withOpacity(
+                        0.5,
+                      ),
+                      selectedFontSize: 12,
+                      unselectedFontSize: 10,
+                      selectedLabelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      elevation: 0,
+                      items: [
+                        BottomNavigationBarItem(
+                          icon: _buildIcon(AppAssets.iconHome, false),
+                          activeIcon: _buildIcon(AppAssets.iconHome, true),
+                          label: 'Beranda',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: _buildIcon(AppAssets.iconHistory, false),
+                          activeIcon: _buildIcon(AppAssets.iconHistory, true),
+                          label: 'Riwayat',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.pie_chart_outline,
+                              size: 24,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          activeIcon: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.pie_chart,
+                              size: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          label: 'Stats',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: _buildIcon(AppAssets.iconBudget, false),
+                          activeIcon: _buildIcon(AppAssets.iconBudget, true),
+                          label: 'Anggaran',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: _buildIcon(AppAssets.iconProfile, false),
+                          activeIcon: _buildIcon(AppAssets.iconProfile, true),
+                          label: 'Profil',
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }

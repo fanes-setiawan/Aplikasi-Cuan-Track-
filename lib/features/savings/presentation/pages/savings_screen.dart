@@ -12,8 +12,10 @@ import '../../../../core/widgets/empty_state.dart';
 import '../bloc/savings_bloc.dart';
 import '../bloc/savings_event.dart';
 import '../bloc/savings_state.dart';
+import 'package:intl/intl.dart';
 import 'add_savings_goal_screen.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../domain/entities/savings_history_entity.dart';
 
 class SavingsScreen extends StatefulWidget {
   const SavingsScreen({super.key});
@@ -257,7 +259,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                           ],
                         ),
                         const SizedBox(height: AppDimens.md),
-                        _buildHistoryPlaceholder(),
+                        _buildHistoryPlaceholder(state.history),
                       ],
                     ),
                   );
@@ -508,25 +510,28 @@ class _SavingsScreenState extends State<SavingsScreen> {
     );
   }
 
-  Widget _buildHistoryPlaceholder() {
+  Widget _buildHistoryPlaceholder(List<SavingsHistoryEntity> history) {
+    if (history.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppDimens.lg),
+          child: Text(
+            'Belum ada riwayat menabung',
+            style: AppStyles.caption.copyWith(color: AppColors.textHint),
+          ),
+        ),
+      );
+    }
+
     return Column(
-      children: [
-        _buildHistoryItem(
-          'Setoran - Beli Laptop',
-          'Hari ini, 09:15',
-          '+Rp 500.000',
-        ),
-        _buildHistoryItem(
-          'Setoran - Liburan Bali',
-          '22 Okt 2023',
-          '+Rp 250.000',
-        ),
-        _buildHistoryItem('Auto-debet Bulanan', '20 Okt 2023', '+Rp 1.000.000'),
-      ],
+      children: history.map((item) => _buildHistoryItem(item)).toList(),
     );
   }
 
-  Widget _buildHistoryItem(String title, String subtitle, String amount) {
+  Widget _buildHistoryItem(SavingsHistoryEntity item) {
+    final dateStr = DateFormat('dd MMM yyyy, HH:mm').format(item.date);
+    final amountStr = '+${AppHelpers.formatCurrencyIdr(item.amount)}';
+
     return Container(
       margin: const EdgeInsets.only(bottom: AppDimens.sm),
       padding: const EdgeInsets.all(AppDimens.md),
@@ -554,20 +559,20 @@ class _SavingsScreenState extends State<SavingsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  'Setoran - ${item.goalTitle}',
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  subtitle,
+                  dateStr,
                   style: AppStyles.caption.copyWith(color: AppColors.textHint),
                 ),
               ],
             ),
           ),
           Text(
-            amount,
+            amountStr,
             style: AppStyles.bodyText.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,

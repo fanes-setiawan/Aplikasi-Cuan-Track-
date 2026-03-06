@@ -4,6 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import 'biometric_activation_screen.dart';
+import 'package:cuan_track/features/auth/presentation/pages/change_pin_screen.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class SecuritySettingsScreen extends StatefulWidget {
   const SecuritySettingsScreen({super.key});
@@ -13,9 +15,9 @@ class SecuritySettingsScreen extends StatefulWidget {
 }
 
 class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
-  bool _pinEnabled = true;
+  bool _pinEnabled = false;
   bool _biometricEnabled = false;
-  String _autoLockDuration = '1 Menit';
+  String _autoLockDuration = 'Segera';
 
   @override
   void initState() {
@@ -26,9 +28,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _pinEnabled = prefs.getBool('pinEnabled') ?? true;
+      _pinEnabled = prefs.getBool('pinEnabled') ?? false;
       _biometricEnabled = prefs.getBool('biometricEnabled') ?? false;
-      _autoLockDuration = prefs.getString('autoLockDuration') ?? '1 Menit';
+      _autoLockDuration = prefs.getString('autoLockDuration') ?? 'Segera';
     });
   }
 
@@ -68,7 +70,26 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               title: 'Kunci PIN',
               subtitle: 'Minta PIN saat aplikasi dibuka',
               value: _pinEnabled,
-              onChanged: (val) {
+              onChanged: (val) async {
+                if (val) {
+                  // If enabling, check if PIN exists
+                  final prefs = await SharedPreferences.getInstance();
+                  final hasPin = prefs.getString('userPin') != null;
+                  if (!hasPin) {
+                    if (mounted) {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChangePinScreen(),
+                        ),
+                      );
+                      if (result == true) {
+                        setState(() => _pinEnabled = true);
+                      }
+                    }
+                    return;
+                  }
+                }
                 setState(() => _pinEnabled = val);
                 _saveSetting('pinEnabled', val);
               },
@@ -80,7 +101,14 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               icon: Icons.pin_outlined,
               title: 'Ubah PIN',
               subtitle: 'Ganti kode akses keamanan Anda',
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ChangePinScreen(),
+                  ),
+                );
+              },
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
@@ -100,6 +128,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                   );
                   if (result == true) {
                     setState(() => _biometricEnabled = true);
+                    AppHelpers.showSnackBar(
+                      context,
+                      'Autentikasi biometrik diaktifkan',
+                    );
                   }
                 } else {
                   setState(() => _biometricEnabled = false);
@@ -261,13 +293,11 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   }) {
     final List<String> durations = [
       'Segera',
+      '15 Detik',
       '1 Menit',
       '5 Menit',
-      '15 Menit',
-      '30 Menit',
-      'Tidak Pernah',
+      'Tidak Ada',
     ];
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
