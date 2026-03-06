@@ -12,10 +12,19 @@ import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
 import 'expense_analysis_screen.dart';
 import '../../../main/presentation/pages/main_screen.dart';
+import '../../../savings/presentation/pages/savings_screen.dart';
+import '../../../savings/presentation/bloc/savings_bloc.dart';
+import '../../../savings/presentation/bloc/savings_state.dart';
+import '../../../debt/presentation/pages/debt_screen.dart';
+import '../../../debt/presentation/bloc/debt_bloc.dart';
+import '../../../debt/presentation/bloc/debt_state.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 import '../bloc/home_state.dart';
+
+import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../core/widgets/empty_state.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -80,6 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
               expenseData = state.expenseChartData;
             }
 
+            if (isLoading) {
+              return _buildHomeShimmer();
+            }
+
             return AnimationLimiter(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(AppDimens.md),
@@ -94,22 +107,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       _buildHeader(context),
                       const SizedBox(height: AppDimens.lg),
-                      isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : _buildBalanceCard(
-                              totalBalance,
-                              monthlyIncome,
-                              monthlyExpenses,
-                            ),
+                      _buildBalanceCard(
+                        totalBalance,
+                        monthlyIncome,
+                        monthlyExpenses,
+                      ),
                       const SizedBox(height: AppDimens.lg),
                       _buildActionButtons(context),
                       const SizedBox(height: AppDimens.xl),
                       _buildExpenseAnalysis(expenseData),
+                      const SizedBox(height: AppDimens.lg),
+                      _buildSummaryCards(context),
                       const SizedBox(height: AppDimens.xl),
-                      if (isLoading)
-                        const Center(child: CircularProgressIndicator())
-                      else if (recentTrx.isEmpty)
-                        const Center(child: Text('Belum ada transaksi.'))
+                      if (recentTrx.isEmpty)
+                        const EmptyState(
+                          title: 'Belum ada transaksi',
+                          subtitle: 'Mulai catat transaksi pertamamu sekarang!',
+                        )
                       else
                         _buildRecentTransactions(context, recentTrx),
                     ],
@@ -123,13 +137,101 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildHomeShimmer() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppDimens.md),
+      child: AppShimmer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AppShimmer.circular(radius: 24),
+                const SizedBox(width: AppDimens.md),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppShimmer.rectangular(width: 80, height: 12),
+                    const SizedBox(height: 4),
+                    AppShimmer.rectangular(width: 120, height: 18),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimens.lg),
+            AppShimmer.rectangular(
+              height: 180,
+              borderRadius: AppDimens.radiusL,
+            ),
+            const SizedBox(height: AppDimens.lg),
+            Row(
+              children: [
+                Expanded(
+                  child: AppShimmer.rectangular(
+                    height: 55,
+                    borderRadius: AppDimens.radiusM,
+                  ),
+                ),
+                const SizedBox(width: AppDimens.md),
+                Expanded(
+                  child: AppShimmer.rectangular(
+                    height: 55,
+                    borderRadius: AppDimens.radiusM,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimens.xl),
+            AppShimmer.rectangular(width: 150, height: 24),
+            const SizedBox(height: AppDimens.md),
+            AppShimmer.rectangular(
+              height: 150,
+              borderRadius: AppDimens.radiusL,
+            ),
+            const SizedBox(height: AppDimens.xl),
+            Row(
+              children: [
+                Expanded(
+                  child: AppShimmer.rectangular(
+                    height: 120,
+                    borderRadius: AppDimens.radiusL,
+                  ),
+                ),
+                const SizedBox(width: AppDimens.md),
+                Expanded(
+                  child: AppShimmer.rectangular(
+                    height: 120,
+                    borderRadius: AppDimens.radiusL,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppDimens.xl),
+            AppShimmer.rectangular(width: 150, height: 24),
+            const SizedBox(height: AppDimens.md),
+            ...List.generate(
+              3,
+              (index) => Padding(
+                padding: const EdgeInsets.only(bottom: AppDimens.md),
+                child: AppShimmer.rectangular(
+                  height: 70,
+                  borderRadius: AppDimens.radiusM,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: AppColors.primaryLight,
-          child: const Icon(Icons.person, color: AppColors.primary),
+          backgroundColor: Colors.orange.withOpacity(0.2),
+          child: const Icon(Icons.receipt_long, color: Colors.orange),
         ),
         const SizedBox(width: AppDimens.md),
         Column(
@@ -139,7 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
               _getGreeting(),
               style: AppStyles.bodyTextSecondary.copyWith(fontSize: 12),
             ),
-            Text('Halo, $_userName!', style: AppStyles.heading2),
+            Text(
+              'Halo, $_userName!',
+              style: AppStyles.heading2.copyWith(fontSize: 18),
+            ),
           ],
         ),
         const Spacer(),
@@ -372,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: _buildActionButton(
               'Tambah',
-              Icons.add_circle,
+              Icons.add_circle_outline,
               const Color(0xFFE8F5E9),
               const Color(0xFF1B5E20),
             ),
@@ -392,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: _buildActionButton(
               'Catat',
-              Icons.edit_document,
+              Icons.receipt_long,
               Colors.white,
               const Color(0xFF1B5E20),
               isOutlined: true,
@@ -413,7 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Color? borderColor,
   }) {
     return Container(
-      height: 60,
+      height: 55,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -440,54 +545,225 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildExpenseAnalysis(Map<String, double> expenseData) {
-    if (expenseData.isEmpty) {
-      return Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Analisis Pengeluaran', style: AppStyles.heading2),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ExpenseAnalysisScreen(),
-                    ),
+  Widget _buildSummaryCards(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: _buildSavingsSummaryCard(context)),
+        const SizedBox(width: AppDimens.md),
+        Expanded(child: _buildDebtSummaryCard(context)),
+      ],
+    );
+  }
+
+  Widget _buildSavingsSummaryCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SavingsScreen()),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(AppDimens.md),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+          border: Border.all(color: AppColors.divider, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0F7FA), // Light cyan
+                borderRadius: BorderRadius.circular(AppDimens.radiusS),
+              ),
+              child: const Icon(
+                Icons.savings,
+                color: Color(0xFF00838F),
+                size: 24,
+              ),
+            ),
+            const SizedBox(height: AppDimens.md),
+            Text(
+              'TABUNGAN',
+              style: AppStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+              ),
+            ),
+            const SizedBox(height: 4),
+            BlocBuilder<SavingsBloc, SavingsState>(
+              builder: (context, state) {
+                double totalSavings = 0;
+                if (state is SavingsLoaded) {
+                  totalSavings = state.goals.fold(
+                    0.0,
+                    (sum, goal) => sum + goal.currentAmount,
                   );
-                },
-                child: Text(
-                  'Lihat',
-                  style: AppStyles.bodyText.copyWith(
-                    color: AppColors.primary,
+                }
+                return Text(
+                  _formatCurrencyCompact(totalSavings),
+                  style: AppStyles.heading3.copyWith(
+                    color: const Color(0xFF1B5E20),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: AppDimens.sm),
+            Row(
+              children: [
+                const Icon(
+                  Icons.keyboard_double_arrow_up,
+                  color: Color(0xFF1B5E20),
+                  size: 12,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '+12% bln ini',
+                  style: AppStyles.caption.copyWith(
+                    color: const Color(0xFF1B5E20),
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDebtSummaryCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DebtScreen()),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(AppDimens.md),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+          border: Border.all(color: AppColors.divider, width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF3E0), // Light orange
+                borderRadius: BorderRadius.circular(AppDimens.radiusS),
               ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppDimens.lg),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset('assets/images/img_emty.svg', width: 150),
-                  const SizedBox(height: AppDimens.md),
-                  Text(
-                    "Belum ada pengeluaran bulan ini",
-                    style: AppStyles.bodyText.copyWith(
-                      color: AppColors.textHint,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+              child: const Icon(
+                Icons.account_balance,
+                color: Color(0xFFE65100),
+                size: 24,
               ),
             ),
-          ),
-        ],
-      );
+            const SizedBox(height: AppDimens.md),
+            Text(
+              'HUTANG/PIUTANG',
+              style: AppStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+              ),
+            ),
+            const SizedBox(height: 4),
+            BlocBuilder<DebtBloc, DebtState>(
+              builder: (context, state) {
+                double totalHutang = 0;
+                double totalPiutang = 0;
+                if (state is DebtLoaded) {
+                  for (var debt in state.debts) {
+                    final remaining = debt.amount - debt.paidAmount;
+                    if (remaining > 0) {
+                      if (debt.type == 'hutang') {
+                        totalHutang += remaining;
+                      } else if (debt.type == 'piutang') {
+                        totalPiutang += remaining;
+                      }
+                    }
+                  }
+                }
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Hutang:',
+                          style: AppStyles.caption.copyWith(
+                            fontSize: 10,
+                            color: AppColors.textHint,
+                          ),
+                        ),
+                        Text(
+                          _formatCurrencyCompact(totalHutang),
+                          style: AppStyles.caption.copyWith(
+                            fontSize: 10,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Piutang:',
+                          style: AppStyles.caption.copyWith(
+                            fontSize: 10,
+                            color: AppColors.textHint,
+                          ),
+                        ),
+                        Text(
+                          _formatCurrencyCompact(totalPiutang),
+                          style: AppStyles.caption.copyWith(
+                            fontSize: 10,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatCurrencyCompact(double amount) {
+    if (amount >= 1000000000) {
+      return 'Rp ${(amount / 1000000000).toStringAsFixed(1)}M';
+    } else if (amount >= 1000000) {
+      if (amount % 1000000 == 0) {
+        return 'Rp ${(amount / 1000000).toStringAsFixed(0)}jt';
+      }
+      return 'Rp ${(amount / 1000000).toStringAsFixed(1)}jt';
+    } else if (amount >= 1000) {
+      return 'Rp ${(amount / 1000).toStringAsFixed(0)}rb';
+    } else {
+      return 'Rp ${amount.toStringAsFixed(0)}';
+    }
+  }
+
+  Widget _buildExpenseAnalysis(Map<String, double> expenseData) {
+    if (expenseData.isEmpty) {
+      return const SizedBox.shrink();
     }
 
     final totalExpense = expenseData.values.fold(0.0, (sum, val) => sum + val);
@@ -527,8 +803,8 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Analisis Pengeluaran', style: AppStyles.heading2),
-            TextButton(
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -536,12 +812,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              child: Text(
-                'Lihat',
-                style: AppStyles.bodyText.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: const Icon(
+                Icons.info_outline,
+                color: AppColors.textHint,
+                size: 24,
               ),
             ),
           ],
@@ -552,6 +826,7 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(AppDimens.radiusL),
+            border: Border.all(color: AppColors.divider, width: 1),
           ),
           child: Row(
             children: [

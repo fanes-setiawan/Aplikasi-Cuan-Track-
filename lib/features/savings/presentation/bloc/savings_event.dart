@@ -1,0 +1,62 @@
+import 'package:equatable/equatable.dart';
+import '../../domain/entities/savings_goal_entity.dart';
+
+abstract class SavingsEvent extends Equatable {
+  const SavingsEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoadSavingsGoals extends SavingsEvent {
+  final String userId;
+
+  const LoadSavingsGoals(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
+
+class SavingsGoalsUpdated extends SavingsEvent {
+  final List<SavingsGoalEntity> goals;
+
+  const SavingsGoalsUpdated(this.goals);
+
+  @override
+  List<Object> get props => [goals];
+}
+
+class AddSavingsGoal extends SavingsEvent {
+  final String userId;
+  final SavingsGoalEntity goal;
+
+  const AddSavingsGoal(this.userId, this.goal);
+
+  @override
+  List<Object> get props => [userId, goal];
+}
+
+class DeleteSavingsGoal extends SavingsEvent {
+  final String userId;
+  final String goalId;
+
+  const DeleteSavingsGoal(this.userId, this.goalId);
+
+  @override
+  List<Object> get props => [userId, goalId];
+}
+
+class AddFundsToGoal extends SavingsEvent {
+  final String userId;
+  final String goalId;
+  final double amount;
+
+  const AddFundsToGoal({
+    required this.userId,
+    required this.goalId,
+    required this.amount,
+  });
+
+  @override
+  List<Object> get props => [userId, goalId, amount];
+}

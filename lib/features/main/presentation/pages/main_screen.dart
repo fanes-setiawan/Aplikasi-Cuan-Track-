@@ -1,11 +1,13 @@
 import 'package:cuan_track/features/budget/presentation/pages/budget_screen.dart';
 import 'package:cuan_track/features/history/presentation/pages/history_screen.dart';
 import 'package:cuan_track/features/home/presentation/pages/home_screen.dart';
+import 'package:cuan_track/features/analytics/presentation/pages/analytics_screen.dart';
 import 'package:cuan_track/features/profile/presentation/pages/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
+import '../../../../core/constants/app_dimens.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/local_auth_helper.dart';
@@ -141,6 +143,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   final List<Widget> _pages = [
     const HomeScreen(),
     const HistoryScreen(),
+    const AnalyticsScreen(),
     const BudgetScreen(),
     const ProfileScreen(),
   ];
@@ -184,45 +187,89 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             ? null
             : Container(
                 decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppDimens.radiusXL),
+                    topRight: Radius.circular(AppDimens.radiusXL),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, -5),
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 20,
+                      offset: const Offset(0, -10),
                     ),
                   ],
                 ),
-                child: BottomNavigationBar(
-                  currentIndex: _currentIndex,
-                  onTap: _updateIndex,
-                  type: BottomNavigationBarType.fixed,
-                  backgroundColor: Colors.white,
-                  selectedItemColor: AppColors.primary,
-                  unselectedItemColor: AppColors.textSecondary,
-                  selectedFontSize: 12,
-                  unselectedFontSize: 12,
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: _buildIcon(AppAssets.iconHome, false),
-                      activeIcon: _buildIcon(AppAssets.iconHome, true),
-                      label: 'Home',
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppDimens.radiusXL),
+                    topRight: Radius.circular(AppDimens.radiusXL),
+                  ),
+                  child: BottomNavigationBar(
+                    currentIndex: _currentIndex,
+                    onTap: _updateIndex,
+                    type: BottomNavigationBarType.fixed,
+                    backgroundColor: Colors.white,
+                    selectedItemColor: AppColors.primary,
+                    unselectedItemColor: AppColors.textSecondary.withOpacity(
+                      0.5,
                     ),
-                    BottomNavigationBarItem(
-                      icon: _buildIcon(AppAssets.iconHistory, false),
-                      activeIcon: _buildIcon(AppAssets.iconHistory, true),
-                      label: 'History',
+                    selectedFontSize: 12,
+                    unselectedFontSize: 10,
+                    selectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    BottomNavigationBarItem(
-                      icon: _buildIcon(AppAssets.iconBudget, false),
-                      activeIcon: _buildIcon(AppAssets.iconBudget, true),
-                      label: 'Budget',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: _buildIcon(AppAssets.iconProfile, false),
-                      activeIcon: _buildIcon(AppAssets.iconProfile, true),
-                      label: 'Profile',
-                    ),
-                  ],
+                    elevation: 0,
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: _buildIcon(AppAssets.iconHome, false),
+                        activeIcon: _buildIcon(AppAssets.iconHome, true),
+                        label: 'Beranda',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: _buildIcon(AppAssets.iconHistory, false),
+                        activeIcon: _buildIcon(AppAssets.iconHistory, true),
+                        label: 'Riwayat',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.pie_chart_outline,
+                            size: 24,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        activeIcon: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.pie_chart,
+                            size: 24,
+                            color: Colors.white,
+                          ),
+                        ),
+                        label: 'Stats',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: _buildIcon(AppAssets.iconBudget, false),
+                        activeIcon: _buildIcon(AppAssets.iconBudget, true),
+                        label: 'Anggaran',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: _buildIcon(AppAssets.iconProfile, false),
+                        activeIcon: _buildIcon(AppAssets.iconProfile, true),
+                        label: 'Profil',
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),

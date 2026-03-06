@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -11,6 +10,9 @@ import '../../../home/domain/entities/transaction_entity.dart';
 import '../bloc/history_bloc.dart';
 import '../bloc/history_event.dart';
 import '../bloc/history_state.dart';
+import '../../../../core/utils/pdf_report_generator.dart';
+import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../core/widgets/empty_state.dart';
 
 import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 
@@ -25,6 +27,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   DateTime _selectedDate = DateTime.now();
   String _userId = '';
+  String _selectedCategoryFilter = 'Semua';
 
   final Map<String, IconData> _categoryIconMap = {
     "Gaji": Icons.payments_outlined,
@@ -103,14 +106,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       body: BlocBuilder<HistoryBloc, HistoryState>(
         builder: (context, state) {
           if (state is HistoryInitial || state is HistoryLoading) {
-            return Column(
-              children: [
-                _buildMonthSelector(),
-                const Expanded(
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-              ],
-            );
+            return _buildHistoryShimmer();
           }
 
           if (state is HistoryError) {
@@ -129,9 +125,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                     children: [
                       _buildMonthSelector(),
+                      _buildCategoryFilters(state.transactions),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppDimens.md,
+                          vertical: AppDimens.md,
                         ),
                         child: Container(
                           padding: const EdgeInsets.all(AppDimens.lg),
@@ -228,6 +226,84 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  Widget _buildCategoryFilters(List<TransactionEntity> transactions) {
+    // Extract unique categories from transactions
+    final categories = <String>{};
+    for (var t in transactions) {
+      if (t.categoryName?.isNotEmpty == true) {
+        categories.add(t.categoryName!);
+      }
+    }
+
+    final categoryList = ['Semua', ...categories.toList()..sort()];
+
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
+        scrollDirection: Axis.horizontal,
+        itemCount: categoryList.length,
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final category = categoryList[index];
+          final isSelected = category == _selectedCategoryFilter;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedCategoryFilter = category;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected ? AppColors.primary : AppColors.divider,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (category == 'Semua')
+                    Icon(
+                      Icons.grid_view,
+                      size: 16,
+                      color: isSelected
+                          ? Colors.white
+                          : AppColors.textSecondary,
+                    )
+                  else if (_categoryIconMap.containsKey(category))
+                    Icon(
+                      _categoryIconMap[category],
+                      size: 16,
+                      color: isSelected
+                          ? Colors.white
+                          : AppColors.textSecondary,
+                    ),
+                  if (category == 'Semua' ||
+                      _categoryIconMap.containsKey(category))
+                    const SizedBox(width: 6),
+                  Text(
+                    category,
+                    style: AppStyles.bodyText.copyWith(
+                      color: isSelected ? Colors.white : AppColors.textPrimary,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildSummaryItem(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,31 +329,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildTransactionList(List<TransactionEntity> transactions) {
-    if (transactions.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppDimens.xl * 2),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset('assets/images/img_emty.svg', width: 200),
-              const SizedBox(height: AppDimens.lg),
-              Text(
-                "Data masih kosong",
-                style: AppStyles.bodyText.copyWith(
-                  color: AppColors.textHint,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
+    // Filter transactions based on selected category
+    final displayedTransactions = _selectedCategoryFilter == 'Semua'
+        ? transactions
+        : transactions
+              .where((t) => t.categoryName == _selectedCategoryFilter)
+              .toList();
+
+    if (transactions.isEmpty || displayedTransactions.isEmpty) {
+      return const EmptyState(
+        title: 'Data masih kosong',
+        subtitle: 'Belum ada transaksi di bulan ini atau untuk kategori ini.',
       );
     }
 
     // Grouping by date
     final Map<String, List<TransactionEntity>> grouped = {};
-    for (var t in transactions) {
+    for (var t in displayedTransactions) {
       final dateStr = DateFormat('dd MMM yyyy', 'id_ID').format(t.date);
       if (grouped.containsKey(dateStr)) {
         grouped[dateStr]!.add(t);
@@ -585,7 +653,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    // TODO: Trigger actual PDF generation
+                    PdfReportGenerator.generateAndDownloadReport(state);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
@@ -618,6 +686,65 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildHistoryShimmer() {
+    return SingleChildScrollView(
+      child: AppShimmer(
+        child: Column(
+          children: [
+            _buildMonthSelector(),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 40,
+              child: ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
+                scrollDirection: Axis.horizontal,
+                itemCount: 5,
+                separatorBuilder: (context, index) => const SizedBox(width: 8),
+                itemBuilder: (context, index) => AppShimmer.rectangular(
+                  width: 80,
+                  height: 32,
+                  borderRadius: 20,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppDimens.md),
+              child: AppShimmer.rectangular(
+                height: 80,
+                borderRadius: AppDimens.radiusL,
+              ),
+            ),
+            ...List.generate(
+              5,
+              (index) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(AppDimens.md, 12, 0, 8),
+                    child: AppShimmer.rectangular(width: 100, height: 14),
+                  ),
+                  ...List.generate(
+                    2,
+                    (i) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppDimens.md,
+                        vertical: 6,
+                      ),
+                      child: AppShimmer.rectangular(
+                        height: 70,
+                        borderRadius: AppDimens.radiusM,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

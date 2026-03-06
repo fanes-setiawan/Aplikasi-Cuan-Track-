@@ -13,6 +13,9 @@ import 'features/budget/presentation/bloc/add_budget_bloc.dart';
 import 'features/payment_method/presentation/bloc/payment_method_bloc.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
 import 'features/transaction/presentation/bloc/action/transaction_action_bloc.dart';
+import 'features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'features/savings/presentation/bloc/savings_bloc.dart';
+import 'features/debt/presentation/bloc/debt_bloc.dart';
 import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -66,6 +69,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<TransactionActionBloc>(
           create: (_) => di.sl<TransactionActionBloc>(),
         ),
+        BlocProvider<AnalyticsBloc>(create: (_) => di.sl<AnalyticsBloc>()),
+        BlocProvider<SavingsBloc>(create: (_) => di.sl<SavingsBloc>()),
+        BlocProvider<DebtBloc>(create: (_) => di.sl<DebtBloc>()),
       ],
       child: MaterialApp(
         title: 'Cuan Track',

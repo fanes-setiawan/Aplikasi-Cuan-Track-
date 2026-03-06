@@ -18,6 +18,11 @@ import 'features/home/presentation/bloc/analysis/analysis_bloc.dart';
 import 'features/transaction/presentation/bloc/add_transaction_bloc.dart';
 import 'features/transaction/presentation/bloc/action/transaction_action_bloc.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
+import 'features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'features/savings/data/repositories/firestore_savings_repository_impl.dart';
+import 'features/savings/presentation/bloc/savings_bloc.dart';
+import 'features/debt/data/repositories/firestore_debt_repository_impl.dart';
+import 'features/debt/presentation/bloc/debt_bloc.dart';
 
 import 'features/budget/domain/repositories/budget_repository.dart';
 import 'features/budget/data/repositories/firestore_budget_repository_impl.dart';
@@ -78,6 +83,23 @@ Future<void> init() async {
   sl.registerFactory(() => TransactionActionBloc(repository: sl()));
 
   sl.registerFactory(() => HistoryBloc(repository: sl()));
+
+  // Blocs - Analytics
+  sl.registerFactory(() => AnalyticsBloc(repository: sl()));
+
+  // --- Features: Savings Goal ---
+  sl.registerLazySingleton<FirestoreSavingsRepositoryImpl>(
+    () => FirestoreSavingsRepositoryImpl(firestore: sl()),
+  );
+
+  sl.registerFactory(() => SavingsBloc(repository: sl()));
+
+  // --- Features: Debt Tracking ---
+  sl.registerLazySingleton<FirestoreDebtRepositoryImpl>(
+    () => FirestoreDebtRepositoryImpl(firestore: sl()),
+  );
+
+  sl.registerFactory(() => DebtBloc(repository: sl()));
 
   // --- Features: Budget ---
   sl.registerLazySingleton<BudgetRepository>(

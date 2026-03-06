@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../domain/entities/user_entity.dart';
@@ -114,9 +115,13 @@ class AuthRepositoryImpl implements AuthRepository {
       if (user != null) return user;
       throw Exception('Gagal mendapatkan data pengguna setelah Login Google.');
     } on FirebaseAuthException catch (e) {
+      debugPrint(
+        'Google Login FirebaseAuthException: ${e.code} - ${e.message}',
+      );
       throw Exception(_mapFirebaseAuthError(e));
     } catch (e) {
-      throw Exception('Login Google gagal. Silakan coba lagi.');
+      debugPrint('Google Login error: $e');
+      throw Exception('Login Google gagal: $e. Silakan coba lagi.');
     }
   }
 }

@@ -12,6 +12,8 @@ import '../../domain/entities/budget_entity.dart';
 import 'add_budget_screen.dart';
 import 'edit_budget_screen.dart';
 import '../bloc/edit_budget_bloc.dart';
+import '../../../../core/widgets/app_shimmer.dart';
+import '../../../../core/widgets/empty_state.dart';
 import '../../../../injection_container.dart' as di;
 
 class BudgetScreen extends StatefulWidget {
@@ -58,7 +60,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
       body: BlocBuilder<BudgetBloc, BudgetState>(
         builder: (context, state) {
           if (state is BudgetLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildBudgetShimmer();
           }
 
           if (state is BudgetError) {
@@ -189,14 +191,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
                   // Budget Items
                   if (state.budgets.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.all(AppDimens.lg),
-                      child: Center(
-                        child: Text(
-                          'Belum ada anggaran yang dibuat. Mulai buat sekarang!',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                    const EmptyState(
+                      title: 'Belum ada anggaran',
+                      subtitle:
+                          'Mulai buat anggaran untuk mengatur pengeluaran Anda dengan lebih baik.',
                     )
                   else
                     ...state.budgets.map((budget) {
@@ -617,5 +615,64 @@ class _BudgetScreenState extends State<BudgetScreen> {
       default:
         return const Color(0xFFF1F5F9);
     }
+  }
+
+  Widget _buildBudgetShimmer() {
+    return SingleChildScrollView(
+      child: AppShimmer(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppDimens.md),
+              child: AppShimmer.rectangular(
+                height: 56,
+                borderRadius: AppDimens.radiusM,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimens.md,
+                vertical: 8,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppShimmer.rectangular(width: 100, height: 12),
+                      const SizedBox(height: 8),
+                      AppShimmer.rectangular(width: 150, height: 24),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      AppShimmer.rectangular(width: 60, height: 12),
+                      const SizedBox(height: 8),
+                      AppShimmer.rectangular(width: 40, height: 24),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            ...List.generate(
+              3,
+              (index) => Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimens.md,
+                  vertical: 8,
+                ),
+                child: AppShimmer.rectangular(
+                  height: 100,
+                  borderRadius: AppDimens.radiusL,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
