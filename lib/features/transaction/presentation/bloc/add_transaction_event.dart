@@ -16,3 +16,12 @@ class SubmitTransaction extends AddTransactionEvent {
   @override
   List<Object?> get props => [transaction];
 }
+
+class UpdateTransaction extends AddTransactionEvent {
+  final TransactionEntity transaction;
+
+  const UpdateTransaction(this.transaction);
+
+  @override
+  List<Object?> get props => [transaction];
+}

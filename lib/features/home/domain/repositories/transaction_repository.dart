@@ -16,6 +16,12 @@ abstract class TransactionRepository {
   /// Adds a new transaction.
   Future<void> addTransaction(TransactionEntity transaction);
 
+  /// Updates an existing transaction.
+  Future<void> updateTransaction(TransactionEntity transaction);
+
+  /// Deletes a transaction by its ID.
+  Future<void> deleteTransaction(String id);
+
   /// Calculates the total balance (income - expense) for a specific user.
   Future<double> getTotalBalance(String userId);
 

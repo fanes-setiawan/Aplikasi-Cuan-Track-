@@ -19,6 +19,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<LoadBudgets>(_onLoadBudgets);
     on<BudgetsUpdated>(_onBudgetsUpdated);
     on<TransactionsUpdated>(_onTransactionsUpdated);
+    on<DeleteBudget>(_onDeleteBudget);
   }
 
   void _onLoadBudgets(LoadBudgets event, Emitter<BudgetState> emit) async {
@@ -64,6 +65,17 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     try {
       await _fetchAndCalculate(event.originalEvent.userId, emit);
+    } catch (e) {
+      emit(BudgetError(e.toString()));
+    }
+  }
+
+  void _onDeleteBudget(DeleteBudget event, Emitter<BudgetState> emit) async {
+    try {
+      await budgetRepository.deleteBudget(event.userId, event.budgetId);
+      // We don't need to explicitly update the state here because the
+      // Firestore snapshot listener (watchBudgets) will automatically
+      // trigger a BudgetsUpdated event when it detects the deletion.
     } catch (e) {
       emit(BudgetError(e.toString()));
     }

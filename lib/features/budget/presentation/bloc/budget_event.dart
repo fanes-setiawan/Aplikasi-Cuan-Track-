@@ -33,3 +33,13 @@ class TransactionsUpdated extends BudgetEvent {
   @override
   List<Object> get props => [originalEvent];
 }
+
+class DeleteBudget extends BudgetEvent {
+  final String userId;
+  final String budgetId;
+
+  const DeleteBudget(this.userId, this.budgetId);
+
+  @override
+  List<Object> get props => [userId, budgetId];
+}

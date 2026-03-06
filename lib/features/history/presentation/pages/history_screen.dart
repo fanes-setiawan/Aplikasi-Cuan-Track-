@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -10,6 +11,8 @@ import '../../../home/domain/entities/transaction_entity.dart';
 import '../bloc/history_bloc.dart';
 import '../bloc/history_event.dart';
 import '../bloc/history_state.dart';
+
+import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   final bool showBackButton;
@@ -115,51 +118,65 @@ class _HistoryScreenState extends State<HistoryScreen> {
           }
 
           if (state is HistoryLoaded) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildMonthSelector(),
-                  // Summary Card
-                  Container(
-                    margin: const EdgeInsets.all(AppDimens.md),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF1B5E20), Color(0xFF2E7D32)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(AppDimens.radiusL),
+            return AnimationLimiter(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: widget),
                     ),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildSummaryItem(
-                              'TOTAL PEMASUKAN',
-                              _formatCurrency(state.totalIncome),
+                    children: [
+                      _buildMonthSelector(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.md,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(AppDimens.lg),
+                          decoration: BoxDecoration(
+                            gradient: AppColors.primaryGradient,
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusL,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
                           ),
-                          VerticalDivider(
-                            color: Colors.white.withOpacity(0.3),
-                            thickness: 1,
-                            width: 32,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildSummaryItem(
+                                  'TOTAL PEMASUKAN',
+                                  _formatCurrency(state.totalIncome),
+                                ),
+                              ),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.white.withOpacity(0.2),
+                              ),
+                              const SizedBox(width: AppDimens.lg),
+                              Expanded(
+                                child: _buildSummaryItem(
+                                  'TOTAL PENGELUARAN',
+                                  _formatCurrency(state.totalExpense),
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: _buildSummaryItem(
-                              'TOTAL PENGELUARAN',
-                              _formatCurrency(state.totalExpense),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      _buildTransactionList(state.transactions),
+                      const SizedBox(height: AppDimens.xl * 2),
+                    ],
                   ),
-
-                  _buildTransactionList(state.transactions),
-                  const SizedBox(height: AppDimens.xl * 2),
-                ],
+                ),
               ),
             );
           }
@@ -277,9 +294,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
       }
     });
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: listWidgets,
+    return AnimationLimiter(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: AnimationConfiguration.toStaggeredList(
+          duration: const Duration(milliseconds: 375),
+          childAnimationBuilder: (widget) => SlideAnimation(
+            verticalOffset: 50.0,
+            child: FadeInAnimation(child: widget),
+          ),
+          children: listWidgets,
+        ),
+      ),
     );
   }
 
@@ -318,57 +344,70 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ? const Color(0xFFFF8A00)
         : const Color(0xFF4CAF50);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: 6),
-      padding: const EdgeInsets.all(AppDimens.md),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppDimens.radiusM),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              borderRadius: BorderRadius.circular(AppDimens.radiusM),
-            ),
-            child: Icon(icon, color: iconColor, size: 24),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TransactionDetailScreen(transaction: t),
           ),
-          const SizedBox(width: AppDimens.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  t.title.isNotEmpty
-                      ? t.title
-                      : ((t.notes?.isNotEmpty == true)
-                            ? t.notes!
-                            : (t.categoryName ?? 'Transasksi')),
-                  style: AppStyles.bodyText.copyWith(
-                    fontWeight: FontWeight.bold,
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: AppDimens.md,
+          vertical: 6,
+        ),
+        padding: const EdgeInsets.all(AppDimens.md),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(AppDimens.radiusM),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: iconBgColor,
+                borderRadius: BorderRadius.circular(AppDimens.radiusM),
+              ),
+              child: Icon(icon, color: iconColor, size: 24),
+            ),
+            const SizedBox(width: AppDimens.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.title.isNotEmpty
+                        ? t.title
+                        : ((t.notes?.isNotEmpty == true)
+                              ? t.notes!
+                              : (t.categoryName ?? 'Transasksi')),
+                    style: AppStyles.bodyText.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '$timeStr • ${t.categoryName}',
-                  style: AppStyles.caption.copyWith(
-                    fontSize: 10,
-                    color: AppColors.textHint,
+                  const SizedBox(height: 4),
+                  Text(
+                    '$timeStr • ${t.categoryName}',
+                    style: AppStyles.caption.copyWith(
+                      fontSize: 10,
+                      color: AppColors.textHint,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Text(
-            '$amountSign${_formatCurrency(t.amount)}',
-            style: AppStyles.bodyText.copyWith(
-              color: amountColor,
-              fontWeight: FontWeight.bold,
+            Text(
+              '$amountSign${_formatCurrency(t.amount)}',
+              style: AppStyles.bodyText.copyWith(
+                color: amountColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

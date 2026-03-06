@@ -20,6 +20,33 @@ class FirestoreTransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
+  Future<void> updateTransaction(TransactionEntity transaction) async {
+    try {
+      if (transaction.id.isEmpty) {
+        throw Exception('Cannot update transaction without an ID');
+      }
+      final data = transaction.toMap();
+      // Ensure we don't accidentally write the internal ID into the document payload map
+      // if it behaves like that, though fromMap usually handles it.
+      await _firestore
+          .collection('transactions')
+          .doc(transaction.id)
+          .update(data);
+    } catch (e) {
+      throw Exception('Failed to update transaction: $e');
+    }
+  }
+
+  @override
+  Future<void> deleteTransaction(String id) async {
+    try {
+      await _firestore.collection('transactions').doc(id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete transaction: $e');
+    }
+  }
+
+  @override
   Future<List<TransactionEntity>> getRecentTransactions(
     String userId, {
     int limit = 5,

@@ -24,7 +24,12 @@ import 'package:cuan_track/features/payment_method/presentation/bloc/payment_met
 
 class AddTransactionScreen extends StatefulWidget {
   final bool isIncome;
-  const AddTransactionScreen({super.key, this.isIncome = true});
+  final TransactionEntity? transactionForEdit;
+  const AddTransactionScreen({
+    super.key,
+    this.isIncome = true,
+    this.transactionForEdit,
+  });
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -45,6 +50,34 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     if (user != null) {
       context.read<PaymentMethodBloc>().add(LoadPaymentMethods(user.uid));
       context.read<CategoryBloc>().add(LoadCategories(user.uid));
+    }
+
+    if (widget.transactionForEdit != null) {
+      final t = widget.transactionForEdit!;
+      _rawAmount = t.amount.toStringAsFixed(0);
+      _selectedDate = t.date;
+      _noteController.text = t.notes ?? '';
+      if (t.categoryId.isNotEmpty && t.categoryName != null) {
+        _selectedCategory = CategoryEntity(
+          id: t.categoryId,
+          userId: t.userId,
+          name: t.categoryName!,
+          iconName: 'category', // placeholder, will try to match real one later
+          colorHex: '#27AE60',
+          type: t.type,
+        );
+      }
+      if (t.paymentMethodId != null) {
+        _selectedPaymentMethod = PaymentMethodEntity(
+          id: t.paymentMethodId!,
+          userId: t.userId,
+          name: 'Loading...',
+          type: 'Tunai',
+          accountNumber: '',
+          balance: 0.0,
+          iconPath: '',
+        );
+      }
     }
   }
 
@@ -205,8 +238,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           String value = "Loading...";
                           if (state is PaymentMethodLoaded) {
                             if (state.paymentMethods.isNotEmpty) {
-                              _selectedPaymentMethod ??=
-                                  state.paymentMethods.first;
+                              // If editing and a payment method was pre-selected in initState, try to match it
+                              // Otherwise, default to the first payment method
+                              if (widget.transactionForEdit != null &&
+                                  _selectedPaymentMethod != null) {
+                                _selectedPaymentMethod = state.paymentMethods
+                                    .firstWhere(
+                                      (method) =>
+                                          method.id ==
+                                          _selectedPaymentMethod!.id,
+                                      orElse: () => state.paymentMethods.first,
+                                    );
+                              } else {
+                                _selectedPaymentMethod ??=
+                                    state.paymentMethods.first;
+                              }
                               value = _selectedPaymentMethod!.name;
                             } else {
                               value = "Belum ada metode";
@@ -639,7 +685,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     }
 
     final entity = TransactionEntity(
-      id: '', // Firestore auto-generates
+      id: widget.transactionForEdit?.id ?? '',
       userId: user.uid,
       title: widget.isIncome ? "Pemasukan" : "Pengeluaran",
       amount: amountParsed,
@@ -651,6 +697,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       notes: _noteController.text.trim(),
     );
 
-    context.read<AddTransactionBloc>().add(SubmitTransaction(entity));
+    if (widget.transactionForEdit != null) {
+      context.read<AddTransactionBloc>().add(UpdateTransaction(entity));
+    } else {
+      context.read<AddTransactionBloc>().add(SubmitTransaction(entity));
+    }
   }
 }

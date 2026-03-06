@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -38,58 +39,67 @@ class NotificationScreen extends StatelessWidget {
           const SizedBox(width: AppDimens.sm),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionHeader('TERBARU'),
-            _buildNotificationItem(
-              title: 'Peringatan Anggaran',
-              description: 'Peringatan: Anggaran Makan Siang terpakai 80%.',
-              time: 'Baru saja',
-              icon: Icons.notifications_active,
-              iconBgColor: const Color(0xFFFFECE0),
-              iconColor: const Color(0xFFFF8A00),
-              isUnread: true,
+      body: AnimationLimiter(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: AnimationConfiguration.toStaggeredList(
+              duration: const Duration(milliseconds: 375),
+              childAnimationBuilder: (widget) => SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(child: widget),
+              ),
+              children: [
+                _buildSectionHeader('TERBARU'),
+                _buildNotificationItem(
+                  title: 'Peringatan Anggaran',
+                  description: 'Peringatan: Anggaran Makan Siang terpakai 80%.',
+                  time: 'Baru saja',
+                  icon: Icons.notifications_active,
+                  iconBgColor: const Color(0xFFFFECE0),
+                  iconColor: const Color(0xFFFF8A00),
+                  isUnread: true,
+                ),
+                _buildNotificationItem(
+                  title: 'Laporan Mingguan',
+                  description: 'Laporan Mingguan: Lihat ringkasan keuanganmu!',
+                  time: '2j yang lalu',
+                  icon: Icons.description,
+                  iconBgColor: const Color(0xFFE3F2FD),
+                  iconColor: const Color(0xFF2196F3),
+                  isUnread: true,
+                ),
+                const SizedBox(height: AppDimens.md),
+                _buildSectionHeader('MINGGU INI'),
+                _buildNotificationItem(
+                  title: 'Pengingat Catatan',
+                  description: 'Ingat: Catat pengeluaran kopimu tadi pagi.',
+                  time: 'Senin, 09:00',
+                  icon: Icons.edit_note,
+                  iconBgColor: const Color(0xFFE8F5E9),
+                  iconColor: const Color(0xFF4CAF50),
+                ),
+                _buildNotificationItem(
+                  title: 'Transaksi Berhasil',
+                  description:
+                      'Transfer ke Tabungan Masa Depan telah berhasil diproses.',
+                  time: 'Minggu, 18:30',
+                  icon: Icons.account_balance_wallet,
+                  iconBgColor: const Color(0xFFE8F5E9),
+                  iconColor: const Color(0xFF4CAF50),
+                ),
+                _buildNotificationItem(
+                  title: 'Tips Keuangan',
+                  description:
+                      'Kamu menghemat 15% lebih banyak bulan ini dibandingkan bulan lalu! Teruskan!',
+                  time: 'Sabtu, 10:15',
+                  icon: Icons.insights,
+                  iconBgColor: const Color(0xFFE3F2FD),
+                  iconColor: const Color(0xFF2196F3),
+                ),
+              ],
             ),
-            _buildNotificationItem(
-              title: 'Laporan Mingguan',
-              description: 'Laporan Mingguan: Lihat ringkasan keuanganmu!',
-              time: '2j yang lalu',
-              icon: Icons.description,
-              iconBgColor: const Color(0xFFE3F2FD),
-              iconColor: const Color(0xFF2196F3),
-              isUnread: true,
-            ),
-            const SizedBox(height: AppDimens.md),
-            _buildSectionHeader('MINGGU INI'),
-            _buildNotificationItem(
-              title: 'Pengingat Catatan',
-              description: 'Ingat: Catat pengeluaran kopimu tadi pagi.',
-              time: 'Senin, 09:00',
-              icon: Icons.edit_note,
-              iconBgColor: const Color(0xFFE8F5E9),
-              iconColor: const Color(0xFF4CAF50),
-            ),
-            _buildNotificationItem(
-              title: 'Transaksi Berhasil',
-              description:
-                  'Transfer ke Tabungan Masa Depan telah berhasil diproses.',
-              time: 'Minggu, 18:30',
-              icon: Icons.account_balance_wallet,
-              iconBgColor: const Color(0xFFE8F5E9),
-              iconColor: const Color(0xFF4CAF50),
-            ),
-            _buildNotificationItem(
-              title: 'Tips Keuangan',
-              description:
-                  'Kamu menghemat 15% lebih banyak bulan ini dibandingkan bulan lalu! Teruskan!',
-              time: 'Sabtu, 10:15',
-              icon: Icons.insights,
-              iconBgColor: const Color(0xFFE3F2FD),
-              iconColor: const Color(0xFF2196F3),
-            ),
-          ],
+          ),
         ),
       ),
     );

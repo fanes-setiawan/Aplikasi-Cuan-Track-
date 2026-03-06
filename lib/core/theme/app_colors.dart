@@ -22,4 +22,10 @@ class AppColors {
 
   // Additional Colors
   static const Color divider = Color(0xFFEEEEEE);
+
+  static const Gradient primaryGradient = LinearGradient(
+    colors: [Color(0xFF1B5E20), Color(0xFF2E7D32)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }

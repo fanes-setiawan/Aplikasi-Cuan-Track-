@@ -12,14 +12,31 @@ import 'features/budget/presentation/bloc/budget_bloc.dart';
 import 'features/budget/presentation/bloc/add_budget_bloc.dart';
 import 'features/payment_method/presentation/bloc/payment_method_bloc.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
+import 'features/transaction/presentation/bloc/action/transaction_action_bloc.dart';
 import 'injection_container.dart' as di;
 import 'firebase_options.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'core/services/notification_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Set the background messaging handler early on, as a named top-level function
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Init local & push notifications
+  await NotificationService().init();
+
   await initializeDateFormatting('id_ID', null);
   await di.init();
   runApp(const MyApp());
@@ -46,6 +63,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.sl<PaymentMethodBloc>(),
         ),
         BlocProvider<CategoryBloc>(create: (_) => di.sl<CategoryBloc>()),
+        BlocProvider<TransactionActionBloc>(
+          create: (_) => di.sl<TransactionActionBloc>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Cuan Track',

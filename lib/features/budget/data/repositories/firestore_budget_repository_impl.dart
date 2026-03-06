@@ -19,6 +19,17 @@ class FirestoreBudgetRepositoryImpl implements BudgetRepository {
   }
 
   @override
+  Future<void> updateBudget(BudgetEntity budget) async {
+    final userBudgetsRef = _firestore
+        .collection('users')
+        .doc(budget.userId)
+        .collection('budgets')
+        .doc(budget.id);
+
+    await userBudgetsRef.update(budget.toMap());
+  }
+
+  @override
   Future<List<BudgetEntity>> getBudgets(String userId) async {
     final query = await _firestore
         .collection('users')
@@ -45,5 +56,15 @@ class FirestoreBudgetRepositoryImpl implements BudgetRepository {
             return BudgetEntity.fromMap(doc.data(), doc.id);
           }).toList();
         });
+  }
+
+  @override
+  Future<void> deleteBudget(String userId, String budgetId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('budgets')
+        .doc(budgetId)
+        .delete();
   }
 }

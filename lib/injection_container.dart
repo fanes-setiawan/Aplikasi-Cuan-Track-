@@ -16,12 +16,14 @@ import 'features/home/data/repositories/firestore_transaction_repository_impl.da
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/home/presentation/bloc/analysis/analysis_bloc.dart';
 import 'features/transaction/presentation/bloc/add_transaction_bloc.dart';
+import 'features/transaction/presentation/bloc/action/transaction_action_bloc.dart';
 import 'features/history/presentation/bloc/history_bloc.dart';
 
 import 'features/budget/domain/repositories/budget_repository.dart';
 import 'features/budget/data/repositories/firestore_budget_repository_impl.dart';
 import 'features/budget/presentation/bloc/budget_bloc.dart';
 import 'features/budget/presentation/bloc/add_budget_bloc.dart';
+import 'features/budget/presentation/bloc/edit_budget_bloc.dart';
 
 import 'features/payment_method/domain/repositories/payment_method_repository.dart';
 import 'features/payment_method/data/repositories/firestore_payment_method_repository_impl.dart';
@@ -73,6 +75,8 @@ Future<void> init() async {
 
   sl.registerFactory(() => AddTransactionBloc(repository: sl()));
 
+  sl.registerFactory(() => TransactionActionBloc(repository: sl()));
+
   sl.registerFactory(() => HistoryBloc(repository: sl()));
 
   // --- Features: Budget ---
@@ -85,6 +89,7 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => AddBudgetBloc(budgetRepository: sl()));
+  sl.registerFactory(() => EditBudgetBloc(budgetRepository: sl()));
 
   // --- Features: Payment Methods ---
   sl.registerLazySingleton<PaymentMethodRepository>(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/utils/app_helpers.dart';
@@ -54,7 +55,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Analisis Tren\nHari ke Hari',
+                'Analisis Tren\nMingguan',
                 textAlign: TextAlign.center,
                 style: AppStyles.heading2.copyWith(
                   fontSize: 16,
@@ -82,12 +83,10 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         DateFormat('MMM yyyy', 'id').format(state.currentMonth),
-                        textAlign: TextAlign.center,
                         style: AppStyles.bodyText.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
-                          height: 1.2,
                         ),
                       ),
                     ],
@@ -95,190 +94,202 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                 ),
               ],
             ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTrendChart(state),
-                  const SizedBox(height: 24),
-
-                  // Info Box
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: state.comparisonPercentage > 0
-                          ? const Color(0xFFFDEDEC)
-                          : const Color(0xFFE8F5E9),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: state.comparisonPercentage > 0
-                            ? const Color(0xFFFADBD8)
-                            : const Color(0xFFC8E6C9),
-                      ),
+            body: AnimationLimiter(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: widget),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: state.comparisonPercentage > 0
-                                ? const Color(0xFFE74C3C)
-                                : const Color(0xFF27AE60),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            state.comparisonPercentage > 0
-                                ? Icons.trending_up
-                                : (state.comparisonPercentage < 0
-                                      ? Icons.trending_down
-                                      : Icons.horizontal_rule),
-                            color: Colors.white,
-                            size: 24,
-                          ),
+                    children: [
+                      // Chart Section
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Bulan Ini vs Lalu',
-                                style: AppStyles.heading2.copyWith(
-                                  color: const Color(0xFF1B5E20),
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              RichText(
-                                text: TextSpan(
-                                  style: AppStyles.bodyText.copyWith(
-                                    color: AppColors.textSecondary,
-                                    fontSize: 12,
-                                  ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const TextSpan(text: 'Pengeluaran Anda '),
-                                    TextSpan(
-                                      text:
-                                          '${state.comparisonPercentage.abs().toStringAsFixed(1)}% ',
-                                      style: AppStyles.bodyText.copyWith(
-                                        color: state.comparisonPercentage > 0
-                                            ? const Color(0xFFE74C3C)
-                                            : const Color(0xFF27AE60),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                                    Text(
+                                      'Rata-rata Mingguan',
+                                      style: AppStyles.caption.copyWith(
+                                        color: AppColors.textSecondary,
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: state.comparisonPercentage > 0
-                                          ? 'lebih tinggi'
-                                          : 'lebih rendah',
-                                      style: AppStyles.bodyText.copyWith(
-                                        color: state.comparisonPercentage > 0
-                                            ? const Color(0xFFE74C3C)
-                                            : const Color(0xFF27AE60),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                                    Text(
+                                      AppHelpers.formatCurrencyIdr(
+                                        state.currentMonthTotal / 4,
+                                      ),
+                                      style: AppStyles.heading2.copyWith(
+                                        color: const Color(0xFF1B5E20),
                                       ),
                                     ),
-                                    const TextSpan(text: ' dari bulan lalu.'),
                                   ],
                                 ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE8F5E9),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.trending_up,
+                                        size: 14,
+                                        color: Color(0xFF2E7D32),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '12%',
+                                        style: AppStyles.caption.copyWith(
+                                          color: const Color(0xFF2E7D32),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 32),
+                            // Bar Chart Mock
+                            SizedBox(
+                              height: 180,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: state.currentMonthWeeklyTotals
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                      final idx = entry.key;
+                                      final val = entry.value;
+                                      final maxVal = state
+                                          .currentMonthWeeklyTotals
+                                          .reduce((a, b) => a > b ? a : b);
+                                      final height = maxVal > 0
+                                          ? (val / maxVal) * 150
+                                          : 0.0;
+                                      final isHighest =
+                                          idx == state.highestSpendingWeekIndex;
+
+                                      return Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            width: 32,
+                                            height: height.toDouble(),
+                                            decoration: BoxDecoration(
+                                              color: isHighest
+                                                  ? const Color(0xFF27AE60)
+                                                  : const Color(0xFFE8F5E9),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            'W${idx + 1}',
+                                            style: AppStyles.caption.copyWith(
+                                              fontWeight: isHighest
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                              color: isHighest
+                                                  ? const Color(0xFF1B5E20)
+                                                  : AppColors.textSecondary,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    })
+                                    .toList(),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-
-                  // Tren Kategori
-                  Text(
-                    'Tren Kategori (Bulan Ini)',
-                    style: AppStyles.heading2.copyWith(
-                      color: const Color(0xFF1B5E20),
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (state.topCategories.isEmpty)
-                    Center(
-                      child: Text(
-                        'Belum ada data',
-                        style: AppStyles.bodyTextSecondary,
                       ),
-                    )
-                  else
-                    SizedBox(
-                      height: 140,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: state.topCategories.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(width: 16),
-                        itemBuilder: (context, index) {
-                          final cat = state.topCategories[index];
+                      const SizedBox(height: 32),
 
-                          IconData icon = Icons.category;
-                          final lowerName = cat.categoryName.toLowerCase();
-                          if (lowerName.contains('food') ||
-                              lowerName.contains('makan'))
-                            icon = Icons.restaurant;
-                          else if (lowerName.contains('transport'))
-                            icon = Icons.directions_car;
-                          else if (lowerName.contains('shop') ||
-                              lowerName.contains('belanj'))
-                            icon = Icons.shopping_bag;
-                          else if (lowerName.contains('entert') ||
-                              lowerName.contains('hiburan'))
-                            icon = Icons.local_activity;
-
-                          // calculate individual chart heights based on weekly totals
-                          double maxTotal = 1.0;
-                          for (var v in cat.weeklyTotals) {
-                            if (v > maxTotal) maxTotal = v;
-                          }
-                          final List<double> heights = cat.weeklyTotals
-                              .map((e) => e / maxTotal)
-                              .toList();
-
-                          return _buildCategoryTrendCard(
-                            cat.categoryName,
-                            icon,
-                            AppHelpers.formatCurrencyIdr(cat.totalAmount),
-                            heights,
-                          );
-                        },
-                      ),
-                    ),
-                  const SizedBox(height: 32),
-
-                  // Highlight Pekan Ini -> Insight Hari
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'HIGHLIGHT HARI INI',
-                          style: AppStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.bold,
+                      // Summary Cards
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildTrendStatCard(
+                              'Minggu Tertinggi',
+                              'Minggu ${state.highestSpendingWeekIndex + 1}',
+                              AppHelpers.formatCurrencyIdr(
+                                state.highestSpendingWeekAmount,
+                              ),
+                              const Color(0xFFE74C3C),
+                              const Color(0xFFFDEDEC),
+                            ),
                           ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildTrendStatCard(
+                              'Minggu Terendah',
+                              'Minggu ${state.lowestSpendingWeekIndex + 1}',
+                              AppHelpers.formatCurrencyIdr(
+                                state.lowestSpendingWeekAmount,
+                              ),
+                              const Color(0xFF27AE60),
+                              const Color(0xFFE8F5E9),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+
+                      // Weekly Breakdown List
+                      Text(
+                        'Rincian Mingguan',
+                        style: AppStyles.heading2.copyWith(
+                          color: const Color(0xFF1B5E20),
+                          fontSize: 18,
                         ),
-                        const SizedBox(height: 24),
-                        _buildInsightItem(state),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 16),
+                      ...state.currentMonthWeeklyTotals.asMap().entries.map((
+                        entry,
+                      ) {
+                        final idx = entry.key;
+                        final amount = entry.value;
+                        return _buildWeeklyListItem(
+                          'Minggu ${idx + 1}',
+                          '${idx * 7 + 1} - ${idx == 3 ? 31 : (idx + 1) * 7} ${DateFormat('MMM', 'id').format(state.currentMonth)}',
+                          AppHelpers.formatCurrencyIdr(amount),
+                          idx == state.highestSpendingWeekIndex,
+                        );
+                      }).toList(),
+                      const SizedBox(height: 100),
+                    ],
                   ),
-                  const SizedBox(height: 32),
-                ],
+                ),
               ),
             ),
           );
@@ -286,142 +297,6 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
 
         return const Scaffold(body: Center(child: Text('Terjadi kesalahan')));
       },
-    );
-  }
-
-  Widget _buildInsightItem(AnalysisLoaded state) {
-    if (state.currentMonthWeekdayTotals.every((e) => e == 0)) {
-      return _buildHighlightItem(
-        icon: Icons.info_outline,
-        iconColor: Colors.blue,
-        iconBgColor: Colors.blue.withOpacity(0.1),
-        text: 'Belum ada transaksi di bulan ini.',
-      );
-    }
-
-    int maxIndex = 0;
-    double maxVal = 0;
-    for (int i = 0; i < state.currentMonthWeekdayTotals.length; i++) {
-      if (state.currentMonthWeekdayTotals[i] > maxVal) {
-        maxVal = state.currentMonthWeekdayTotals[i];
-        maxIndex = i;
-      }
-    }
-
-    final days = [
-      'Senin',
-      'Selasa',
-      'Rabu',
-      'Kamis',
-      'Jumat',
-      'Sabtu',
-      'Minggu',
-    ];
-    final highestDay = days[maxIndex];
-
-    return _buildHighlightItem(
-      icon: Icons.warning_amber_rounded,
-      iconColor: const Color(0xFFF39C12),
-      iconBgColor: const Color(0xFFFFF3E0),
-      text:
-          'Pengeluaran paling besar bulan ini sering terjadi pada hari $highestDay.',
-    );
-  }
-
-  Widget _buildTrendChart(AnalysisLoaded state) {
-    final double maxVal1 = state.currentMonthWeekdayTotals.fold(
-      0.0,
-      (m, v) => v > m ? v : m,
-    );
-    final double maxVal2 = state.previousMonthWeekdayTotals.fold(
-      0.0,
-      (m, v) => v > m ? v : m,
-    );
-    final double maxVal = maxVal1 > maxVal2 ? maxVal1 : maxVal2;
-
-    final safeMax = maxVal == 0 ? 1.0 : maxVal;
-
-    final days = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(7, (index) {
-                final valCurrent = state.currentMonthWeekdayTotals[index];
-                final valPrev = state.previousMonthWeekdayTotals[index];
-                final ratioCurrent = valCurrent / safeMax;
-                final ratioPrev = valPrev / safeMax;
-
-                return _buildBarGroup(days[index], ratioPrev, ratioCurrent);
-              }),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildLegendPill('Bulan Lalu', const Color(0xFFC8E6C9)),
-              const SizedBox(width: 16),
-              _buildLegendPill('Bulan Ini', const Color(0xFF27AE60)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBarGroup(String day, double heightPrev, double heightCurrent) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              width: 10,
-              height: 150 * heightPrev,
-              decoration: const BoxDecoration(
-                color: Color(0xFFC8E6C9),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
-              ),
-            ),
-            const SizedBox(width: 2),
-            Container(
-              width: 10,
-              height: 150 * heightCurrent,
-              decoration: const BoxDecoration(
-                color: Color(0xFF27AE60),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4),
-                  topRight: Radius.circular(4),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          day,
-          style: AppStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-            fontSize: 10,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
     );
   }
 
@@ -466,122 +341,130 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendPill(String text, Color dotColor) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          text,
-          style: AppStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryTrendCard(
-    String title,
-    IconData icon,
+  Widget _buildTrendStatCard(
+    String label,
+    String value,
     String amount,
-    List<double> chartHeights,
+    Color color,
+    Color bgColor,
   ) {
     return Container(
-      width: 140,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: bgColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: color.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
-              Icon(icon, color: const Color(0xFF27AE60), size: 16),
-            ],
-          ),
-          const SizedBox(height: 12),
           Text(
-            amount,
-            style: AppStyles.heading2.copyWith(
-              color: AppColors.textPrimary,
-              fontSize: 16,
+            label,
+            style: AppStyles.caption.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: 10,
             ),
           ),
-          const Spacer(),
-          // Small Mini-Chart Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: chartHeights.map((height) {
-              return Container(
-                width: 16,
-                height: 30 * height,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF4ADE80),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(2),
-                    topRight: Radius.circular(2),
-                  ),
-                ),
-              );
-            }).toList(),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: AppStyles.heading2.copyWith(color: color, fontSize: 14),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            amount,
+            style: AppStyles.bodyText.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHighlightItem({
-    required IconData icon,
-    required Color iconColor,
-    required Color iconBgColor,
-    required String text,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: iconBgColor, shape: BoxShape.circle),
-          child: Icon(icon, color: iconColor, size: 20),
+  Widget _buildWeeklyListItem(
+    String title,
+    String dateRange,
+    String amount,
+    bool isHighest,
+  ) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isHighest ? const Color(0xFF27AE60) : AppColors.divider,
+          width: isHighest ? 2 : 1,
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            text,
-            style: AppStyles.bodyText.copyWith(
-              color: AppColors.textSecondary,
-              fontSize: 13,
-              height: 1.5,
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isHighest
+                  ? const Color(0xFFE8F5E9)
+                  : const Color(0xFFF8FAFB),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.calendar_view_week,
+              color: isHighest
+                  ? const Color(0xFF1B5E20)
+                  : AppColors.textSecondary,
+              size: 20,
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppStyles.heading2.copyWith(
+                    fontSize: 14,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                Text(
+                  dateRange,
+                  style: AppStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                amount,
+                style: AppStyles.heading2.copyWith(
+                  fontSize: 14,
+                  color: isHighest
+                      ? const Color(0xFF1B5E20)
+                      : AppColors.textPrimary,
+                ),
+              ),
+              if (isHighest)
+                Text(
+                  'Tertinggi',
+                  style: AppStyles.caption.copyWith(
+                    color: const Color(0xFF27AE60),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

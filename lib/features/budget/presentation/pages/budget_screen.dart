@@ -8,7 +8,11 @@ import '../bloc/budget_state.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../domain/entities/budget_entity.dart';
 import 'add_budget_screen.dart';
+import 'edit_budget_screen.dart';
+import '../bloc/edit_budget_bloc.dart';
+import '../../../../injection_container.dart' as di;
 
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
@@ -219,6 +223,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             : (progress >= 0.8
                                   ? const Color(0xFFF97316)
                                   : const Color(0xFF27AE60)),
+                        budget: budget,
                       );
                     }).toList(),
 
@@ -317,6 +322,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     required Color iconBgColor,
     required Color iconColor,
     required Color progressColor,
+    required BudgetEntity budget,
     Color? highlightColor,
   }) {
     return Container(
@@ -384,6 +390,75 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
+              PopupMenuButton<String>(
+                icon: const Icon(
+                  Icons.more_vert,
+                  color: AppColors.textSecondary,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                ),
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (_) => di.sl<EditBudgetBloc>(),
+                          child: EditBudgetScreen(budget: budget),
+                        ),
+                      ),
+                    ).then((_) {
+                      context.read<BudgetBloc>().add(
+                        LoadBudgets(budget.userId),
+                      );
+                    });
+                  } else if (value == 'delete') {
+                    _showDeleteConfirmationDialog(context, budget);
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.edit_outlined,
+                          size: 20,
+                          color: Color(0xFF2563EB),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Edit',
+                          style: AppStyles.bodyText.copyWith(
+                            color: const Color(0xFF2563EB),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.delete_outline,
+                          size: 20,
+                          color: Color(0xFFEF4444),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Delete',
+                          style: AppStyles.bodyText.copyWith(
+                            color: const Color(0xFFEF4444),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -398,6 +473,104 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(
+    BuildContext context,
+    BudgetEntity budget,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimens.radiusL),
+          ),
+          title: Text('Hapus Anggaran', style: AppStyles.heading3),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Apakah Anda yakin ingin menghapus anggaran ini?',
+                style: AppStyles.bodyText,
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _getBgColorForCategory(budget.categoryName),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        _getIconForCategory(budget.categoryName),
+                        color: _getColorForCategory(budget.categoryName),
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            budget.categoryName,
+                            style: AppStyles.bodyText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            _formatCurrency(budget.amount),
+                            style: AppStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Batal',
+                style: AppStyles.bodyText.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<BudgetBloc>().add(
+                  DeleteBudget(budget.userId, budget.id),
+                );
+              },
+              child: Text(
+                'Hapus',
+                style: AppStyles.bodyText.copyWith(
+                  color: const Color(0xFFEF4444),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

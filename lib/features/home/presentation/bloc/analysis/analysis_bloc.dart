@@ -169,6 +169,21 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       final topTransactionsList = allExpenses.take(3).toList();
 
       // 7. Dynamic Insights
+      int highestWeekIdx = 0;
+      double highestWeekVal = currentWeekly[0];
+      int lowestWeekIdx = 0;
+      double lowestWeekVal = currentWeekly[0];
+
+      for (int i = 1; i < currentWeekly.length; i++) {
+        if (currentWeekly[i] > highestWeekVal) {
+          highestWeekVal = currentWeekly[i];
+          highestWeekIdx = i;
+        }
+        if (currentWeekly[i] < lowestWeekVal && currentWeekly[i] > 0) {
+          lowestWeekVal = currentWeekly[i];
+          lowestWeekIdx = i;
+        }
+      }
 
       String insightHighlight = '';
       String insight = '';
@@ -176,19 +191,11 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         insightHighlight = 'Ayo catat!';
         insight = 'Belum ada pengeluaran di bulan ini.';
       } else if (comparison > 0) {
-        int maxWeekIdx = 0;
-        double maxWeekVal = currentWeekly[0];
-        for (int i = 1; i < 4; i++) {
-          if (currentWeekly[i] > maxWeekVal) {
-            maxWeekVal = currentWeekly[i];
-            maxWeekIdx = i;
-          }
-        }
-        final weekStrings = ['pertama', 'kedua', 'ketiga', 'keempat'];
+        final weekStrings = ['pertama', 'kedua', 'ketiga', 'keempat', 'kelima'];
 
         insightHighlight = 'Lebih boros ${comparison.toStringAsFixed(1)}%';
         insight =
-            'Pengeluaran Anda naik dibanding bulan lalu. Kenaikan terbesar terjadi pada kategori ${topCategories.isNotEmpty ? topCategories.first.categoryName : 'Lainnya'} di minggu ${weekStrings[maxWeekIdx]}.';
+            'Pengeluaran Anda naik dibanding bulan lalu. Kenaikan terbesar terjadi pada kategori ${topCategories.isNotEmpty ? topCategories.first.categoryName : 'Lainnya'} di minggu ${weekStrings[highestWeekIdx]}.';
       } else if (comparison < 0) {
         insightHighlight =
             'Lebih hemat ${comparison.abs().toStringAsFixed(1)}%';
@@ -214,6 +221,10 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
           insightText: insight,
           insightHighlightText: insightHighlight,
           currentMonth: event.selectedMonth,
+          highestSpendingWeekIndex: highestWeekIdx,
+          highestSpendingWeekAmount: highestWeekVal,
+          lowestSpendingWeekIndex: lowestWeekIdx,
+          lowestSpendingWeekAmount: lowestWeekVal,
         ),
       );
     } catch (e) {

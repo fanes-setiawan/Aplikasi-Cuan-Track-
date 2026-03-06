@@ -59,6 +59,10 @@ class AnalysisLoaded extends AnalysisState {
   final String insightText;
   final String insightHighlightText;
   final DateTime currentMonth;
+  final int highestSpendingWeekIndex;
+  final double highestSpendingWeekAmount;
+  final int lowestSpendingWeekIndex;
+  final double lowestSpendingWeekAmount;
 
   const AnalysisLoaded({
     required this.currentMonthTotal,
@@ -75,6 +79,10 @@ class AnalysisLoaded extends AnalysisState {
     required this.insightText,
     required this.insightHighlightText,
     required this.currentMonth,
+    required this.highestSpendingWeekIndex,
+    required this.highestSpendingWeekAmount,
+    required this.lowestSpendingWeekIndex,
+    required this.lowestSpendingWeekAmount,
   });
 
   @override

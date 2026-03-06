@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -13,6 +14,7 @@ import 'expense_analysis_screen.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
+import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 import '../bloc/home_state.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,6 +45,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ).format(amount);
   }
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 11) {
+      return 'Selamat Pagi,';
+    } else if (hour < 15) {
+      return 'Selamat Siang,';
+    } else if (hour < 18) {
+      return 'Selamat Sore,';
+    } else {
+      return 'Selamat Malam,';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,32 +80,41 @@ class _HomeScreenState extends State<HomeScreen> {
               expenseData = state.expenseChartData;
             }
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(AppDimens.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeader(context),
-                  const SizedBox(height: AppDimens.lg),
-                  isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : _buildBalanceCard(
-                          totalBalance,
-                          monthlyIncome,
-                          monthlyExpenses,
-                        ),
-                  const SizedBox(height: AppDimens.lg),
-                  _buildActionButtons(context),
-                  const SizedBox(height: AppDimens.xl),
-                  _buildExpenseAnalysis(expenseData),
-                  const SizedBox(height: AppDimens.xl),
-                  if (isLoading)
-                    const Center(child: CircularProgressIndicator())
-                  else if (recentTrx.isEmpty)
-                    const Center(child: Text('Belum ada transaksi.'))
-                  else
-                    _buildRecentTransactions(context, recentTrx),
-                ],
+            return AnimationLimiter(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppDimens.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: widget),
+                    ),
+                    children: [
+                      _buildHeader(context),
+                      const SizedBox(height: AppDimens.lg),
+                      isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : _buildBalanceCard(
+                              totalBalance,
+                              monthlyIncome,
+                              monthlyExpenses,
+                            ),
+                      const SizedBox(height: AppDimens.lg),
+                      _buildActionButtons(context),
+                      const SizedBox(height: AppDimens.xl),
+                      _buildExpenseAnalysis(expenseData),
+                      const SizedBox(height: AppDimens.xl),
+                      if (isLoading)
+                        const Center(child: CircularProgressIndicator())
+                      else if (recentTrx.isEmpty)
+                        const Center(child: Text('Belum ada transaksi.'))
+                      else
+                        _buildRecentTransactions(context, recentTrx),
+                    ],
+                  ),
+                ),
               ),
             );
           },
@@ -112,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Selamat Pagi,',
+              _getGreeting(),
               style: AppStyles.bodyTextSecondary.copyWith(fontSize: 12),
             ),
             Text('Halo, $_userName!', style: AppStyles.heading2),
@@ -655,7 +679,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         else
-          ...transactions.map((trx) {
+          ...transactions.asMap().entries.map((entry) {
+            final idx = entry.key;
+            final trx = entry.value;
             final isIncome = trx.type == 'income';
             final amountStr = _formatCurrency(trx.amount);
             final finalAmountStr = isIncome ? '+$amountStr' : '-$amountStr';
@@ -670,20 +696,40 @@ class _HomeScreenState extends State<HomeScreen> {
             // Format Date
             final dateStr = DateFormat('dd MMM yyyy • HH:mm').format(trx.date);
 
-            return _buildTransactionItem(
-              trx.title.isNotEmpty
-                  ? trx.title
-                  : (trx.notes?.isNotEmpty == true
-                        ? trx.notes!
-                        : (trx.categoryName ?? 'Transaksi')),
-              '$dateStr • ${trx.categoryName?.toUpperCase() ?? 'LAINNYA'}',
-              finalAmountStr,
-              bgColor,
-              iconColor,
-              icon,
-              isIncome,
+            return AnimationConfiguration.staggeredList(
+              position: idx,
+              duration: const Duration(milliseconds: 375),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TransactionDetailScreen(transaction: trx),
+                        ),
+                      );
+                    },
+                    child: _buildTransactionItem(
+                      trx.title.isNotEmpty
+                          ? trx.title
+                          : (trx.notes?.isNotEmpty == true
+                                ? trx.notes!
+                                : (trx.categoryName ?? 'Transaksi')),
+                      '$dateStr • ${trx.categoryName?.toUpperCase() ?? 'LAINNYA'}',
+                      finalAmountStr,
+                      bgColor,
+                      iconColor,
+                      icon,
+                      isIncome,
+                    ),
+                  ),
+                ),
+              ),
             );
-          }).toList(),
+          }),
       ],
     );
   }

@@ -10,6 +10,7 @@ class AddTransactionBloc
   AddTransactionBloc({required this.repository})
     : super(AddTransactionInitial()) {
     on<SubmitTransaction>(_onSubmitTransaction);
+    on<UpdateTransaction>(_onUpdateTransaction);
   }
 
   Future<void> _onSubmitTransaction(
@@ -19,6 +20,19 @@ class AddTransactionBloc
     emit(AddTransactionLoading());
     try {
       await repository.addTransaction(event.transaction);
+      emit(AddTransactionSuccess());
+    } catch (e) {
+      emit(AddTransactionFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateTransaction(
+    UpdateTransaction event,
+    Emitter<AddTransactionState> emit,
+  ) async {
+    emit(AddTransactionLoading());
+    try {
+      await repository.updateTransaction(event.transaction);
       emit(AddTransactionSuccess());
     } catch (e) {
       emit(AddTransactionFailure(e.toString()));
