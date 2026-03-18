@@ -7,6 +7,7 @@ import 'custom_categories_screen.dart';
 import 'account_info_screen.dart';
 import 'security_settings_screen.dart';
 import 'notification_settings_screen.dart';
+import '../../../home/presentation/pages/import_excel_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -145,6 +146,19 @@ class ProfileScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) =>
                                   const CustomCategoriesScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      _buildProfileMenuItem(
+                        icon: Icons.file_upload_outlined,
+                        title: 'Import Transaksi Excel',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ImportExcelScreen(),
                             ),
                           );
                         },
