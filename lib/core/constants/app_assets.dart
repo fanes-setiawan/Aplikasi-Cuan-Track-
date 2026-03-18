@@ -19,6 +19,7 @@ class AppAssets {
   static const String iconBudget = '$pathIcons/ic_wallet.svg';
   static const String iconProfile = '$pathIcons/ic_profile.svg';
   static const String iconGoogle = '$pathIcons/ic_google.svg';
+  static const String iconBot = '$pathIcons/ic_boot.svg';
 
   // Tambahkan path asset gambar lainnya di sini nantinya
 }

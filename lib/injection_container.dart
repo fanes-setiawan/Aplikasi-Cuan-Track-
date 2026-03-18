@@ -10,6 +10,8 @@ import 'features/auth/domain/usecases/register_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/ai_chat/data/repositories/ai_chat_repository.dart';
+import 'features/ai_chat/presentation/bloc/ai_chat_bloc.dart';
 
 import 'features/home/domain/repositories/transaction_repository.dart';
 import 'features/home/data/repositories/firestore_transaction_repository_impl.dart';
@@ -127,4 +129,8 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => CategoryBloc(repository: sl()));
+
+  // --- Features: AI Chatbot ---
+  sl.registerLazySingleton(() => AIChatRepository(firestore: sl()));
+  sl.registerFactory(() => AIChatBloc(repository: sl(), authRepository: sl()));
 }

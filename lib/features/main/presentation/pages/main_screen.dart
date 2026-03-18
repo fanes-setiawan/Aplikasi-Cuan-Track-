@@ -18,6 +18,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../../core/utils/app_helpers.dart';
+import '../../../ai_chat/presentation/pages/ai_chat_screen.dart';
+import '../../../ai_chat/presentation/bloc/ai_chat_bloc.dart';
+import '../../../../injection_container.dart';
 
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
@@ -305,6 +308,34 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           label: 'Profil',
                         ),
                       ],
+                    ),
+                  ),
+                ),
+          floatingActionButton: _isAppLocked
+              ? null
+              : FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => sl<AIChatBloc>(),
+                          child: const AIChatScreen(),
+                        ),
+                      ),
+                    );
+                  },
+                  backgroundColor: AppColors.primary,
+                  elevation: 4,
+                  shape: const CircleBorder(),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      AppAssets.iconBot,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
