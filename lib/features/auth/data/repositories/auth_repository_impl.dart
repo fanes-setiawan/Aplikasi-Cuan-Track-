@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,6 +7,7 @@ import '../../domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   AuthRepositoryImpl(this.firebaseAuth);
@@ -89,7 +91,6 @@ class AuthRepositoryImpl implements AuthRepository {
       await _googleSignIn.signOut();
       await firebaseAuth.signOut();
     } catch (e) {
-      // Ignored or handle specifically
       throw Exception('Gagal logout. Silakan coba lagi.');
     }
   }
@@ -122,6 +123,60 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       debugPrint('Google Login error: $e');
       throw Exception('Login Google gagal: $e. Silakan coba lagi.');
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user == null) throw Exception('Tidak ada pengguna yang login.');
+      final uid = user.uid;
+
+      // 1. Hapus semua transaksi (top-level collection, filter by userId)
+      final txSnapshot = await _firestore
+          .collection('transactions')
+          .where('userId', isEqualTo: uid)
+          .get();
+      for (final doc in txSnapshot.docs) {
+        await doc.reference.delete();
+      }
+
+      // 2. Hapus sub-koleksi di users/{uid}/
+      final subCollections = [
+        'budgets',
+        'categories',
+        'payment_methods',
+        'debts',
+        'savings_goals',
+        'savings_history',
+      ];
+
+      for (final sub in subCollections) {
+        final snapshot = await _firestore
+            .collection('users')
+            .doc(uid)
+            .collection(sub)
+            .get();
+        for (final doc in snapshot.docs) {
+          await doc.reference.delete();
+        }
+      }
+
+      // 3. Hapus dokumen users/{uid}
+      await _firestore.collection('users').doc(uid).delete();
+
+      // 4. Sign out Google jika ada
+      try {
+        await _googleSignIn.signOut();
+      } catch (_) {}
+
+      // 5. Hapus akun Firebase Auth
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseAuthError(e));
+    } catch (e) {
+      throw Exception('Gagal menghapus akun: $e');
     }
   }
 }

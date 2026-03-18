@@ -240,6 +240,55 @@ class ProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 24),
+                // Hapus Akun Button
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
+                  child: InkWell(
+                    onTap: () => _showDeleteAccountDialog(context),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(AppDimens.md),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFF0F0),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.delete_forever_outlined,
+                              color: Color(0xFFE53935),
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              'Hapus Akun',
+                              style: AppStyles.bodyText.copyWith(
+                                color: const Color(0xFFE53935),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.chevron_right,
+                            color: Color(0xFFE53935),
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
                 Text(
                   'VERSI 1.0.42',
                   style: AppStyles.caption.copyWith(
@@ -253,6 +302,113 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDeleteAccountDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF0F0),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.warning_amber_rounded,
+                color: Color(0xFFE53935),
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Hapus Akun',
+              style: AppStyles.heading2.copyWith(
+                color: const Color(0xFFE53935),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tindakan ini tidak dapat dibatalkan!',
+              style: AppStyles.bodyText.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Semua data berikut akan dihapus secara permanen:',
+              style: AppStyles.bodyText.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...[
+              '• Semua transaksi',
+              '• Anggaran (budget)',
+              '• Kategori kustom',
+              '• Metode pembayaran',
+              '• Tabungan & hutang',
+              '• Akun Firebase Auth',
+            ].map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  item,
+                  style: AppStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Batal',
+              style: AppStyles.bodyText.copyWith(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<AuthBloc>().add(DeleteAccountEvent());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFE53935),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimens.radiusM),
+              ),
+            ),
+            child: Text(
+              'Ya, Hapus Akun',
+              style: AppStyles.bodyText.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

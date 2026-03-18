@@ -66,6 +66,7 @@ Future<void> init() async {
       registerUseCase: sl(),
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
+      authRepository: sl(),
     ),
   );
 
