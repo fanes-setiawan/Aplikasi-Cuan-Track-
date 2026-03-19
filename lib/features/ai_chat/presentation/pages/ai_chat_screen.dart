@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../bloc/ai_chat_bloc.dart';
@@ -36,37 +37,49 @@ class _AIChatScreenState extends State<AIChatScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FBF9),
       appBar: _buildAppBar(context),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: BlocConsumer<AIChatBloc, AIChatState>(
-              listener: (context, state) {
-                if (state is AIChatLoaded || state is AIChatLoading) {
-                  _scrollToBottom();
-                }
-              },
-              builder: (context, state) {
-                if (state.messages.isEmpty && state is! AIChatLoading) {
-                  return _buildEmptyState();
-                }
-
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.all(AppDimens.md),
-                  itemCount: state.messages.length + (state is AIChatLoading ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == state.messages.length) {
-                      return _buildTypingIndicator();
-                    }
-                    final message = state.messages[index];
-                    return _buildMessageBubble(message);
-                  },
-                );
-              },
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.5, // Subtle opacity for the background pattern
+              child: SvgPicture.asset(AppAssets.bgSemar, fit: BoxFit.cover),
             ),
           ),
-          _buildQuickActions(),
-          _buildInputSection(),
+          Column(
+            children: [
+              Expanded(
+                child: BlocConsumer<AIChatBloc, AIChatState>(
+                  listener: (context, state) {
+                    if (state is AIChatLoaded || state is AIChatLoading) {
+                      _scrollToBottom();
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state.messages.isEmpty && state is! AIChatLoading) {
+                      return _buildEmptyState();
+                    }
+
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(AppDimens.md),
+                      itemCount:
+                          state.messages.length +
+                          (state is AIChatLoading ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == state.messages.length) {
+                          return _buildTypingIndicator();
+                        }
+                        final message = state.messages[index];
+                        return _buildMessageBubble(message);
+                      },
+                    );
+                  },
+                ),
+              ),
+              _buildQuickActions(),
+              _buildInputSection(),
+            ],
+          ),
         ],
       ),
     );
@@ -103,7 +116,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'CuanAI',
+                'Asisten AI',
                 style: AppStyles.bodyText.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -133,16 +146,6 @@ class _AIChatScreenState extends State<AIChatScreen> {
           ),
         ],
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.search, color: AppColors.textSecondary),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
-          onPressed: () {},
-        ),
-      ],
     );
   }
 
@@ -168,17 +171,16 @@ class _AIChatScreenState extends State<AIChatScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            'Halo! Aku CuanAI',
-            style: AppStyles.heading2,
-          ),
+          Text('Halo! Aku CuanAI', style: AppStyles.heading2),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
               'Asisten keuangan pribadimu. Tanya apa saja tentang pengeluaranmu!',
               textAlign: TextAlign.center,
-              style: AppStyles.bodyText.copyWith(color: AppColors.textSecondary),
+              style: AppStyles.bodyText.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ),
         ],
@@ -191,13 +193,12 @@ class _AIChatScreenState extends State<AIChatScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser) ...[
-            _buildAIAvatar(),
-            const SizedBox(width: 8),
-          ],
+          if (!isUser) ...[_buildAIAvatar(), const SizedBox(width: 8)],
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -225,10 +226,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
               ),
             ),
           ),
-          if (isUser) ...[
-            const SizedBox(width: 8),
-            _buildUserAvatar(),
-          ],
+          if (isUser) ...[const SizedBox(width: 8), _buildUserAvatar()],
         ],
       ),
     );
@@ -280,10 +278,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
         'assets/icons/ic_boot.svg',
         width: 18,
         height: 18,
-        colorFilter: const ColorFilter.mode(
-          AppColors.primary,
-          BlendMode.srcIn,
-        ),
+        colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
       ),
     );
   }
@@ -295,11 +290,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
         color: Colors.orange.withOpacity(0.1),
         shape: BoxShape.circle,
       ),
-      child: const Icon(
-        Icons.person_outline,
-        size: 18,
-        color: Colors.orange,
-      ),
+      child: const Icon(Icons.person_outline, size: 18, color: Colors.orange),
     );
   }
 

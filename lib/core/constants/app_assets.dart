@@ -12,6 +12,7 @@ class AppAssets {
   static const String onboarding2 = '$pathImages/onboarding_2.png';
   static const String onboarding3 = '$pathImages/onboarding_3.png';
   static const String placeholder = '$pathImages/placeholder.png';
+  static const String bgSemar = '$pathImages/bg_semar.svg';
 
   // Icons
   static const String iconHome = '$pathIcons/ic_home.svg';
