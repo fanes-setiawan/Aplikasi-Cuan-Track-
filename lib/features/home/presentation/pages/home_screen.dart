@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -111,18 +111,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         totalBalance,
                         monthlyIncome,
                         monthlyExpenses,
+                        showTrend: recentTrx.isNotEmpty,
                       ),
                       const SizedBox(height: AppDimens.lg),
                       _buildActionButtons(context),
                       const SizedBox(height: AppDimens.xl),
-                      _buildExpenseAnalysis(expenseData),
+                      
+                      if (expenseData.isNotEmpty) ...[
+                        _buildExpenseAnalysis(expenseData),
+                        const SizedBox(height: AppDimens.lg),
+                      ],
+
+                      _buildSummaryCards(context, isDataEmpty: recentTrx.isEmpty),
                       const SizedBox(height: AppDimens.lg),
-                      _buildSummaryCards(context),
-                      const SizedBox(height: AppDimens.xl),
+                      
                       if (recentTrx.isEmpty)
-                        const EmptyState(
+                        EmptyState(
                           title: 'Belum ada transaksi',
-                          subtitle: 'Mulai catat transaksi pertamamu sekarang!',
+                          subtitle: 'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
+                          imageWidth: 140, // Reduced size
+                          padding: const EdgeInsets.symmetric(vertical: AppDimens.md),
+                          onAction: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddTransactionScreen(),
+                              ),
+                            );
+                          },
+                          actionLabel: 'Tambah Transaksi',
                         )
                       else
                         _buildRecentTransactions(context, recentTrx),
@@ -275,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBalanceCard(double totalBalance, double income, double expense) {
+  Widget _buildBalanceCard(double totalBalance, double income, double expense, {bool showTrend = true}) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -338,33 +355,34 @@ class _HomeScreenState extends State<HomeScreen> {
                           letterSpacing: 1.2,
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(AppDimens.round),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.trending_up,
-                              color: Colors.white,
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              '+ 2.5%',
-                              style: AppStyles.caption.copyWith(
+                      if (showTrend)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(AppDimens.round),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.trending_up,
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                size: 14,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 4),
+                              Text(
+                                '+ 2.5%',
+                                style: AppStyles.caption.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: AppDimens.sm),
@@ -545,17 +563,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSummaryCards(BuildContext context) {
+  Widget _buildSummaryCards(BuildContext context, {bool isDataEmpty = false}) {
     return Row(
       children: [
-        Expanded(child: _buildSavingsSummaryCard(context)),
+        Expanded(child: _buildSavingsSummaryCard(context, showTrend: !isDataEmpty)),
         const SizedBox(width: AppDimens.md),
         Expanded(child: _buildDebtSummaryCard(context)),
       ],
     );
   }
 
-  Widget _buildSavingsSummaryCard(BuildContext context) {
+  Widget _buildSavingsSummaryCard(BuildContext context, {bool showTrend = true}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -613,24 +631,25 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             const SizedBox(height: AppDimens.sm),
-            Row(
-              children: [
-                const Icon(
-                  Icons.keyboard_double_arrow_up,
-                  color: Color(0xFF1B5E20),
-                  size: 12,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '+12% bln ini',
-                  style: AppStyles.caption.copyWith(
-                    color: const Color(0xFF1B5E20),
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+            if (showTrend)
+              Row(
+                children: [
+                  const Icon(
+                    Icons.keyboard_double_arrow_up,
+                    color: Color(0xFF1B5E20),
+                    size: 12,
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '+12% bln ini',
+                    style: AppStyles.caption.copyWith(
+                      color: const Color(0xFF1B5E20),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
@@ -960,25 +979,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: AppDimens.md),
         if (transactions.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppDimens.xl),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset('assets/images/img_emty.svg', width: 150),
-                  const SizedBox(height: AppDimens.md),
-                  Text(
-                    "Belum ada transaksi terakhir",
-                    style: AppStyles.bodyText.copyWith(
-                      color: AppColors.textHint,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
+          const SizedBox.shrink()
         else
           ...transactions.asMap().entries.map((entry) {
             final idx = entry.key;

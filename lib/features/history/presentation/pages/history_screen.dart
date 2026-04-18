@@ -338,8 +338,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
     if (transactions.isEmpty || displayedTransactions.isEmpty) {
       return const EmptyState(
-        title: 'Data masih kosong',
+        title: 'Data Masih Kosong',
         subtitle: 'Belum ada transaksi di bulan ini atau untuk kategori ini.',
+        imageWidth: 120,
       );
     }
 

@@ -16,6 +16,9 @@ import 'package:intl/intl.dart';
 import 'add_savings_goal_screen.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/savings_history_entity.dart';
+import '../bloc/savings_category_bloc.dart';
+import '../bloc/savings_category_event.dart';
+import '../widgets/add_savings_category_sheet.dart';
 
 class SavingsScreen extends StatefulWidget {
   const SavingsScreen({super.key});
@@ -37,6 +40,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
     if (user != null) {
       _userId = user.uid;
       context.read<SavingsBloc>().add(LoadSavingsGoals(_userId));
+      context.read<SavingsCategoryBloc>().add(LoadSavingsCategories(_userId));
     }
   }
 
@@ -162,6 +166,26 @@ class _SavingsScreenState extends State<SavingsScreen> {
           ),
           title: Text('Tabungan Saya', style: AppStyles.heading2),
           centerTitle: false,
+          actions: [
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => const AddSavingsCategorySheet(),
+                );
+              },
+              icon: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.category_outlined, color: AppColors.primary),
+                  Text('Tujuan', style: TextStyle(fontSize: 10, color: AppColors.primary)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
         ),
         body: Stack(
           children: [
@@ -174,13 +198,20 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     0.0,
                     (sum, goal) => sum + goal.currentAmount,
                   );
+                  final totalTarget = state.goals.fold(
+                    0.0,
+                    (sum, goal) => sum + goal.targetAmount,
+                  );
 
                   return SingleChildScrollView(
                     padding: const EdgeInsets.all(AppDimens.md),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTotalCard(totalSavings),
+                        _buildTotalCard(totalSavings, totalTarget),
+                        const SizedBox(height: AppDimens.xl),
+
+                        _buildPurposeSummary(state.goals),
                         const SizedBox(height: AppDimens.xl),
 
                         Row(
@@ -203,47 +234,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                             title: 'Belum ada target',
                             subtitle:
                                 'Buat target tabungan untuk memotivasi Anda mencapai impian.',
+                            imageWidth: 120,
                           )
                         else
                           ...state.goals.map((goal) => _buildGoalItem(goal)),
-
-                        const SizedBox(height: AppDimens.md),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AddSavingsGoalScreen(),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              'Tambah Target Baru',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  AppDimens.radiusM,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: AppDimens.xl + 10),
 
                         // History Section Placeholder
                         Row(
@@ -281,11 +275,27 @@ class _SavingsScreenState extends State<SavingsScreen> {
             ),
           ],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddSavingsGoalScreen(),
+              ),
+            );
+          },
+          backgroundColor: AppColors.primary,
+          icon: const Icon(Icons.add_circle_outline, color: Colors.white),
+          label: const Text(
+            'Tambah Target',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildTotalCard(double total) {
+  Widget _buildTotalCard(double total, double totalTarget) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -328,31 +338,61 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     const Icon(Icons.credit_card, color: Colors.white70),
                   ],
                 ),
-                const SizedBox(height: 4),
                 Text(
                   AppHelpers.formatCurrencyIdr(total),
                   style: AppStyles.heading1.copyWith(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 28,
                     letterSpacing: -0.5,
                   ),
                 ),
-                const SizedBox(height: AppDimens.lg),
+                const SizedBox(height: AppDimens.md),
+                Divider(color: Colors.white.withOpacity(0.2)),
+                const SizedBox(height: AppDimens.md),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Icon(
-                      Icons.verified_user,
-                      color: Colors.white,
-                      size: 14,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'TOTAL TARGET',
+                          style: AppStyles.caption.copyWith(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          AppHelpers.formatCurrencyIdr(totalTarget),
+                          style: AppStyles.bodyText.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'SAFE & SECURED',
-                      style: AppStyles.caption.copyWith(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'SISA TARGET',
+                          style: AppStyles.caption.copyWith(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          AppHelpers.formatCurrencyIdr(
+                            totalTarget - total > 0 ? totalTarget - total : 0,
+                          ),
+                          style: AppStyles.bodyText.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -364,17 +404,186 @@ class _SavingsScreenState extends State<SavingsScreen> {
     );
   }
 
+  Widget _buildPurposeSummary(List<dynamic> goals) {
+    if (goals.isEmpty) return const SizedBox.shrink();
+
+    // Grouping logic
+    final Map<String, Map<String, dynamic>> summary = {};
+    for (var goal in goals) {
+      final name = goal.categoryName ?? 'Lainnya';
+      if (!summary.containsKey(name)) {
+        summary[name] = {
+          'target': 0.0,
+          'collected': 0.0,
+          'icon': goal.categoryIconName,
+          'color': goal.categoryColorHex,
+        };
+      }
+      summary[name]!['target'] += goal.targetAmount;
+      summary[name]!['collected'] += goal.currentAmount;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Ringkasan per Tujuan Nabung', style: AppStyles.heading3),
+        const SizedBox(height: AppDimens.md),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: summary.entries.map((entry) {
+              final progress = (entry.value['collected'] / entry.value['target']).clamp(0.0, 1.0);
+              final icon = AppHelpers.getCategoryIcon(entry.value['icon']);
+              final color = entry.value['color'] != null 
+                  ? Color(int.parse(entry.value['color']))
+                  : AppColors.primary;
+
+              return Container(
+                width: 200,
+                margin: const EdgeInsets.only(right: AppDimens.md),
+                padding: const EdgeInsets.all(AppDimens.md),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                  border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(icon, size: 16, color: color),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            entry.key,
+                            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${(progress * 100).toStringAsFixed(0)}%',
+                          style: AppStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          AppHelpers.formatCurrencyIdr(entry.value['target']),
+                          style: AppStyles.caption.copyWith(fontSize: 9),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 4,
+                        backgroundColor: AppColors.divider.withOpacity(0.3),
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Terkumpul: ${AppHelpers.formatCurrencyIdr(entry.value['collected'])}',
+                      style: AppStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 10),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showGoalActions(BuildContext context, dynamic goal) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: const Icon(Icons.edit_outlined, color: Colors.blue),
+                title: const Text('Edit Target'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddSavingsGoalScreen(goal: goal),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: Colors.red),
+                title: const Text('Hapus Target'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showDeleteConfirmation(context, goal);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, dynamic goal) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Hapus Target'),
+        content: Text('Apakah Anda yakin ingin menghapus target "${goal.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<SavingsBloc>().add(DeleteSavingsGoal(_userId, goal.id));
+              Navigator.pop(ctx);
+            },
+            child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGoalItem(dynamic goal) {
     final progress = (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0);
     final remaining = goal.targetAmount - goal.currentAmount;
-    final bool isLaptop = goal.title.toLowerCase().contains('laptop');
-    final IconData icon = isLaptop ? Icons.laptop_mac : Icons.flight_takeoff;
-    final Color iconBgColor = isLaptop
-        ? const Color(0xFFE0F2F1)
-        : const Color(0xFFE3F2FD);
-    final Color iconColor = isLaptop
-        ? const Color(0xFF00897B)
-        : const Color(0xFF1976D2);
+    
+    final IconData icon = AppHelpers.getCategoryIcon(goal.categoryIconName);
+    final Color iconColor = goal.categoryColorHex != null
+        ? Color(int.parse(goal.categoryColorHex))
+        : AppColors.primary;
+    final Color iconBgColor = iconColor.withOpacity(0.1);
 
     // Format the date assuming deadline is in DateTime
     final monthNames = [
@@ -399,9 +608,6 @@ class _SavingsScreenState extends State<SavingsScreen> {
         if (!goal.isAchieved) {
           _showAddFundsDialog(context, goal.id, remaining);
         }
-      },
-      onLongPress: () {
-        context.read<SavingsBloc>().add(DeleteSavingsGoal(_userId, goal.id));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: AppDimens.md),
@@ -430,22 +636,53 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(goal.title, style: AppStyles.heading3),
-                        Text(
-                          dateStr,
-                          style: AppStyles.caption.copyWith(
-                            color: AppColors.textHint,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              dateStr,
+                              style: AppStyles.caption.copyWith(
+                                color: AppColors.textHint,
+                              ),
+                            ),
+                            if (goal.categoryName != null) ...[
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 4,
+                                height: 4,
+                                decoration: const BoxDecoration(
+                                  color: AppColors.textHint,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                goal.categoryName!,
+                                style: AppStyles.caption.copyWith(
+                                  color: iconColor.withOpacity(0.8),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
                     ),
                   ],
                 ),
-                Text(
-                  '${(progress * 100).toStringAsFixed(0)}%',
-                  style: AppStyles.bodyText.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      '${(progress * 100).toStringAsFixed(0)}%',
+                      style: AppStyles.bodyText.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_vert, size: 20),
+                      onPressed: () => _showGoalActions(context, goal),
+                    ),
+                  ],
                 ),
               ],
             ),

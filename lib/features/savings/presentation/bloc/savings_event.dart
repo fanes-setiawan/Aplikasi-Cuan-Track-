@@ -56,6 +56,16 @@ class DeleteSavingsGoal extends SavingsEvent {
   List<Object> get props => [userId, goalId];
 }
 
+class UpdateSavingsGoal extends SavingsEvent {
+  final String userId;
+  final SavingsGoalEntity goal;
+
+  const UpdateSavingsGoal(this.userId, this.goal);
+
+  @override
+  List<Object> get props => [userId, goal];
+}
+
 class AddFundsToGoal extends SavingsEvent {
   final String userId;
   final String goalId;

@@ -202,8 +202,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Widget _buildChartSection(AnalyticsLoaded state) {
     if (state.expenses.isEmpty) {
       return const EmptyState(
-        title: 'Belum ada pengeluaran',
+        title: 'Belum Ada Pengeluaran',
         subtitle: 'Tidak ada data pengeluaran untuk dianalisis di bulan ini.',
+        imageWidth: 120,
       );
     }
 

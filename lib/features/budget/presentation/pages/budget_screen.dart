@@ -192,9 +192,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   // Budget Items
                   if (state.budgets.isEmpty)
                     const EmptyState(
-                      title: 'Belum ada anggaran',
+                      title: 'Belum Ada Anggaran',
                       subtitle:
                           'Mulai buat anggaran untuk mengatur pengeluaran Anda dengan lebih baik.',
+                      imageWidth: 120,
                     )
                   else
                     ...state.budgets.map((budget) {

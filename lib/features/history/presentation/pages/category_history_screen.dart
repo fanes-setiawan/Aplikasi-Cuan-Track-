@@ -127,8 +127,9 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
 
             if (filtered.isEmpty) {
               return const EmptyState(
-                title: 'Tidak ada transaksi',
+                title: 'Tidak Ada Transaksi',
                 subtitle: 'Tidak ada transaksi untuk kategori ini di bulan ini.',
+                imageWidth: 120,
               );
             }
 

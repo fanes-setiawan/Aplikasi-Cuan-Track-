@@ -51,7 +51,8 @@ class FirestoreSavingsRepositoryImpl implements SavingsRepository {
         .collection('users')
         .doc(userId)
         .collection('savings_goals')
-        .add(goal.toMap());
+        .doc(goal.id)
+        .set(goal.toMap());
   }
 
   @override

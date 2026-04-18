@@ -23,6 +23,9 @@ import 'features/history/presentation/bloc/history_bloc.dart';
 import 'features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'features/savings/data/repositories/firestore_savings_repository_impl.dart';
 import 'features/savings/presentation/bloc/savings_bloc.dart';
+import 'features/savings/domain/repositories/savings_category_repository.dart';
+import 'features/savings/data/repositories/firestore_savings_category_repository_impl.dart';
+import 'features/savings/presentation/bloc/savings_category_bloc.dart';
 import 'features/debt/data/repositories/firestore_debt_repository_impl.dart';
 import 'features/debt/presentation/bloc/debt_bloc.dart';
 
@@ -96,6 +99,12 @@ Future<void> init() async {
   );
 
   sl.registerFactory(() => SavingsBloc(repository: sl()));
+
+  sl.registerLazySingleton<SavingsCategoryRepository>(
+    () => FirestoreSavingsCategoryRepositoryImpl(),
+  );
+
+  sl.registerFactory(() => SavingsCategoryBloc(sl()));
 
   // --- Features: Debt Tracking ---
   sl.registerLazySingleton<FirestoreDebtRepositoryImpl>(

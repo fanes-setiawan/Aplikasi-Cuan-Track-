@@ -10,9 +10,14 @@ import '../../domain/entities/savings_goal_entity.dart';
 import '../bloc/savings_bloc.dart';
 import '../bloc/savings_event.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../bloc/savings_category_bloc.dart';
+import '../bloc/savings_category_event.dart';
+import '../bloc/savings_category_state.dart';
+import '../widgets/add_savings_category_sheet.dart';
 
 class AddSavingsGoalScreen extends StatefulWidget {
-  const AddSavingsGoalScreen({super.key});
+  final SavingsGoalEntity? goal;
+  const AddSavingsGoalScreen({super.key, this.goal});
 
   @override
   State<AddSavingsGoalScreen> createState() => _AddSavingsGoalScreenState();
@@ -23,6 +28,32 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime? _selectedDeadline;
+  String? _selectedCategoryId;
+  String? _selectedCategoryName;
+  String? _selectedCategoryIcon;
+  String? _selectedCategoryColor;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<SavingsCategoryBloc>().add(LoadSavingsCategories(user.uid));
+    }
+
+    if (widget.goal != null) {
+      _titleController.text = widget.goal!.title;
+      // Format current amount for the controller
+      _amountController.text = AppHelpers.formatCurrencyIdr(widget.goal!.targetAmount)
+          .replaceAll('Rp', '')
+          .trim();
+      _selectedDeadline = widget.goal!.deadline;
+      _selectedCategoryId = widget.goal!.categoryId;
+      _selectedCategoryName = widget.goal!.categoryName;
+      _selectedCategoryIcon = widget.goal!.categoryIconName;
+      _selectedCategoryColor = widget.goal!.categoryColorHex;
+    }
+  }
 
   @override
   void dispose() {
@@ -42,15 +73,34 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
       );
       final amount = double.tryParse(numericAmount) ?? 0;
 
-      final goal = SavingsGoalEntity(
-        id: const Uuid().v4(),
-        title: _titleController.text,
-        targetAmount: amount,
-        currentAmount: 0,
-        deadline: _selectedDeadline!,
-      );
-
-      context.read<SavingsBloc>().add(AddSavingsGoal(user.uid, goal));
+      if (widget.goal != null) {
+        final updatedGoal = SavingsGoalEntity(
+          id: widget.goal!.id,
+          title: _titleController.text,
+          targetAmount: amount,
+          currentAmount: widget.goal!.currentAmount,
+          deadline: _selectedDeadline!,
+          isAchieved: amount <= widget.goal!.currentAmount,
+          categoryId: _selectedCategoryId,
+          categoryName: _selectedCategoryName,
+          categoryIconName: _selectedCategoryIcon,
+          categoryColorHex: _selectedCategoryColor,
+        );
+        context.read<SavingsBloc>().add(UpdateSavingsGoal(user.uid, updatedGoal));
+      } else {
+        final goal = SavingsGoalEntity(
+          id: const Uuid().v4(),
+          title: _titleController.text,
+          targetAmount: amount,
+          currentAmount: 0,
+          deadline: _selectedDeadline!,
+          categoryId: _selectedCategoryId,
+          categoryName: _selectedCategoryName,
+          categoryIconName: _selectedCategoryIcon,
+          categoryColorHex: _selectedCategoryColor,
+        );
+        context.read<SavingsBloc>().add(AddSavingsGoal(user.uid, goal));
+      }
       Navigator.pop(context);
     } else if (_selectedDeadline == null) {
       AppHelpers.showSnackBar(
@@ -89,7 +139,10 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text('Buat Target', style: AppStyles.heading2),
+        title: Text(
+          widget.goal != null ? 'Edit Target' : 'Buat Target',
+          style: AppStyles.heading2,
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -184,6 +237,84 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Kategori Tujuan Nabung',
+                    style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => const AddSavingsCategorySheet(),
+                      );
+                    },
+                    icon: const Icon(Icons.add_circle_outline, size: 16),
+                    label: const Text('Kelola', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              BlocBuilder<SavingsCategoryBloc, SavingsCategoryState>(
+                builder: (context, state) {
+                  if (state is SavingsCategoryLoaded) {
+                    return DropdownButtonFormField<String>(
+                      value: _selectedCategoryId,
+                      hint: const Text('Pilih Kategori Tujuan'),
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      items: state.categories.map((category) {
+                        return DropdownMenuItem<String>(
+                          value: category.id,
+                          child: Row(
+                            children: [
+                              Icon(
+                                AppHelpers.getCategoryIcon(category.iconName),
+                                color: Color(int.parse(category.colorHex)),
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(category.name),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        final category = state.categories.firstWhere(
+                          (c) => c.id == value,
+                        );
+                        setState(() {
+                          _selectedCategoryId = value;
+                          _selectedCategoryName = category.name;
+                          _selectedCategoryIcon = category.iconName;
+                          _selectedCategoryColor = category.colorHex;
+                        });
+                      },
+                    );
+                  }
+                  return Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    ),
+                    child: const Text('Memuat kategori...'),
+                  );
+                },
+              ),
               const SizedBox(height: 32),
 
               SizedBox(
@@ -197,9 +328,9 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                   ),
-                  child: const Text(
-                    'Simpan Target',
-                    style: TextStyle(
+                  child: Text(
+                    widget.goal != null ? 'Simpan Perubahan' : 'Simpan Target',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

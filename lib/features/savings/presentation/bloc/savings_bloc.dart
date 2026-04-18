@@ -19,6 +19,7 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
     on<SavingsGoalsUpdated>(_onSavingsGoalsUpdated);
     on<SavingsHistoryUpdated>(_onSavingsHistoryUpdated);
     on<AddSavingsGoal>(_onAddSavingsGoal);
+    on<UpdateSavingsGoal>(_onUpdateSavingsGoal);
     on<DeleteSavingsGoal>(_onDeleteSavingsGoal);
     on<AddFundsToGoal>(_onAddFundsToGoal);
     on<SavingsErrorEvent>(_onSavingsErrorEvent);
@@ -81,6 +82,17 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
   ) async {
     try {
       await repository.addSavingsGoal(event.userId, event.goal);
+    } catch (e) {
+      emit(SavingsError(e.toString()));
+    }
+  }
+
+  Future<void> _onUpdateSavingsGoal(
+    UpdateSavingsGoal event,
+    Emitter<SavingsState> emit,
+  ) async {
+    try {
+      await repository.updateSavingsGoal(event.userId, event.goal);
     } catch (e) {
       emit(SavingsError(e.toString()));
     }

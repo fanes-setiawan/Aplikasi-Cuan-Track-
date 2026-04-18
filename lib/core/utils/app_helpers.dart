@@ -128,4 +128,29 @@ class AppHelpers {
   static Future<void> delay(int milliseconds) async {
     await Future.delayed(Duration(milliseconds: milliseconds));
   }
+
+  /// Mendapatkan IconData berdasarkan nama ikon kategori
+  static IconData getCategoryIcon(String? name) {
+    if (name == null) return Icons.category_outlined;
+    final iconName = name.toLowerCase();
+    if (iconName.contains('salary')) return Icons.payments_outlined;
+    if (iconName.contains('business')) return Icons.business_center_outlined;
+    if (iconName.contains('bonus')) return Icons.stars_outlined;
+    if (iconName.contains('invest')) return Icons.show_chart_outlined;
+    if (iconName.contains('food')) return Icons.fastfood_outlined;
+    if (iconName.contains('transport')) return Icons.directions_car_outlined;
+    if (iconName.contains('shopping')) return Icons.shopping_bag_outlined;
+    if (iconName.contains('entertainment')) return Icons.sports_esports_outlined;
+    if (iconName.contains('home')) return Icons.home_outlined;
+    if (iconName.contains('heart')) return Icons.favorite_border_outlined;
+    if (iconName.contains('cafe')) return Icons.local_cafe_outlined;
+    if (iconName.contains('travel')) return Icons.flight_takeoff_outlined;
+    if (iconName.contains('education')) return Icons.school_outlined;
+    if (iconName.contains('savings')) return Icons.savings;
+    if (iconName.contains('electronics')) return Icons.laptop_mac;
+    if (iconName.contains('health')) return Icons.local_hospital;
+    if (iconName.contains('camera')) return Icons.camera_alt;
+    if (iconName.contains('phone')) return Icons.phone_iphone;
+    return Icons.category_outlined;
+  }
 }

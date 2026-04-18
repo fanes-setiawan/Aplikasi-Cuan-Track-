@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -218,10 +219,23 @@ class _AIChatScreenState extends State<AIChatScreen> {
                   ),
                 ],
               ),
-              child: Text(
-                message.text,
-                style: AppStyles.bodyText.copyWith(
-                  color: isUser ? Colors.white : AppColors.textPrimary,
+              child: MarkdownBody(
+                data: message.text,
+                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+                  p: AppStyles.bodyText.copyWith(
+                    color: isUser ? Colors.white : AppColors.textPrimary,
+                  ),
+                  listBullet: AppStyles.bodyText.copyWith(
+                    color: isUser ? Colors.white : AppColors.textPrimary,
+                  ),
+                  strong: AppStyles.bodyText.copyWith(
+                    color: isUser ? Colors.white : AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  em: AppStyles.bodyText.copyWith(
+                    color: isUser ? Colors.white : AppColors.textPrimary,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
               ),
             ),

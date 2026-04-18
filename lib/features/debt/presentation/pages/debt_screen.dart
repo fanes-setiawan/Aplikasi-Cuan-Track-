@@ -499,12 +499,10 @@ class _DebtScreenState extends State<DebtScreen>
 
   Widget _buildDebtList(List debts, String typeName) {
     if (debts.isEmpty) {
-      return Center(
-        child: EmptyState(
-          title: 'Tidak ada data $typeName',
-          subtitle:
-              'Mulai catat $typeName Anda untuk melacak keuangan dengan lebih rinci.',
-        ),
+      return EmptyState(
+        title: 'Tidak ada data $typeName',
+        subtitle: 'Mulai catat $typeName Anda untuk melacak keuangan dengan lebih rinci.',
+        imageWidth: 100,
       );
     }
 

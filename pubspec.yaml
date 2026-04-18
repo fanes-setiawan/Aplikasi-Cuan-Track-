@@ -61,6 +61,7 @@ dependencies:
   flutter_spinkit: ^5.2.2
   firebase_app_check: ^0.4.1+5
   firebase_ai: ^3.9.0
+  flutter_markdown: ^0.7.7+1
 
 dev_dependencies:
   flutter_test:
