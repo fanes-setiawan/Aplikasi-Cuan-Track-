@@ -25,10 +25,15 @@ import 'package:cuan_track/features/payment_method/presentation/bloc/payment_met
 class AddTransactionScreen extends StatefulWidget {
   final bool isIncome;
   final TransactionEntity? transactionForEdit;
+  final double? initialAmount;
+  final String? initialNote;
+
   const AddTransactionScreen({
     super.key,
     this.isIncome = true,
     this.transactionForEdit,
+    this.initialAmount,
+    this.initialNote,
   });
 
   @override
@@ -77,6 +82,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           balance: 0.0,
           iconPath: '',
         );
+      }
+    } else {
+      // Use initial values if provided via constructor
+      if (widget.initialAmount != null && widget.initialAmount! > 0) {
+        _rawAmount = widget.initialAmount!.toStringAsFixed(0);
+      }
+      if (widget.initialNote != null) {
+        _noteController.text = widget.initialNote!;
       }
     }
   }

@@ -1,3 +1,16 @@
+import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
+import 'package:cuan_track/features/category/presentation/bloc/category_state.dart';
+import 'package:cuan_track/features/home/domain/entities/transaction_entity.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_bloc.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_event.dart';
+import 'package:cuan_track/features/payment_method/presentation/bloc/payment_method_state.dart';
+import 'package:cuan_track/features/transaction/presentation/bloc/add_transaction_bloc.dart';
+import 'package:cuan_track/features/transaction/presentation/bloc/add_transaction_event.dart';
+import 'package:cuan_track/features/transaction/presentation/bloc/add_transaction_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:cuan_track/features/transaction/presentation/pages/add_transaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +22,7 @@ import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../bloc/ai_chat_bloc.dart';
 import '../bloc/ai_chat_state.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 class AIChatScreen extends StatefulWidget {
   const AIChatScreen({super.key});
@@ -20,6 +34,16 @@ class AIChatScreen extends StatefulWidget {
 class _AIChatScreenState extends State<AIChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      context.read<CategoryBloc>().add(LoadCategories(user.uid));
+      context.read<PaymentMethodBloc>().add(LoadPaymentMethods(user.uid));
+    }
+  }
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,40 +70,62 @@ class _AIChatScreenState extends State<AIChatScreen> {
               child: SvgPicture.asset(AppAssets.bgSemar, fit: BoxFit.cover),
             ),
           ),
-          Column(
-            children: [
-              Expanded(
-                child: BlocConsumer<AIChatBloc, AIChatState>(
-                  listener: (context, state) {
-                    if (state is AIChatLoaded || state is AIChatLoading) {
-                      _scrollToBottom();
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state.messages.isEmpty && state is! AIChatLoading) {
-                      return _buildEmptyState();
-                    }
-
-                    return ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(AppDimens.md),
-                      itemCount:
-                          state.messages.length +
-                          (state is AIChatLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == state.messages.length) {
-                          return _buildTypingIndicator();
-                        }
-                        final message = state.messages[index];
-                        return _buildMessageBubble(message);
-                      },
-                    );
-                  },
-                ),
+          MultiBlocListener(
+            listeners: [
+              BlocListener<AIChatBloc, AIChatState>(
+                listener: (context, state) {
+                  if (state is AIChatLoaded || state is AIChatLoading) {
+                    _scrollToBottom();
+                  }
+                },
               ),
-              _buildQuickActions(),
-              _buildInputSection(),
+              BlocListener<AddTransactionBloc, AddTransactionState>(
+                listener: (context, state) {
+                  if (state is AddTransactionSuccess) {
+                    AppHelpers.showSnackBar(
+                      context,
+                      'Transaksi berhasil disimpan! ✅',
+                    );
+                  } else if (state is AddTransactionFailure) {
+                    AppHelpers.showSnackBar(
+                      context,
+                      'Gagal menyimpan: ${state.message}',
+                      isError: true,
+                    );
+                  }
+                },
+              ),
             ],
+            child: Column(
+              children: [
+                Expanded(
+                  child: BlocBuilder<AIChatBloc, AIChatState>(
+                    builder: (context, state) {
+                      if (state.messages.isEmpty && state is! AIChatLoading) {
+                        return _buildEmptyState();
+                      }
+
+                      return ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.all(AppDimens.md),
+                        itemCount:
+                            state.messages.length +
+                            (state is AIChatLoading ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == state.messages.length) {
+                            return _buildTypingIndicator();
+                          }
+                          final message = state.messages[index];
+                          return _buildMessageBubble(message);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                _buildQuickActions(),
+                _buildInputSection(),
+              ],
+            ),
           ),
         ],
       ),
@@ -219,24 +265,42 @@ class _AIChatScreenState extends State<AIChatScreen> {
                   ),
                 ],
               ),
-              child: MarkdownBody(
-                data: message.text,
-                styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
-                  p: AppStyles.bodyText.copyWith(
-                    color: isUser ? Colors.white : AppColors.textPrimary,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MarkdownBody(
+                    data: _getMessageText(message.text),
+                    styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+                        .copyWith(
+                          p: AppStyles.bodyText.copyWith(
+                            color: isUser
+                                ? Colors.white
+                                : AppColors.textPrimary,
+                          ),
+                          listBullet: AppStyles.bodyText.copyWith(
+                            color: isUser
+                                ? Colors.white
+                                : AppColors.textPrimary,
+                          ),
+                          strong: AppStyles.bodyText.copyWith(
+                            color: isUser
+                                ? Colors.white
+                                : AppColors.textPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          em: AppStyles.bodyText.copyWith(
+                            color: isUser
+                                ? Colors.white
+                                : AppColors.textPrimary,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
                   ),
-                  listBullet: AppStyles.bodyText.copyWith(
-                    color: isUser ? Colors.white : AppColors.textPrimary,
-                  ),
-                  strong: AppStyles.bodyText.copyWith(
-                    color: isUser ? Colors.white : AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  em: AppStyles.bodyText.copyWith(
-                    color: isUser ? Colors.white : AppColors.textPrimary,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
+                  if (!isUser && _hasAction(message.text)) ...[
+                    const SizedBox(height: 12),
+                    _buildActionButton(message.text),
+                  ],
+                ],
               ),
             ),
           ),
@@ -370,7 +434,14 @@ class _AIChatScreenState extends State<AIChatScreen> {
               ),
               child: IconButton(
                 icon: const Icon(Icons.add, color: AppColors.textSecondary),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AddTransactionScreen(),
+                    ),
+                  );
+                },
               ),
             ),
             const SizedBox(width: 12),
@@ -415,5 +486,217 @@ class _AIChatScreenState extends State<AIChatScreen> {
       context.read<AIChatBloc>().add(SendMessageEvent(_messageController.text));
       _messageController.clear();
     }
+  }
+
+  // --- Action Tag Parsing Helpers ---
+
+  bool _hasAction(String text) {
+    return text.contains('[ACTION:');
+  }
+
+  String _getMessageText(String text) {
+    if (!_hasAction(text)) return text;
+    final actionIndex = text.indexOf('[ACTION:');
+    return text.substring(0, actionIndex).trim();
+  }
+
+  Map<String, dynamic>? _parseAction(String text) {
+    try {
+      final regExp = RegExp(r"\[ACTION:(.*)\]");
+      final match = regExp.firstMatch(text);
+      if (match != null && match.groupCount >= 1) {
+        final jsonStr = match.group(1)!;
+        return json.decode(jsonStr) as Map<String, dynamic>;
+      }
+    } catch (e) {
+      debugPrint("Error parsing action tag: $e");
+    }
+    return null;
+  }
+
+  Widget _buildActionButton(String fullText) {
+    final action = _parseAction(fullText);
+    if (action == null) return const SizedBox.shrink();
+
+    final String type = action['type'] ?? 'expense';
+    final double amount = (action['amount'] ?? 0).toDouble();
+    final String note = action['note'] ?? '';
+    final bool isIncome = type == 'income';
+
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Konfirmasi Transaksi:',
+            style: AppStyles.caption.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          _buildInfoRow(
+            Icons.payments_outlined,
+            'Nominal',
+            AppHelpers.formatCurrencyIdr(amount),
+          ),
+          _buildInfoRow(Icons.notes, 'Catatan', note.isEmpty ? '-' : note),
+          _buildInfoRow(
+            isIncome ? Icons.add_circle_outline : Icons.remove_circle_outline,
+            'Tipe',
+            isIncome ? 'Pemasukan' : 'Pengeluaran',
+            color: isIncome ? AppColors.primary : Colors.orange,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: BlocBuilder<AddTransactionBloc, AddTransactionState>(
+                  builder: (context, state) {
+                    final isLoading = state is AddTransactionLoading;
+                    return ElevatedButton(
+                      onPressed:
+                          isLoading
+                              ? null
+                              : () => _submitTransactionDirectly(
+                                isIncome,
+                                amount,
+                                note,
+                              ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isIncome ? AppColors.primary : Colors.orange,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child:
+                          isLoading
+                              ? const SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                'Kirim ke Catatan',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => AddTransactionScreen(
+                            isIncome: isIncome,
+                            initialAmount: amount,
+                            initialNote: note,
+                          ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit_note, color: Colors.grey),
+                tooltip: 'Edit detail',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: color ?? AppColors.textSecondary),
+          const SizedBox(width: 6),
+          Text(
+            "$label: ",
+            style: AppStyles.caption.copyWith(fontSize: 11),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: AppStyles.caption.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                color: color ?? AppColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submitTransactionDirectly(
+    bool isIncome,
+    double amount,
+    String note,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    // 1. Get Categories to find a default one
+    final catState = context.read<CategoryBloc>().state;
+    String categoryId = '';
+    String categoryName = '';
+
+    if (catState is CategoryLoaded) {
+      final relevantCats =
+          catState.categories
+              .where((c) => c.type == (isIncome ? 'income' : 'expense'))
+              .toList();
+      if (relevantCats.isNotEmpty) {
+        // Try to find "Lainnya" or just pick the first one
+        final defaultCat = relevantCats.firstWhere(
+          (c) => c.name.toLowerCase().contains('lainnya'),
+          orElse: () => relevantCats.first,
+        );
+        categoryId = defaultCat.id;
+        categoryName = defaultCat.name;
+      }
+    }
+
+    // 2. Get Payment Methods to find a default one
+    final pmState = context.read<PaymentMethodBloc>().state;
+    String? paymentMethodId;
+    if (pmState is PaymentMethodLoaded && pmState.paymentMethods.isNotEmpty) {
+      paymentMethodId = pmState.paymentMethods.first.id;
+    }
+
+    final entity = TransactionEntity(
+      id: '',
+      userId: user.uid,
+      title: isIncome ? 'Pemasukan AI' : 'Pengeluaran AI',
+      amount: amount,
+      type: isIncome ? 'income' : 'expense',
+      categoryId: categoryId,
+      categoryName: categoryName,
+      paymentMethodId: paymentMethodId,
+      date: DateTime.now(),
+      notes: note,
+    );
+
+    context.read<AddTransactionBloc>().add(SubmitTransaction(entity));
   }
 }

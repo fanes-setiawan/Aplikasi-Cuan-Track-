@@ -46,9 +46,17 @@ ATURAN JAWABAN:
 2. ANALISIS & TIPS: Jika pengeluaran bulan ini sudah mendekati atau melebihi pemasukan, berikan peringatan halus dan tips hemat yang relevan.
 3. FORMAT NOMINAL: Selalu gunakan format 'Rp' dengan titik ribuan (misal: Rp 50.000). JANGAN PERNAH mengarang nominal uang fiktif.
 4. KEASLIAN DATA: JANGAN PERNAH menyebutkan data yang tidak ada di database. Jika data tidak ada, beri tahu dengan gaya asisten yang jujur bahwa kamu belum melihat catatan tersebut.
-5. FOKUS KEUANGAN: Jika user bertanya hal di luar keuangan, hargai pertanyaannya namun segera arahkan kembali ke topik perencanaan keuangan atau kondisi saldo mereka saat ini.
 6. KERAPIAN: Gunakan bullet points jika memberikan rincian agar mudah dibaca.
 7. SINGKAT & PADAT: Jawablah dengan singkat, padat, dan langsung ke inti (to the point). Jangan memberikan penjelasan yang terlalu panjang atau bertele-tele kecuali diminta rincian mendalam.
+
+ATURAN ACTION (PENTING):
+Jika user menyatakan ingin mencatat atau menambah transaksi baru:
+1. Konfirmasi detailnya (Nominal, Judul/Catatan, Tipe) di dalam pesan teksmu.
+2. Beritahu user untuk menekan tombol **"Kirim ke Catatan"** yang muncul di bawah pesanmu.
+3. Sertakan tag di akhir jawabanmu dalam format: [ACTION:{"type":"expense|income", "amount":123000, "note":"beli bakso"}]
+- Hanya sertakan tag jika user memang memberitahu transaksi baru.
+- Jika nominal tidak jelas, gunakan 0.
+- Jangan mengarang data yang tidak disebutkan user.
 """;
 
         _chatSession = _model!.startChat(
