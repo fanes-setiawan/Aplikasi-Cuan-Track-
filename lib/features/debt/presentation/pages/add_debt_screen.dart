@@ -27,6 +27,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
   final _descriptionController = TextEditingController();
   final _titleController = TextEditingController();
   DateTime? _selectedDeadline;
+  DateTime? _selectedStartDate;
   String _selectedType = 'hutang';
 
   bool _isInstallment = false;
@@ -36,6 +37,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedStartDate = widget.debt?.startDate ?? DateTime.now();
     if (widget.debt != null) {
       _nameController.text = widget.debt!.personName;
       _amountController.text = widget.debt!.amount.toInt().toString();
@@ -114,11 +116,12 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
         amount: amount,
         paidAmount: widget.debt?.paidAmount ?? 0,
         dueDate: _selectedDeadline!,
+        startDate: _selectedStartDate,
         description: _descriptionController.text.trim(),
         title: _titleController.text.trim(),
         isInstallment: _isInstallment,
         totalMonths: totalMonths,
-        paidMonths: widget.debt?.paidMonths ?? 0,
+        paidInstallmentMonths: widget.debt?.paidInstallmentMonths ?? const [],
         monthlyPayment: monthlyPayment,
       );
 
@@ -140,8 +143,8 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
   Future<void> _pickDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 7)),
-      firstDate: DateTime.now(),
+      initialDate: _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
+      firstDate: DateTime.now().subtract(const Duration(days: 365 * 5)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
       builder: (context, child) {
         return Theme(
@@ -156,6 +159,29 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
     if (date != null) {
       setState(() {
         _selectedDeadline = date;
+      });
+    }
+  }
+
+  Future<void> _pickStartDate() async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedStartDate ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 365 * 5)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(primary: AppColors.primary),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (date != null) {
+      setState(() {
+        _selectedStartDate = date;
       });
     }
   }
@@ -403,6 +429,44 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                 ),
               ),
               const SizedBox(height: 16),
+
+              if (_isInstallment) ...[
+                Text(
+                  'Tanggal Mulai Cicilan',
+                  style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: _pickStartDate,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          _selectedStartDate != null
+                              ? '${_selectedStartDate!.day} / ${_selectedStartDate!.month} / ${_selectedStartDate!.year}'
+                              : 'Pilih Tanggal Mulai',
+                          style: AppStyles.bodyText.copyWith(
+                            color: _selectedStartDate != null
+                                ? AppColors.textPrimary
+                                : AppColors.textHint,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: AppColors.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
 
               Text(
                 'Tenggat Waktu Pembayaran',

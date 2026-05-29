@@ -70,3 +70,22 @@ class AddPaymentToDebt extends DebtEvent {
   @override
   List<Object> get props => [userId, debtId, amount];
 }
+
+class ToggleInstallmentMonth extends DebtEvent {
+  final String userId;
+  final String debtId;
+  final int monthIndex;
+  final bool isPaid;
+  final double monthlyAmount;
+
+  const ToggleInstallmentMonth({
+    required this.userId,
+    required this.debtId,
+    required this.monthIndex,
+    required this.isPaid,
+    required this.monthlyAmount,
+  });
+
+  @override
+  List<Object> get props => [userId, debtId, monthIndex, isPaid, monthlyAmount];
+}

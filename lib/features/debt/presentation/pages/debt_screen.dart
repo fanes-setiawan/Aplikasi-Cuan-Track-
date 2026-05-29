@@ -14,6 +14,7 @@ import '../bloc/debt_state.dart';
 import 'add_debt_screen.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/debt_entity.dart';
+import 'installment_detail_screen.dart';
 
 class DebtScreen extends StatefulWidget {
   const DebtScreen({super.key});
@@ -260,11 +261,19 @@ class _DebtScreenState extends State<DebtScreen>
                       runSpacing: 8,
                       alignment: WrapAlignment.start,
                       children: List.generate(debt.totalMonths, (index) {
-                        final monthNum = index + 1;
-                        final isPaidMonth = monthNum <= debt.paidMonths;
+                        final startMonth = debt.dueDate.month; // 1-based
+                        final targetMonthIndex = (startMonth - 1 + index) % 12;
+                        final monthsList = [
+                          'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                        ];
+                        final monthLabel = monthsList[targetMonthIndex];
+                        final targetYear = debt.dueDate.year + (startMonth - 1 + index) ~/ 12;
+
+                        final isPaidMonth = debt.paidInstallmentMonths.contains(index);
 
                         return Container(
-                          width: 65,
+                          width: 80,
                           padding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 4,
@@ -292,7 +301,7 @@ class _DebtScreenState extends State<DebtScreen>
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Bulan $monthNum',
+                                monthLabel,
                                 style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
@@ -301,6 +310,14 @@ class _DebtScreenState extends State<DebtScreen>
                                       : Colors.grey[700],
                                 ),
                                 textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                targetYear.toString(),
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  color: Colors.grey[500],
+                                ),
                               ),
                               const SizedBox(height: 2),
                               Text(
@@ -583,11 +600,15 @@ class _DebtScreenState extends State<DebtScreen>
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            AppHelpers.formatCurrencyIdr(amount),
-            style: AppStyles.heading2.copyWith(
-              color: accentColor,
-              fontWeight: FontWeight.bold,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              AppHelpers.formatCurrencyIdr(amount),
+              style: AppStyles.heading2.copyWith(
+                color: accentColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 4),
@@ -613,13 +634,22 @@ class _DebtScreenState extends State<DebtScreen>
       );
     }
 
-    return ListView.builder(
+    return GridView.builder(
       padding: const EdgeInsets.all(AppDimens.md),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.76,
+      ),
       itemCount: debts.length,
       itemBuilder: (context, index) {
-        final debt = debts[index];
+        final DebtEntity debt = debts[index];
         final dateStr = DateFormat('dd MMM yyyy').format(debt.dueDate);
         final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
+        final isHutang = debt.type == 'hutang';
+        final accentColor = isHutang ? const Color(0xFFEF4444) : const Color(0xFF10B981);
+        final lightAccentColor = isHutang ? const Color(0xFFFFF1F1) : const Color(0xFFF1FFF8);
 
         IconData itemIcon = Icons.person_outline;
         if (debt.description.toLowerCase().contains('toko') ||
@@ -628,21 +658,37 @@ class _DebtScreenState extends State<DebtScreen>
         } else if (debt.description.toLowerCase().contains('sewa') ||
             debt.description.toLowerCase().contains('kontrakan')) {
           itemIcon = Icons.home_outlined;
+        } else if (debt.isInstallment) {
+          itemIcon = Icons.replay;
         }
 
         return GestureDetector(
           onTap: () {
-            _showDebtOptions(context, debt);
+            if (debt.isInstallment) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      InstallmentDetailScreen(debt: debt, userId: _userId),
+                ),
+              );
+            } else {
+              _showDebtOptions(context, debt);
+            }
           },
           onLongPress: () {
             _showDebtOptions(context, debt);
           },
           child: Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(AppDimens.md),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(AppDimens.radiusL),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isOverdue
+                    ? const Color(0xFFEF4444).withOpacity(0.2)
+                    : Colors.grey.withOpacity(0.1),
+                width: isOverdue ? 1.5 : 1.0,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.02),
@@ -651,87 +697,149 @@ class _DebtScreenState extends State<DebtScreen>
                 ),
               ],
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8FAFB),
-                    borderRadius: BorderRadius.circular(12),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: lightAccentColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          itemIcon,
+                          color: accentColor,
+                          size: 16,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: debt.isPaid
+                              ? const Color(0xFFE8F5E9)
+                              : (isOverdue
+                                  ? const Color(0xFFFFF1F1)
+                                  : const Color(0xFFF1F5F9)),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          debt.isPaid
+                              ? 'LUNAS'
+                              : (isOverdue ? 'TERLAMBAT' : 'AKTIF'),
+                          style: TextStyle(
+                            color: debt.isPaid
+                                ? Colors.green
+                                : (isOverdue
+                                    ? const Color(0xFFEF4444)
+                                    : AppColors.textHint),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Icon(
-                    itemIcon,
-                    color: AppColors.textSecondary,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
+                  const SizedBox(height: 6),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text(
-                            debt.title.isNotEmpty
-                                ? debt.title
-                                : debt.personName,
-                            style: AppStyles.bodyText.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (isOverdue) ...[
-                            const SizedBox(width: 4),
-                            const Icon(
-                              Icons.error,
-                              color: Color(0xFFEF4444),
-                              size: 14,
-                            ),
-                          ],
-                        ],
+                      Text(
+                        debt.title.isNotEmpty ? debt.title : debt.personName,
+                        style: AppStyles.bodyText.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      if (debt.title.isNotEmpty)
+                      if (debt.title.isNotEmpty) ...[
+                        const SizedBox(height: 2),
                         Text(
-                          'Pemberi/Penerima: ${debt.personName}',
+                          debt.personName,
                           style: AppStyles.caption.copyWith(
                             color: AppColors.textSecondary,
                             fontSize: 10,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      if (debt.description.isNotEmpty)
-                        Text(
-                          debt.description,
-                          style: AppStyles.caption.copyWith(
-                            color: AppColors.textHint,
-                            fontSize: 10,
+                      ],
+                      const SizedBox(height: 4),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          AppHelpers.formatCurrencyIdr(debt.amount),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15,
+                            color: accentColor,
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  const Divider(height: 1, thickness: 0.5),
+                  const SizedBox(height: 6),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       if (debt.isInstallment) ...[
-                        const SizedBox(height: 4),
                         Row(
                           children: [
                             const Icon(
                               Icons.replay,
                               color: AppColors.primary,
-                              size: 12,
+                              size: 10,
                             ),
                             const SizedBox(width: 4),
-                            Text(
-                              'Cicilan: ${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)}/bln',
-                              style: AppStyles.caption.copyWith(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
+                            Expanded(
+                              child: Text(
+                                '${debt.paidMonths}/${debt.totalMonths} Bln',
+                                style: const TextStyle(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 10,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Tenor: ${debt.paidMonths}/${debt.totalMonths} Bulan (Sisa: ${debt.totalMonths - debt.paidMonths} Bln)',
-                          style: AppStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
+                          '${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)}/bln',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 9,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ] else ...[
+                        Text(
+                          'Non-Cicilan',
+                          style: TextStyle(
+                            color: Colors.grey[600],
                             fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Sekali bayar',
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 9,
                           ),
                         ),
                       ],
@@ -743,70 +851,31 @@ class _DebtScreenState extends State<DebtScreen>
                             color: isOverdue
                                 ? const Color(0xFFEF4444)
                                 : AppColors.textHint,
-                            size: 12,
+                            size: 9,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            isOverdue
-                                ? 'Lewat: $dateStr'
-                                : 'Jatuh Tempo: $dateStr',
-                            style: AppStyles.caption.copyWith(
-                              color: isOverdue
-                                  ? const Color(0xFFEF4444)
-                                  : AppColors.textHint,
-                              fontWeight: isOverdue
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              fontSize: 10,
+                          Expanded(
+                            child: Text(
+                              isOverdue ? 'Lewat: $dateStr' : 'Tempo: $dateStr',
+                              style: TextStyle(
+                                color: isOverdue
+                                    ? const Color(0xFFEF4444)
+                                    : AppColors.textHint,
+                                fontWeight: isOverdue
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                fontSize: 9,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      AppHelpers.formatCurrencyIdr(debt.amount),
-                      style: AppStyles.bodyText.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFEF4444),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: debt.isPaid
-                            ? const Color(0xFFE8F5E9)
-                            : (isOverdue
-                                  ? const Color(0xFFFFF1F1)
-                                  : const Color(0xFFF1F5F9)),
-                        borderRadius: BorderRadius.circular(AppDimens.radiusL),
-                      ),
-                      child: Text(
-                        debt.isPaid
-                            ? 'LUNAS'
-                            : (isOverdue ? 'TERLAMBAT' : 'AKTIF'),
-                        style: AppStyles.caption.copyWith(
-                          color: debt.isPaid
-                              ? Colors.green
-                              : (isOverdue
-                                    ? const Color(0xFFEF4444)
-                                    : AppColors.textHint),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 9,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -850,17 +919,24 @@ class _DebtScreenState extends State<DebtScreen>
               ),
             ),
             const SizedBox(height: AppDimens.md),
-            ...List.generate(
-              5,
-              (index) => Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimens.md,
-                  vertical: 8,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 0.76,
                 ),
-                child: AppShimmer.rectangular(
-                  height: 90,
-                  borderRadius: AppDimens.radiusL,
-                ),
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  return AppShimmer.rectangular(
+                    height: 180,
+                    borderRadius: 16.0,
+                  );
+                },
               ),
             ),
           ],

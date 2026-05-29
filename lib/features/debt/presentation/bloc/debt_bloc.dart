@@ -15,6 +15,7 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
     on<UpdateDebt>(_onUpdateDebt);
     on<DeleteDebt>(_onDeleteDebt);
     on<AddPaymentToDebt>(_onAddPaymentToDebt);
+    on<ToggleInstallmentMonth>(_onToggleInstallmentMonth);
   }
 
   void _onLoadDebts(LoadDebts event, Emitter<DebtState> emit) {
@@ -87,6 +88,23 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
           event.amount,
         );
       }
+    } catch (e) {
+      emit(DebtError(e.toString()));
+    }
+  }
+
+  Future<void> _onToggleInstallmentMonth(
+    ToggleInstallmentMonth event,
+    Emitter<DebtState> emit,
+  ) async {
+    try {
+      await repository.toggleInstallmentMonth(
+        event.userId,
+        event.debtId,
+        event.monthIndex,
+        event.isPaid,
+        event.monthlyAmount,
+      );
     } catch (e) {
       emit(DebtError(e.toString()));
     }

@@ -7,13 +7,17 @@ class DebtEntity {
   final double amount;
   final double paidAmount;
   final DateTime dueDate;
+  final DateTime? startDate;
   final bool isPaid;
   final String description;
   final String title;
   final bool isInstallment;
   final int totalMonths;
-  final int paidMonths;
+  final List<int> paidInstallmentMonths;
   final double monthlyPayment;
+
+  int get paidMonths => paidInstallmentMonths.length;
+  DateTime get effectiveStartDate => startDate ?? dueDate;
 
   DebtEntity({
     required this.id,
@@ -22,17 +26,19 @@ class DebtEntity {
     required this.amount,
     required this.paidAmount,
     required this.dueDate,
+    this.startDate,
     this.isPaid = false,
     this.description = '',
     this.title = '',
     this.isInstallment = false,
     this.totalMonths = 0,
-    this.paidMonths = 0,
+    this.paidInstallmentMonths = const [],
     this.monthlyPayment = 0.0,
   });
 
   factory DebtEntity.fromMap(Map<String, dynamic> map, String id) {
     final paidMonthsList = map['paidInstallmentMonths'] as List? ?? [];
+    final List<int> paidList = paidMonthsList.map((e) => (e as num).toInt()).toList();
     return DebtEntity(
       id: id,
       personName: map['personName'] ?? '',
@@ -40,6 +46,9 @@ class DebtEntity {
       amount: (map['amount'] ?? 0).toDouble(),
       paidAmount: (map['paidAmount'] ?? 0).toDouble(),
       dueDate: (map['dueDate'] as Timestamp).toDate(),
+      startDate: map['startDate'] != null
+          ? (map['startDate'] as Timestamp).toDate()
+          : null,
       isPaid: map['isPaid'] ?? false,
       description: map['description'] ?? '',
       title: map['title'] ?? '',
@@ -49,7 +58,7 @@ class DebtEntity {
                 ? int.tryParse(map['installmentMonths']) ?? 0
                 : (map['installmentMonths'] as num).toInt())
           : 0,
-      paidMonths: paidMonthsList.length,
+      paidInstallmentMonths: paidList,
       monthlyPayment: (map['monthlyAmount'] ?? 0).toDouble(),
     );
   }
@@ -61,13 +70,14 @@ class DebtEntity {
       'amount': amount,
       'paidAmount': paidAmount,
       'dueDate': Timestamp.fromDate(dueDate),
+      'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
       'isPaid': isPaid,
       'description': description,
       'title': title,
       'isInstallment': isInstallment,
       'installmentMonths': totalMonths,
       'monthlyAmount': monthlyPayment,
-      'paidInstallmentMonths': List.generate(paidMonths, (i) => i),
+      'paidInstallmentMonths': paidInstallmentMonths,
     };
   }
 
@@ -78,12 +88,13 @@ class DebtEntity {
     double? amount,
     double? paidAmount,
     DateTime? dueDate,
+    DateTime? startDate,
     bool? isPaid,
     String? description,
     String? title,
     bool? isInstallment,
     int? totalMonths,
-    int? paidMonths,
+    List<int>? paidInstallmentMonths,
     double? monthlyPayment,
   }) {
     return DebtEntity(
@@ -93,12 +104,13 @@ class DebtEntity {
       amount: amount ?? this.amount,
       paidAmount: paidAmount ?? this.paidAmount,
       dueDate: dueDate ?? this.dueDate,
+      startDate: startDate ?? this.startDate,
       isPaid: isPaid ?? this.isPaid,
       description: description ?? this.description,
       title: title ?? this.title,
       isInstallment: isInstallment ?? this.isInstallment,
       totalMonths: totalMonths ?? this.totalMonths,
-      paidMonths: paidMonths ?? this.paidMonths,
+      paidInstallmentMonths: paidInstallmentMonths ?? this.paidInstallmentMonths,
       monthlyPayment: monthlyPayment ?? this.monthlyPayment,
     );
   }
