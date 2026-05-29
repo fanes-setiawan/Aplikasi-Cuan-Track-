@@ -44,28 +44,39 @@ class _DebtScreenState extends State<DebtScreen>
     super.dispose();
   }
 
-  void _showAddPaymentDialog(
-    BuildContext context,
-    String debtId,
-    double remaining,
-  ) {
+  void _showAddPaymentDialog(BuildContext context, DebtEntity debt) {
+    final remaining = debt.amount - debt.paidAmount;
     if (remaining <= 0) return;
     final TextEditingController amountController = TextEditingController();
+
+    if (debt.isInstallment) {
+      amountController.text = NumberFormat.decimalPattern(
+        'id_ID',
+      ).format(debt.monthlyPayment.toInt());
+    }
 
     showDialog(
       context: context,
       builder: (ctx) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text('Bayar Cicilan', style: AppStyles.heading2),
+          title: Text(
+            debt.isInstallment
+                ? 'Bayar Cicilan Bulan ke-${debt.paidMonths + 1}'
+                : 'Bayar Cicilan',
+            style: AppStyles.heading2,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Sisa: ${AppHelpers.formatCurrencyIdr(remaining)}',
+                debt.isInstallment
+                    ? 'Nominal Cicilan: ${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)}\nSisa Total: ${AppHelpers.formatCurrencyIdr(remaining)}'
+                    : 'Sisa: ${AppHelpers.formatCurrencyIdr(remaining)}',
                 style: AppStyles.bodyText.copyWith(
                   color: AppColors.textSecondary,
                 ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -95,7 +106,7 @@ class _DebtScreenState extends State<DebtScreen>
                   context.read<DebtBloc>().add(
                     AddPaymentToDebt(
                       userId: _userId,
-                      debtId: debtId,
+                      debtId: debt.id,
                       amount: amount,
                     ),
                   );
@@ -149,8 +160,7 @@ class _DebtScreenState extends State<DebtScreen>
                   title: Text('Bayar Cicilan', style: AppStyles.bodyText),
                   onTap: () {
                     Navigator.pop(ctx);
-                    final remaining = debt.amount - debt.paidAmount;
-                    _showAddPaymentDialog(context, debt.id, remaining);
+                    _showAddPaymentDialog(context, debt);
                   },
                 ),
               ListTile(
@@ -197,7 +207,23 @@ class _DebtScreenState extends State<DebtScreen>
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (debt.title.isNotEmpty) _detailRow('Judul', debt.title),
               _detailRow('Nama', debt.personName),
+              if (debt.isInstallment) ...[
+                _detailRow(
+                  'Jenis',
+                  'Cicilan / Angsuran (${debt.totalMonths} Bulan)',
+                ),
+                _detailRow(
+                  'Cicilan',
+                  '${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)} / Bulan',
+                ),
+                _detailRow('Sudah Bayar', '${debt.paidMonths} Bulan'),
+                _detailRow(
+                  'Sisa Tenor',
+                  '${debt.totalMonths - debt.paidMonths} Bulan',
+                ),
+              ],
               _detailRow('Total', AppHelpers.formatCurrencyIdr(debt.amount)),
               _detailRow(
                 'Terbayar',
@@ -567,7 +593,9 @@ class _DebtScreenState extends State<DebtScreen>
                       Row(
                         children: [
                           Text(
-                            debt.personName,
+                            debt.title.isNotEmpty
+                                ? debt.title
+                                : debt.personName,
                             style: AppStyles.bodyText.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -582,6 +610,14 @@ class _DebtScreenState extends State<DebtScreen>
                           ],
                         ],
                       ),
+                      if (debt.title.isNotEmpty)
+                        Text(
+                          'Pemberi/Penerima: ${debt.personName}',
+                          style: AppStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 10,
+                          ),
+                        ),
                       if (debt.description.isNotEmpty)
                         Text(
                           debt.description,
@@ -590,6 +626,35 @@ class _DebtScreenState extends State<DebtScreen>
                             fontSize: 10,
                           ),
                         ),
+                      if (debt.isInstallment) ...[
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.replay,
+                              color: AppColors.primary,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Cicilan: ${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)}/bln',
+                              style: AppStyles.caption.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Tenor: ${debt.paidMonths}/${debt.totalMonths} Bulan (Sisa: ${debt.totalMonths - debt.paidMonths} Bln)',
+                          style: AppStyles.caption.copyWith(
+                            color: AppColors.textSecondary,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 4),
                       Row(
                         children: [

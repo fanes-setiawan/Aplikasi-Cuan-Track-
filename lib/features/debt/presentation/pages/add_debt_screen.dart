@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -24,8 +25,13 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _titleController = TextEditingController();
   DateTime? _selectedDeadline;
   String _selectedType = 'hutang';
+
+  bool _isInstallment = false;
+  final _monthsController = TextEditingController();
+  final _monthlyPaymentController = TextEditingController();
 
   @override
   void initState() {
@@ -34,9 +40,19 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
       _nameController.text = widget.debt!.personName;
       _amountController.text = widget.debt!.amount.toInt().toString();
       _descriptionController.text = widget.debt!.description;
+      _titleController.text = widget.debt!.title;
       _selectedDeadline = widget.debt!.dueDate;
       _selectedType = widget.debt!.type;
+      _isInstallment = widget.debt!.isInstallment;
+      if (_isInstallment) {
+        _monthsController.text = widget.debt!.totalMonths.toString();
+        _monthlyPaymentController.text = widget.debt!.monthlyPayment
+            .toInt()
+            .toString();
+      }
     }
+    _monthsController.addListener(_calculateTotalAmount);
+    _monthlyPaymentController.addListener(_calculateTotalAmount);
   }
 
   @override
@@ -44,7 +60,28 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
     _nameController.dispose();
     _amountController.dispose();
     _descriptionController.dispose();
+    _titleController.dispose();
+    _monthsController.dispose();
+    _monthlyPaymentController.dispose();
     super.dispose();
+  }
+
+  void _calculateTotalAmount() {
+    if (!_isInstallment) return;
+    final months = int.tryParse(_monthsController.text) ?? 0;
+    final monthlyVal = _monthlyPaymentController.text.replaceAll(
+      RegExp(r'[^0-9]'),
+      '',
+    );
+    final monthlyPayment = int.tryParse(monthlyVal) ?? 0;
+
+    if (months > 0 && monthlyPayment > 0) {
+      final total = months * monthlyPayment;
+      final formatter = NumberFormat.decimalPattern('id_ID');
+      setState(() {
+        _amountController.text = formatter.format(total);
+      });
+    }
   }
 
   void _saveDebt() {
@@ -58,6 +95,18 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
       );
       final amount = double.tryParse(numericAmount) ?? 0;
 
+      int totalMonths = 0;
+      double monthlyPayment = 0.0;
+
+      if (_isInstallment) {
+        totalMonths = int.tryParse(_monthsController.text) ?? 0;
+        final numericMonthly = _monthlyPaymentController.text.replaceAll(
+          RegExp(r'[^0-9]'),
+          '',
+        );
+        monthlyPayment = double.tryParse(numericMonthly) ?? 0.0;
+      }
+
       final debt = DebtEntity(
         id: widget.debt?.id ?? const Uuid().v4(),
         personName: _nameController.text,
@@ -66,6 +115,11 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
         paidAmount: widget.debt?.paidAmount ?? 0,
         dueDate: _selectedDeadline!,
         description: _descriptionController.text.trim(),
+        title: _titleController.text.trim(),
+        isInstallment: _isInstallment,
+        totalMonths: totalMonths,
+        paidMonths: widget.debt?.paidMonths ?? 0,
+        monthlyPayment: monthlyPayment,
       );
 
       if (widget.debt != null) {
@@ -157,6 +211,25 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
               const SizedBox(height: 16),
 
               Text(
+                'Judul Transaksi (Opsional)',
+                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  hintText: 'Cth: Bank BRI, Cicilan Motor...',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              Text(
                 'Nama Orang',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
@@ -184,13 +257,14 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: _amountController,
+                readOnly: _isInstallment,
                 keyboardType: TextInputType.number,
                 inputFormatters: [CurrencyFormatter()],
                 decoration: InputDecoration(
                   prefixText: 'Rp ',
                   hintText: '0',
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: _isInstallment ? Colors.grey[200] : Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     borderSide: BorderSide.none,
@@ -200,6 +274,116 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                     value!.isEmpty ? 'Nominal wajib diisi' : null,
               ),
               const SizedBox(height: 16),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Catat Sebagai Angsuran / Cicilan',
+                    style: AppStyles.bodyText.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Switch(
+                    value: _isInstallment,
+                    activeColor: AppColors.primary,
+                    onChanged: (val) {
+                      setState(() {
+                        _isInstallment = val;
+                        if (!val) {
+                          _monthsController.clear();
+                          _monthlyPaymentController.clear();
+                          _amountController.clear();
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              if (_isInstallment) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tenor (Bulan)',
+                            style: AppStyles.bodyText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _monthsController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: 'Cth: 12',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusM,
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (_isInstallment &&
+                                  (value == null || value.isEmpty)) {
+                                return 'Tenor wajib diisi';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppDimens.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Cicilan Per Bulan',
+                            style: AppStyles.bodyText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _monthlyPaymentController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [CurrencyFormatter()],
+                            decoration: InputDecoration(
+                              prefixText: 'Rp ',
+                              hintText: '0',
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusM,
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (_isInstallment &&
+                                  (value == null || value.isEmpty)) {
+                                return 'Cicilan wajib diisi';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
 
               Text(
                 'Keterangan (Opsional)',

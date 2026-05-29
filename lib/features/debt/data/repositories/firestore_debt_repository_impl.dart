@@ -75,14 +75,32 @@ class FirestoreDebtRepositoryImpl implements DebtRepository {
 
       final paidAmount = (snapshot.data()?['paidAmount'] ?? 0).toDouble();
       final totalAmount = (snapshot.data()?['amount'] ?? 0).toDouble();
-      final newPaidAmount = paidAmount + amount;
+      final isInstallment = snapshot.data()?['isInstallment'] ?? false;
+      final totalMonths = (snapshot.data()?['installmentMonths'] ?? 0).toInt();
+      final paidMonthsList =
+          snapshot.data()?['paidInstallmentMonths'] as List? ?? [];
+      final paidMonths = paidMonthsList.length;
 
+      final newPaidAmount = paidAmount + amount;
       final isPaid = newPaidAmount >= totalAmount;
 
-      transaction.update(docRef, {
+      final updates = <String, dynamic>{
         'paidAmount': newPaidAmount,
         'isPaid': isPaid,
-      });
+      };
+
+      if (isInstallment) {
+        final newPaidMonths = paidMonths + 1;
+        updates['paidInstallmentMonths'] = List.generate(
+          newPaidMonths,
+          (i) => i,
+        );
+        if (newPaidMonths >= totalMonths) {
+          updates['isPaid'] = true;
+        }
+      }
+
+      transaction.update(docRef, updates);
     });
   }
 }
