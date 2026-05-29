@@ -202,45 +202,125 @@ class _DebtScreenState extends State<DebtScreen>
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimens.radiusL),
           ),
-          title: Text('Detail', style: AppStyles.heading2),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (debt.title.isNotEmpty) _detailRow('Judul', debt.title),
-              _detailRow('Nama', debt.personName),
-              if (debt.isInstallment) ...[
+          title: Text('Detail Transaksi', style: AppStyles.heading2),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (debt.title.isNotEmpty) _detailRow('Judul', debt.title),
+                _detailRow('Nama', debt.personName),
+                if (debt.isInstallment) ...[
+                  _detailRow(
+                    'Jenis',
+                    'Cicilan / Angsuran (${debt.totalMonths} Bulan)',
+                  ),
+                  _detailRow(
+                    'Cicilan',
+                    '${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)} / Bulan',
+                  ),
+                  _detailRow('Sudah Bayar', '${debt.paidMonths} Bulan'),
+                  _detailRow(
+                    'Sisa Tenor',
+                    '${debt.totalMonths - debt.paidMonths} Bulan',
+                  ),
+                ],
+                _detailRow('Total', AppHelpers.formatCurrencyIdr(debt.amount)),
                 _detailRow(
-                  'Jenis',
-                  'Cicilan / Angsuran (${debt.totalMonths} Bulan)',
+                  'Terbayar',
+                  AppHelpers.formatCurrencyIdr(debt.paidAmount),
                 ),
                 _detailRow(
-                  'Cicilan',
-                  '${AppHelpers.formatCurrencyIdr(debt.monthlyPayment)} / Bulan',
+                  'Sisa',
+                  AppHelpers.formatCurrencyIdr(debt.amount - debt.paidAmount),
                 ),
-                _detailRow('Sudah Bayar', '${debt.paidMonths} Bulan'),
+                _detailRow('Status', debt.isPaid ? 'Lunas' : 'Belum Lunas'),
                 _detailRow(
-                  'Sisa Tenor',
-                  '${debt.totalMonths - debt.paidMonths} Bulan',
+                  'Tempo',
+                  DateFormat('dd MMM yyyy').format(debt.dueDate),
                 ),
+                if (debt.description.isNotEmpty)
+                  _detailRow('Keterangan', debt.description),
+                if (debt.isInstallment && debt.totalMonths > 0) ...[
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Status Pembayaran Bulanan',
+                    style: AppStyles.bodyText.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.start,
+                      children: List.generate(debt.totalMonths, (index) {
+                        final monthNum = index + 1;
+                        final isPaidMonth = monthNum <= debt.paidMonths;
+
+                        return Container(
+                          width: 65,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isPaidMonth
+                                ? const Color(0xFFE8F5E9)
+                                : const Color(0xFFF1F5F9),
+                            border: Border.all(
+                              color: isPaidMonth
+                                  ? Colors.green.withOpacity(0.3)
+                                  : Colors.grey.withOpacity(0.2),
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isPaidMonth
+                                    ? Icons.check_circle
+                                    : Icons.radio_button_unchecked,
+                                color: isPaidMonth ? Colors.green : Colors.grey,
+                                size: 16,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Bulan $monthNum',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: isPaidMonth
+                                      ? Colors.green[800]
+                                      : Colors.grey[700],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                isPaidMonth ? 'Lunas' : 'Belum',
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  color: isPaidMonth
+                                      ? Colors.green[600]
+                                      : Colors.grey[500],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ],
               ],
-              _detailRow('Total', AppHelpers.formatCurrencyIdr(debt.amount)),
-              _detailRow(
-                'Terbayar',
-                AppHelpers.formatCurrencyIdr(debt.paidAmount),
-              ),
-              _detailRow(
-                'Sisa',
-                AppHelpers.formatCurrencyIdr(debt.amount - debt.paidAmount),
-              ),
-              _detailRow('Status', debt.isPaid ? 'Lunas' : 'Belum Lunas'),
-              _detailRow(
-                'Tempo',
-                DateFormat('dd MMM yyyy').format(debt.dueDate),
-              ),
-              if (debt.description.isNotEmpty)
-                _detailRow('Keterangan', debt.description),
-            ],
+            ),
           ),
           actions: [
             TextButton(
