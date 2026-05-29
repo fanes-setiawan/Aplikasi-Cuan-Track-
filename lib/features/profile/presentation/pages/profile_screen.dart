@@ -13,12 +13,18 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../../../features/auth/presentation/bloc/auth_event.dart';
+import '../../../../injection_container.dart';
+import '../../../../core/services/remote_config_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final packageInfo = sl<PackageInfo>();
+    final remoteConfig = sl<RemoteConfigService>();
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email ?? 'Belum login';
     final name =
@@ -193,7 +199,19 @@ class ProfileScreen extends StatelessWidget {
                       _buildProfileMenuItem(
                         icon: Icons.help_outline,
                         title: 'Bantuan',
-                        onTap: () {},
+                        onTap: () async {
+                          final url = remoteConfig.supportContactUrl;
+                          final uri = Uri.parse(url);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Tidak dapat membuka: $url')),
+                              );
+                            }
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -286,7 +304,7 @@ class ProfileScreen extends StatelessWidget {
 
                 const SizedBox(height: 24),
                 Text(
-                  'VERSI 1.0.42',
+                  'VERSI ${packageInfo.version}',
                   style: AppStyles.caption.copyWith(
                     color: AppColors.textHint,
                     fontSize: 10,

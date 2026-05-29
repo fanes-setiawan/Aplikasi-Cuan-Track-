@@ -21,6 +21,8 @@ import '../../../../core/utils/app_helpers.dart';
 import '../../../ai_chat/presentation/pages/ai_chat_screen.dart';
 import '../../../ai_chat/presentation/bloc/ai_chat_bloc.dart';
 import '../../../../injection_container.dart';
+import '../../../../core/services/remote_config_service.dart';
+
 
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
@@ -305,7 +307,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-          floatingActionButton: _isAppLocked
+          floatingActionButton: _isAppLocked || !sl<RemoteConfigService>().enableAIChat
               ? null
               : FloatingActionButton(
                   onPressed: () {

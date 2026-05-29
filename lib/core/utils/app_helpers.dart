@@ -132,4 +132,29 @@ class AppHelpers {
     if (iconName.contains('phone')) return Icons.phone_iphone;
     return Icons.category_outlined;
   }
+
+  static Color parseHexColor(
+    String? hexString, {
+    Color defaultColor = Colors.white,
+  }) {
+    if (hexString == null || hexString.trim().isEmpty) return defaultColor;
+    try {
+      String cleaned = hexString.replaceAll('O', '0').replaceAll('o', '0');
+
+      String formattedHex = cleaned
+          .replaceAll('#', '')
+          .replaceAll('0x', '')
+          .replaceAll('0X', '')
+          .trim();
+      if (formattedHex.length == 6) {
+        formattedHex = 'FF$formattedHex';
+      }
+      if (formattedHex.length == 8) {
+        return Color(int.parse(formattedHex, radix: 16));
+      }
+    } catch (e) {
+      debugPrint('Error parsing hex color "$hexString": $e');
+    }
+    return defaultColor;
+  }
 }

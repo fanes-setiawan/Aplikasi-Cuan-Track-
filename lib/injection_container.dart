@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'core/services/remote_config_service.dart';
 
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -46,6 +48,13 @@ import 'features/category/presentation/bloc/category_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  final packageInfo = await PackageInfo.fromPlatform();
+  sl.registerSingleton<PackageInfo>(packageInfo);
+
+  final remoteConfigService = RemoteConfigService();
+  await remoteConfigService.initialize();
+  sl.registerSingleton<RemoteConfigService>(remoteConfigService);
+
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
