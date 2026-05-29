@@ -63,7 +63,6 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
       child: Column(
         children: [
           const SizedBox(height: 12),
-          // Handle
           Container(
             width: 40,
             height: 4,
@@ -73,7 +72,6 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
             ),
           ),
           const SizedBox(height: 12),
-          // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -95,7 +93,6 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
             ),
           ),
           const SizedBox(height: 24),
-          // Content
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -366,7 +363,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         context,
                         'Kategori berhasil ditambahkan',
                       );
-                      Navigator.pop(context); // Close sheet
+                      Navigator.pop(context);
                     },
                   ),
                   const SizedBox(height: 32),

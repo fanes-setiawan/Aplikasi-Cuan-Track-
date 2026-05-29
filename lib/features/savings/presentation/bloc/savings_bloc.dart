@@ -114,7 +114,6 @@ class SavingsBloc extends Bloc<SavingsEvent, SavingsState> {
     Emitter<SavingsState> emit,
   ) async {
     try {
-      // Find current goal state to check if we just achieved it
       final currentState = state;
       if (currentState is SavingsLoaded) {
         final goal = currentState.goals.firstWhere((g) => g.id == event.goalId);

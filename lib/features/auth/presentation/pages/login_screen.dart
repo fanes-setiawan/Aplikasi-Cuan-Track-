@@ -83,7 +83,6 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header Texts
                   Text(
                     'Selamat Datang\nKembali',
                     style: AppStyles.heading1.copyWith(fontSize: 28),
@@ -95,7 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl + 16),
 
-                  // Form Fields
                   CustomTextField(
                     label: 'Email',
                     hintText: 'nama@email.com',
@@ -113,13 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimens.sm),
 
-                  // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {
-                        // TODO: Navigate to Forgot Password
-                      },
+                      onPressed: () {},
                       child: Text(
                         'Lupa Password?',
                         style: AppStyles.caption.copyWith(
@@ -131,7 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimens.md),
 
-                  // Login Button
                   isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : CustomButton(
@@ -154,7 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Divider "ATAU MASUK DENGAN"
                   Row(
                     children: [
                       Expanded(child: Divider(color: AppColors.divider)),
@@ -176,7 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Google Login Button
                   CustomButton(
                     text: 'Masuk dengan Google',
                     onPressed: () {
@@ -192,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Register Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

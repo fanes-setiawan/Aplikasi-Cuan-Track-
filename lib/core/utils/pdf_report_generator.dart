@@ -24,7 +24,6 @@ class PdfReportGenerator {
       decimalDigits: 0,
     );
 
-    // Grouping transactions by Date just like in HistoryScreen
     final Map<String, List<TransactionEntity>> grouped = {};
     for (var t in state.transactions) {
       final dateStr = DateFormat('dd MMM yyyy', 'id_ID').format(t.date);
@@ -41,7 +40,6 @@ class PdfReportGenerator {
         margin: const pw.EdgeInsets.all(32),
         build: (pw.Context context) {
           return [
-            // Header Title
             pw.Header(
               level: 0,
               child: pw.Row(
@@ -72,7 +70,6 @@ class PdfReportGenerator {
             ),
             pw.SizedBox(height: 20),
 
-            // Summary Section
             pw.Container(
               padding: const pw.EdgeInsets.all(16),
               decoration: pw.BoxDecoration(
@@ -133,14 +130,12 @@ class PdfReportGenerator {
             ),
             pw.SizedBox(height: 30),
 
-            // Transactions Title
             pw.Text(
               'Rincian Transaksi',
               style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
             ),
             pw.SizedBox(height: 10),
 
-            // Transactions List
             if (state.transactions.isEmpty)
               pw.Text(
                 'Tidak ada transaksi di bulan ini.',

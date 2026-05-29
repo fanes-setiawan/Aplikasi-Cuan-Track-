@@ -72,7 +72,6 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               value: _pinEnabled,
               onChanged: (val) async {
                 if (val) {
-                  // If enabling, check if PIN exists
                   final prefs = await SharedPreferences.getInstance();
                   final hasPin = prefs.getString('userPin') != null;
                   if (!hasPin) {

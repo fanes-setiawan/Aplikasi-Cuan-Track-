@@ -104,7 +104,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       case '5 Menit':
         return const Duration(minutes: 5);
       case 'Tidak Ada':
-        return const Duration(days: 365); // Large duration for "No Lock"
+        return const Duration(days: 365);
       default:
         return Duration.zero;
     }
@@ -180,10 +180,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         onPopInvoked: (didPop) async {
           if (didPop) return;
 
-          // If app is locked, don't allow back button navigation
           if (_isAppLocked) return;
 
-          // If not on the first tab (Dashboard), go back to it
           if (_currentIndex != 0) {
             setState(() {
               _currentIndex = 0;
@@ -191,7 +189,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             return;
           }
 
-          // If on the first tab, handle double tap to exit
           final now = DateTime.now();
           final backButtonHasNotBeenPressedOrSnackBarHasExpired =
               _lastPressedAt == null ||
@@ -201,7 +198,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
             _lastPressedAt = now;
             AppHelpers.showSnackBar(context, 'Klik sekali lagi untuk keluar');
           } else {
-            // Exit the app
             SystemNavigator.pop();
           }
         },
@@ -215,9 +211,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     showBiometric: _biometricEnabled,
                     onPinCompleted: _handlePinCompleted,
                     onBiometricPressed: _authenticateBiometric,
-                    onForgotPin: () {
-                      // Handle forgot PIN
-                    },
+                    onForgotPin: () {},
                   ),
                 ),
             ],

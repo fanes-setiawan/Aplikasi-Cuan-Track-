@@ -119,7 +119,6 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 48),
-            // PIN Dots
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(_pinLength, (index) {
@@ -136,7 +135,6 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               }),
             ),
             const Spacer(),
-            // Numpad
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
               child: Column(
@@ -150,9 +148,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(
-                        width: 80,
-                      ), // Empty space for layout balance
+                      const SizedBox(width: 80),
                       _buildNumButton(0),
                       _buildDeleteButton(),
                     ],

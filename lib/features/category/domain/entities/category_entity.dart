@@ -4,7 +4,7 @@ class CategoryEntity extends Equatable {
   final String id;
   final String userId;
   final String name;
-  final String type; // 'income' or 'expense'
+  final String type;
   final String iconName;
   final String colorHex;
 

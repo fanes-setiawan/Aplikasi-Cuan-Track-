@@ -430,12 +430,10 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                 _rawAmount = "0";
               }
             } else if (key == '.') {
-              // ignore decimal for IDR format
             } else {
               if (_rawAmount == "0") {
                 _rawAmount = key;
               } else {
-                // limit length to avoid overflow
                 if (_rawAmount.length < 12) {
                   _rawAmount += key;
                 }

@@ -5,7 +5,6 @@ class AppAssets {
   static const String pathIcons = 'assets/icons';
   static const String pathLogo = 'assets/logo';
 
-  // Images & Logos
   static const String logoApp = '$pathLogo/logo_app.png';
   static const String logoText = '$pathLogo/logo_text.png';
   static const String onboarding1 = '$pathImages/onboarding_1.png';
@@ -14,13 +13,10 @@ class AppAssets {
   static const String placeholder = '$pathImages/placeholder.png';
   static const String bgSemar = '$pathImages/bg_semar.svg';
 
-  // Icons
   static const String iconHome = '$pathIcons/ic_home.svg';
   static const String iconHistory = '$pathIcons/ic_history.svg';
   static const String iconBudget = '$pathIcons/ic_wallet.svg';
   static const String iconProfile = '$pathIcons/ic_profile.svg';
   static const String iconGoogle = '$pathIcons/ic_google.svg';
   static const String iconBot = '$pathIcons/ic_boot.svg';
-
-  // Tambahkan path asset gambar lainnya di sini nantinya
 }

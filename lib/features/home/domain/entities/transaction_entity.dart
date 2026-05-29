@@ -5,7 +5,7 @@ class TransactionEntity extends Equatable {
   final String userId;
   final String title;
   final double amount;
-  final String type; // 'income' or 'expense'
+  final String type;
   final String categoryId;
   final String? categoryName;
   final String? paymentMethodId;
@@ -39,7 +39,6 @@ class TransactionEntity extends Equatable {
     notes,
   ];
 
-  // Factory to create from Firestore document
   factory TransactionEntity.fromMap(Map<String, dynamic> map, String id) {
     return TransactionEntity(
       id: id,
@@ -57,7 +56,6 @@ class TransactionEntity extends Equatable {
     );
   }
 
-  // Convert to map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -67,8 +65,6 @@ class TransactionEntity extends Equatable {
       'categoryId': categoryId,
       'categoryName': categoryName,
       'paymentMethodId': paymentMethodId,
-      // For date, Firestore uses Timestamp. We usually let the repo handle the conversion
-      // or we can pass DateTime directly and cloud_firestore plugin converts it.
       'date': date,
       'notes': notes,
     };

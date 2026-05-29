@@ -22,7 +22,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool _isSplashDone = false;
+  bool _navigationTriggered = false;
 
   Future<void> _handleNavigation(
     BuildContext context,
@@ -41,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen> {
           ? const LoginScreen()
           : const OnboardingScreen();
     } else {
-      // Still loading auth status, wait for it
       return;
     }
 
@@ -49,6 +48,22 @@ class _SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(builder: (context) => nextScreen),
     );
+  }
+
+  void _checkAndNavigate(BuildContext context) {
+    if (_navigationTriggered) return;
+
+    final splashState = context.read<SplashBloc>().state;
+    final authState = context.read<AuthBloc>().state;
+
+    if (splashState is SplashLoaded) {
+      if (authState is Authenticated ||
+          authState is Unauthenticated ||
+          authState is AuthError) {
+        _navigationTriggered = true;
+        _handleNavigation(context, authState);
+      }
+    }
   }
 
   @override
@@ -59,17 +74,12 @@ class _SplashScreenState extends State<SplashScreen> {
         listeners: [
           BlocListener<SplashBloc, SplashState>(
             listener: (context, state) {
-              if (state is SplashLoaded) {
-                setState(() => _isSplashDone = true);
-                _handleNavigation(context, context.read<AuthBloc>().state);
-              }
+              _checkAndNavigate(context);
             },
           ),
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (_isSplashDone) {
-                _handleNavigation(context, state);
-              }
+              _checkAndNavigate(context);
             },
           ),
         ],
@@ -99,7 +109,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       const SizedBox(height: AppDimens.xl),
 
-                      // App Title Asset
                       Image.asset(
                         AppAssets.logoText,
                         height: 48,
@@ -107,7 +116,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                       const SizedBox(height: AppDimens.sm),
 
-                      // Subtitle
                       Text(
                         'SMART WEALTH MANAGER',
                         style: AppStyles.caption.copyWith(

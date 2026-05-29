@@ -43,10 +43,9 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
 
     if (widget.goal != null) {
       _titleController.text = widget.goal!.title;
-      // Format current amount for the controller
-      _amountController.text = AppHelpers.formatCurrencyIdr(widget.goal!.targetAmount)
-          .replaceAll('Rp', '')
-          .trim();
+      _amountController.text = AppHelpers.formatCurrencyIdr(
+        widget.goal!.targetAmount,
+      ).replaceAll('Rp', '').trim();
       _selectedDeadline = widget.goal!.deadline;
       _selectedCategoryId = widget.goal!.categoryId;
       _selectedCategoryName = widget.goal!.categoryName;
@@ -86,7 +85,9 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
           categoryIconName: _selectedCategoryIcon,
           categoryColorHex: _selectedCategoryColor,
         );
-        context.read<SavingsBloc>().add(UpdateSavingsGoal(user.uid, updatedGoal));
+        context.read<SavingsBloc>().add(
+          UpdateSavingsGoal(user.uid, updatedGoal),
+        );
       } else {
         final goal = SavingsGoalEntity(
           id: const Uuid().v4(),
@@ -244,7 +245,9 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                 children: [
                   Text(
                     'Kategori Tujuan Nabung',
-                    style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                    style: AppStyles.bodyText.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   TextButton.icon(
                     onPressed: () {
@@ -272,7 +275,9 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusM,
+                          ),
                           borderSide: BorderSide.none,
                         ),
                       ),

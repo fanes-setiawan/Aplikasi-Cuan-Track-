@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/savings_category_entity.dart';
 import '../../domain/repositories/savings_category_repository.dart';
 
-class FirestoreSavingsCategoryRepositoryImpl implements SavingsCategoryRepository {
+class FirestoreSavingsCategoryRepositoryImpl
+    implements SavingsCategoryRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -14,10 +15,10 @@ class FirestoreSavingsCategoryRepositoryImpl implements SavingsCategoryRepositor
         .orderBy('createdAt', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return SavingsCategoryEntity.fromMap(doc.data(), doc.id);
-      }).toList();
-    });
+          return snapshot.docs.map((doc) {
+            return SavingsCategoryEntity.fromMap(doc.data(), doc.id);
+          }).toList();
+        });
   }
 
   @override

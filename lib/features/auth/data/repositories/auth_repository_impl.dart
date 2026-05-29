@@ -133,7 +133,6 @@ class AuthRepositoryImpl implements AuthRepository {
       if (user == null) throw Exception('Tidak ada pengguna yang login.');
       final uid = user.uid;
 
-      // 1. Hapus semua transaksi (top-level collection, filter by userId)
       final txSnapshot = await _firestore
           .collection('transactions')
           .where('userId', isEqualTo: uid)
@@ -142,7 +141,6 @@ class AuthRepositoryImpl implements AuthRepository {
         await doc.reference.delete();
       }
 
-      // 2. Hapus sub-koleksi di users/{uid}/
       final subCollections = [
         'budgets',
         'categories',
@@ -163,15 +161,12 @@ class AuthRepositoryImpl implements AuthRepository {
         }
       }
 
-      // 3. Hapus dokumen users/{uid}
       await _firestore.collection('users').doc(uid).delete();
 
-      // 4. Sign out Google jika ada
       try {
         await _googleSignIn.signOut();
       } catch (_) {}
 
-      // 5. Hapus akun Firebase Auth
       await user.delete();
     } on FirebaseAuthException catch (e) {
       throw Exception(_mapFirebaseAuthError(e));

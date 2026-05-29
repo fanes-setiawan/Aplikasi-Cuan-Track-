@@ -108,7 +108,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       child: Column(
         children: [
           const SizedBox(height: 12),
-          // Handle
           Container(
             width: 40,
             height: 4,
@@ -118,7 +117,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
             ),
           ),
           const SizedBox(height: 12),
-          // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -140,7 +138,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
             ),
           ),
           const SizedBox(height: 24),
-          // Tipe Akun Section
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -169,7 +166,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  // Search Bar
                   Container(
                     height: 52,
                     decoration: BoxDecoration(
@@ -202,7 +198,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Penyedia Section
                   Text(
                     'Penyedia Layanan',
                     style: AppStyles.caption.copyWith(
@@ -254,7 +249,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
               ),
             ),
           ),
-          // Bottom Button
           Padding(
             padding: const EdgeInsets.all(AppDimens.lg),
             child: SizedBox(
@@ -290,7 +284,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       onTap: () {
         setState(() {
           _selectedCategory = title;
-          // Clear search when switching categories
           _searchQuery = '';
           _searchController.clear();
         });
@@ -350,7 +343,6 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
   ) {
     return InkWell(
       onTap: () {
-        // Logic to return selected provider
         Navigator.pop(context, name);
       },
       borderRadius: BorderRadius.circular(16),

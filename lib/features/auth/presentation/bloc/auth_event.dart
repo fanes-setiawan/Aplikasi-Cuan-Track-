@@ -34,4 +34,3 @@ class LoginWithGoogleEvent extends AuthEvent {}
 class LogoutEvent extends AuthEvent {}
 
 class DeleteAccountEvent extends AuthEvent {}
-

@@ -106,7 +106,6 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                       child: FadeInAnimation(child: widget),
                     ),
                     children: [
-                      // Chart Section
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -175,7 +174,6 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                               ],
                             ),
                             const SizedBox(height: 32),
-                            // Bar Chart Mock
                             SizedBox(
                               height: 180,
                               child: Row(
@@ -235,7 +233,6 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 32),
 
-                      // Summary Cards
                       Row(
                         children: [
                           Expanded(
@@ -265,7 +262,6 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 32),
 
-                      // Weekly Breakdown List
                       Text(
                         'Rincian Mingguan',
                         style: AppStyles.heading2.copyWith(

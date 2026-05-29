@@ -4,11 +4,10 @@ class PaymentMethodEntity extends Equatable {
   final String id;
   final String userId;
   final String name;
-  final String type; // 'Bank', 'E-Wallet', 'Tunai'
+  final String type;
   final String accountNumber;
   final double balance;
-  final String
-  iconPath; // This could represent a basic shape/icon name or string
+  final String iconPath;
 
   const PaymentMethodEntity({
     required this.id,

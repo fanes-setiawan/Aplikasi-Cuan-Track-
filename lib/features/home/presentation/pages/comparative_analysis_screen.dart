@@ -116,7 +116,6 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                       child: FadeInAnimation(child: widget),
                     ),
                     children: [
-                      // Month Cards
                       Row(
                         children: [
                           Expanded(
@@ -194,7 +193,6 @@ class ComparativeAnalysisScreen extends StatelessWidget {
 
                       const SizedBox(height: 32),
 
-                      // Insight Card
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -270,7 +268,6 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 48),
 
-                      // Top Transactions
                       Text(
                         'Transaksi Terbesar',
                         style: AppStyles.heading2.copyWith(

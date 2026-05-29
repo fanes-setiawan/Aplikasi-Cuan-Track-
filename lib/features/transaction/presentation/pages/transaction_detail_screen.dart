@@ -48,7 +48,7 @@ class TransactionDetailScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Navigator.pop(dialogContext); // close dialog
+                Navigator.pop(dialogContext);
                 context.read<TransactionActionBloc>().add(
                   DeleteTransaction(transaction.id),
                 );
@@ -75,7 +75,6 @@ class TransactionDetailScreen extends StatelessWidget {
     return BlocListener<TransactionActionBloc, TransactionActionState>(
       listener: (context, state) {
         if (state is TransactionActionLoading) {
-          // showloading if necessary
         } else if (state is TransactionActionFailure) {
           AppHelpers.showSnackBar(
             context,
@@ -84,7 +83,7 @@ class TransactionDetailScreen extends StatelessWidget {
           );
         } else if (state is TransactionActionSuccess) {
           AppHelpers.showSnackBar(context, state.message);
-          Navigator.pop(context); // go back to wherever it came from
+          Navigator.pop(context);
         }
       },
       child: Scaffold(
@@ -114,7 +113,6 @@ class TransactionDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: AppDimens.lg),
-              // Main Nominal
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -147,16 +145,13 @@ class TransactionDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // Detail List
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(
-                        10,
-                      ), // using withAlpha instead of withOpacity
+                      color: Colors.black.withAlpha(10),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),

@@ -66,7 +66,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
         children: [
           Positioned.fill(
             child: Opacity(
-              opacity: 0.5, // Subtle opacity for the background pattern
+              opacity: 0.5,
               child: SvgPicture.asset(AppAssets.bgSemar, fit: BoxFit.cover),
             ),
           ),
@@ -488,8 +488,6 @@ class _AIChatScreenState extends State<AIChatScreen> {
     }
   }
 
-  // --- Action Tag Parsing Helpers ---
-
   bool _hasAction(String text) {
     return text.contains('[ACTION:');
   }
@@ -559,40 +557,39 @@ class _AIChatScreenState extends State<AIChatScreen> {
                   builder: (context, state) {
                     final isLoading = state is AddTransactionLoading;
                     return ElevatedButton(
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () => _submitTransactionDirectly(
-                                isIncome,
-                                amount,
-                                note,
-                              ),
+                      onPressed: isLoading
+                          ? null
+                          : () => _submitTransactionDirectly(
+                              isIncome,
+                              amount,
+                              note,
+                            ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            isIncome ? AppColors.primary : Colors.orange,
+                        backgroundColor: isIncome
+                            ? AppColors.primary
+                            : Colors.orange,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child:
-                          isLoading
-                              ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              )
-                              : const Text(
-                                'Kirim ke Catatan',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 18,
+                              width: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
                               ),
+                            )
+                          : const Text(
+                              'Kirim ke Catatan',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
                     );
                   },
                 ),
@@ -603,12 +600,11 @@ class _AIChatScreenState extends State<AIChatScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder:
-                          (context) => AddTransactionScreen(
-                            isIncome: isIncome,
-                            initialAmount: amount,
-                            initialNote: note,
-                          ),
+                      builder: (context) => AddTransactionScreen(
+                        isIncome: isIncome,
+                        initialAmount: amount,
+                        initialNote: note,
+                      ),
                     ),
                   );
                 },
@@ -622,17 +618,19 @@ class _AIChatScreenState extends State<AIChatScreen> {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String label, String value, {Color? color}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String label,
+    String value, {
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
           Icon(icon, size: 14, color: color ?? AppColors.textSecondary),
           const SizedBox(width: 6),
-          Text(
-            "$label: ",
-            style: AppStyles.caption.copyWith(fontSize: 11),
-          ),
+          Text("$label: ", style: AppStyles.caption.copyWith(fontSize: 11)),
           Expanded(
             child: Text(
               value,
@@ -656,18 +654,15 @@ class _AIChatScreenState extends State<AIChatScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // 1. Get Categories to find a default one
     final catState = context.read<CategoryBloc>().state;
     String categoryId = '';
     String categoryName = '';
 
     if (catState is CategoryLoaded) {
-      final relevantCats =
-          catState.categories
-              .where((c) => c.type == (isIncome ? 'income' : 'expense'))
-              .toList();
+      final relevantCats = catState.categories
+          .where((c) => c.type == (isIncome ? 'income' : 'expense'))
+          .toList();
       if (relevantCats.isNotEmpty) {
-        // Try to find "Lainnya" or just pick the first one
         final defaultCat = relevantCats.firstWhere(
           (c) => c.name.toLowerCase().contains('lainnya'),
           orElse: () => relevantCats.first,
@@ -677,7 +672,6 @@ class _AIChatScreenState extends State<AIChatScreen> {
       }
     }
 
-    // 2. Get Payment Methods to find a default one
     final pmState = context.read<PaymentMethodBloc>().state;
     String? paymentMethodId;
     if (pmState is PaymentMethodLoaded && pmState.paymentMethods.isNotEmpty) {

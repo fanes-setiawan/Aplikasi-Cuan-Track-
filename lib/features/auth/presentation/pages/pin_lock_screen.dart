@@ -53,17 +53,13 @@ class _PinLockScreenState extends State<PinLockScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF065F46), // Dark green
-              Color(0xFF10B981), // Primary green
-            ],
+            colors: [Color(0xFF065F46), Color(0xFF10B981)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
               const Spacer(),
-              // Icon Header
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
@@ -72,12 +68,11 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 ),
                 child: const Icon(
                   Icons.shield_outlined,
-                  color: Color(0xFFFBBF24), // Amber/Yellow icon
+                  color: Color(0xFFFBBF24),
                   size: 40,
                 ),
               ),
               const SizedBox(height: 32),
-              // Title
               Text(
                 'MASUKKAN PIN\nKEAMANAN',
                 textAlign: TextAlign.center,
@@ -89,7 +84,6 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 ),
               ),
               const SizedBox(height: 48),
-              // PIN Indicators
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_pinLength, (index) {
@@ -136,7 +130,6 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 }),
               ),
               const Spacer(),
-              // NumPad
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
@@ -159,7 +152,6 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 ),
               ),
               const Spacer(),
-              // Footer
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 40,

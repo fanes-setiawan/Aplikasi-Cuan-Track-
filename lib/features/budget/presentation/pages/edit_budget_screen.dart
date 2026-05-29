@@ -46,7 +46,6 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
     _selectedPeriod = widget.budget.period;
     _remindMe = widget.budget.remindMe;
 
-    // Formatting the initial amount correctly so the numeric keypad works
     if (widget.budget.amount == widget.budget.amount.toInt()) {
       _rawAmount = widget.budget.amount.toInt().toString();
     } else {
@@ -549,12 +548,10 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
         _rawAmount = "0";
       }
     } else if (key == '.') {
-      // ignore decimal for IDR format
     } else {
       if (_rawAmount == "0") {
         _rawAmount = key;
       } else {
-        // limit length to avoid overflow
         if (_rawAmount.length < 12) {
           _rawAmount += key;
         }

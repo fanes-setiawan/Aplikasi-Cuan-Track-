@@ -85,7 +85,6 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 16),
-              // Profile Picture
               Center(
                 child: SizedBox(
                   width: 130,
@@ -140,7 +139,6 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
               ),
               const SizedBox(height: 48),
 
-              // Form Fields
               CustomTextField(
                 label: 'NAMA LENGKAP',
                 hintText: 'User Name',
@@ -172,7 +170,6 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
               ),
               const SizedBox(height: 48),
 
-              // Save Button
               CustomButton(
                 text: 'Simpan Perubahan',
                 onPressed: () {

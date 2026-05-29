@@ -25,8 +25,6 @@ import 'package:intl/date_symbol_data_local.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   print("Handling a background message: ${message.messageId}");
 }
@@ -35,10 +33,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // Init local & push notifications
   await NotificationService().init();
 
   await initializeDateFormatting('id_ID', null);
@@ -72,7 +68,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<AnalyticsBloc>(create: (_) => di.sl<AnalyticsBloc>()),
         BlocProvider<SavingsBloc>(create: (_) => di.sl<SavingsBloc>()),
-        BlocProvider<SavingsCategoryBloc>(create: (_) => di.sl<SavingsCategoryBloc>()),
+        BlocProvider<SavingsCategoryBloc>(
+          create: (_) => di.sl<SavingsCategoryBloc>(),
+        ),
         BlocProvider<DebtBloc>(create: (_) => di.sl<DebtBloc>()),
       ],
       child: MaterialApp(

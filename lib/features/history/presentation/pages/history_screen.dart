@@ -34,9 +34,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
     "Bonus": Icons.stars_outlined,
     "Investasi": Icons.show_chart_outlined,
     "Makanan & Minuman": Icons.restaurant,
-    "Makan": Icons.restaurant, // Legacy
+    "Makan": Icons.restaurant,
     "Transportasi": Icons.directions_car,
-    "Transport": Icons.directions_car, // Legacy
+    "Transport": Icons.directions_car,
     "Belanja": Icons.shopping_bag,
     "Hiburan": Icons.theater_comedy,
   };
@@ -227,7 +227,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildCategoryFilters(List<TransactionEntity> transactions) {
-    // Extract unique categories from transactions
     final categories = <String>{};
     for (var t in transactions) {
       if (t.categoryName?.isNotEmpty == true) {
@@ -329,7 +328,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Widget _buildTransactionList(List<TransactionEntity> transactions) {
-    // Filter transactions based on selected category
     final displayedTransactions = _selectedCategoryFilter == 'Semua'
         ? transactions
         : transactions
@@ -344,7 +342,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       );
     }
 
-    // Grouping by date
     final Map<String, List<TransactionEntity>> grouped = {};
     for (var t in displayedTransactions) {
       final dateStr = DateFormat('dd MMM yyyy', 'id_ID').format(t.date);
@@ -517,7 +514,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Report Card
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -580,7 +576,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Bar Chart
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -647,7 +642,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
 
               const SizedBox(height: 32),
-              // Unduh Button
               SizedBox(
                 width: double.infinity,
                 height: 54,

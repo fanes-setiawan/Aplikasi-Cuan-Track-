@@ -12,8 +12,6 @@ class AIChatRepository {
   Future<void> _initModel() async {
     if (_model != null) return;
 
-    // Since App Check is unenforced during development, we omit it here to bypass the
-    // DEVELOPER_ERROR caused by missing debug token registration in Firebase Console.
     final ai = await FirebaseAI.googleAI();
     _model = ai.generativeModel(model: 'gemini-2.5-flash');
   }
@@ -22,10 +20,8 @@ class AIChatRepository {
     try {
       await _initModel();
 
-      // 1. Fetch financial context
       final context = await _getFinancialContext(userId);
 
-      // 2. Initialize chat session if null
       if (_chatSession == null) {
         final systemInstruction =
             """
@@ -71,7 +67,6 @@ Jika user menyatakan ingin mencatat atau menambah transaksi baru:
         );
       }
 
-      // 3. Send message
       final response = await _chatSession!.sendMessage(Content.text(message));
       return response.text ?? "Maaf, aku sedang pusing. Coba tanya lagi ya! 🙏";
     } catch (e) {
@@ -94,7 +89,6 @@ Jika user menyatakan ingin mencatat atau menambah transaksi baru:
       final now = DateTime.now();
       final startOfMonth = DateTime(now.year, now.month, 1);
 
-      // Get transactions for the current month
       final snapshot = await _firestore
           .collection('transactions')
           .where('userId', isEqualTo: userId)
@@ -140,7 +134,6 @@ Jika user menyatakan ingin mencatat atau menambah transaksi baru:
           categories[category] = (categories[category] ?? 0) + amount;
         }
 
-        // Add to logs for detailed context (limit to last 30 for brevity, or sort later)
         String dateStr = "${date.day}/${date.month}";
         String noteStr = notes.isNotEmpty ? " (Catatan: $notes)" : "";
         transactionLogs.add(
@@ -148,19 +141,14 @@ Jika user menyatakan ingin mencatat atau menambah transaksi baru:
         );
       }
 
-      // Sort logs by date (simple string sort based on current structure or just keep as is if snapshot order is okay)
-      // For better result, we could have sorted the snapshot docs by date before loop.
-      
       String categoryBreakdown = categories.entries
           .map((e) => "- ${e.key}: Rp ${e.value.toStringAsFixed(0)}")
           .join("\n");
 
-      // Limit transaction logs to a reasonable number to avoid long prompt
-      String recentTransactions = transactionLogs.length > 25 
+      String recentTransactions = transactionLogs.length > 25
           ? transactionLogs.sublist(transactionLogs.length - 25).join("\n")
           : transactionLogs.join("\n");
 
-      // Fetch Savings
       final savingsSnapshot = await _firestore
           .collection('users')
           .doc(userId)
@@ -190,7 +178,6 @@ Jika user menyatakan ingin mencatat atau menambah transaksi baru:
           ? "Tidak ada data tabungan."
           : savingsDetails.join("\n");
 
-      // Fetch Debts
       final debtSnapshot = await _firestore
           .collection('users')
           .doc(userId)

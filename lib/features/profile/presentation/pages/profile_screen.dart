@@ -45,7 +45,6 @@ class ProfileScreen extends StatelessWidget {
               ),
               children: [
                 const SizedBox(height: 32),
-                // Profile Header
                 Center(
                   child: Column(
                     children: [
@@ -105,7 +104,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 48),
 
-                // Settings Menu
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                   child: Column(
@@ -202,7 +200,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 32),
-                // Logout Button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                   child: SizedBox(
@@ -240,7 +237,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 24),
-                // Hapus Akun Button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                   child: InkWell(

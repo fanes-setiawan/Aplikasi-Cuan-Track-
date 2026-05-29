@@ -14,7 +14,8 @@ class AddSavingsCategorySheet extends StatefulWidget {
   const AddSavingsCategorySheet({super.key, this.category});
 
   @override
-  State<AddSavingsCategorySheet> createState() => _AddSavingsCategorySheetState();
+  State<AddSavingsCategorySheet> createState() =>
+      _AddSavingsCategorySheetState();
 }
 
 class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
@@ -111,7 +112,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      widget.category != null ? 'Edit Tujuan' : 'Tambah Tujuan Nabung',
+                      widget.category != null
+                          ? 'Edit Tujuan'
+                          : 'Tambah Tujuan Nabung',
                       style: AppStyles.heading2.copyWith(fontSize: 18),
                     ),
                   ),
@@ -129,7 +132,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                 children: [
                   Text(
                     'Nama Tujuan',
-                    style: AppStyles.caption.copyWith(fontWeight: FontWeight.bold),
+                    style: AppStyles.caption.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -144,17 +149,20 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                   const SizedBox(height: 32),
                   Text(
                     'Pilih Ikon',
-                    style: AppStyles.caption.copyWith(fontWeight: FontWeight.bold),
+                    style: AppStyles.caption.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                        ),
                     itemCount: _icons.length,
                     itemBuilder: (context, index) {
                       final icon = _icons[index];
@@ -163,15 +171,21 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                         onTap: () => setState(() => _selectedIcon = icon),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: isSelected ? AppColors.primary : Colors.white,
+                            color: isSelected
+                                ? AppColors.primary
+                                : Colors.white,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: isSelected ? Colors.transparent : AppColors.divider,
+                              color: isSelected
+                                  ? Colors.transparent
+                                  : AppColors.divider,
                             ),
                           ),
                           child: Icon(
                             icon,
-                            color: isSelected ? Colors.white : AppColors.textSecondary,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textSecondary,
                           ),
                         ),
                       );
@@ -180,7 +194,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                   const SizedBox(height: 32),
                   Text(
                     'Pilih Warna',
-                    style: AppStyles.caption.copyWith(fontWeight: FontWeight.bold),
+                    style: AppStyles.caption.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Wrap(
@@ -196,22 +212,33 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                           decoration: BoxDecoration(
                             color: color,
                             shape: BoxShape.circle,
-                            border: isSelected ? Border.all(color: Colors.black, width: 2) : null,
+                            border: isSelected
+                                ? Border.all(color: Colors.black, width: 2)
+                                : null,
                           ),
-                          child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
+                          child: isSelected
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : null,
                         ),
                       );
                     }).toList(),
                   ),
                   const SizedBox(height: 48),
                   CustomButton(
-                    text: widget.category != null ? 'Update Tujuan' : 'Simpan Tujuan',
+                    text: widget.category != null
+                        ? 'Update Tujuan'
+                        : 'Simpan Tujuan',
                     onPressed: () {
                       final user = FirebaseAuth.instance.currentUser;
                       if (user == null || _nameController.text.isEmpty) return;
 
-                      final colorHex = '0xFF${_selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
-                      
+                      final colorHex =
+                          '0xFF${_selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+
                       final category = SavingsCategoryEntity(
                         id: widget.category?.id ?? '',
                         userId: user.uid,
@@ -221,11 +248,15 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       );
 
                       if (widget.category != null) {
-                        context.read<SavingsCategoryBloc>().add(UpdateSavingsCategory(category));
+                        context.read<SavingsCategoryBloc>().add(
+                          UpdateSavingsCategory(category),
+                        );
                       } else {
-                        context.read<SavingsCategoryBloc>().add(AddSavingsCategory(category));
+                        context.read<SavingsCategoryBloc>().add(
+                          AddSavingsCategory(category),
+                        );
                       }
-                      
+
                       Navigator.pop(context);
                     },
                   ),
@@ -238,12 +269,18 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                           final user = FirebaseAuth.instance.currentUser;
                           if (user != null) {
                             context.read<SavingsCategoryBloc>().add(
-                              DeleteSavingsCategory(user.uid, widget.category!.id),
+                              DeleteSavingsCategory(
+                                user.uid,
+                                widget.category!.id,
+                              ),
                             );
                             Navigator.pop(context);
                           }
                         },
-                        child: Text('Hapus Tujuan', style: TextStyle(color: Colors.red)),
+                        child: Text(
+                          'Hapus Tujuan',
+                          style: TextStyle(color: Colors.red),
+                        ),
                       ),
                     ),
                   ],

@@ -28,14 +28,12 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       _budgetSubscription?.cancel();
       _transactionSubscription?.cancel();
 
-      // Listen to budgets
       _budgetSubscription = budgetRepository.watchBudgets(event.userId).listen((
         _,
       ) {
         add(BudgetsUpdated(event));
       });
 
-      // Listen to transactions
       _transactionSubscription = transactionRepository
           .watchTransactions(event.userId)
           .listen((_) {
@@ -73,9 +71,6 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   void _onDeleteBudget(DeleteBudget event, Emitter<BudgetState> emit) async {
     try {
       await budgetRepository.deleteBudget(event.userId, event.budgetId);
-      // We don't need to explicitly update the state here because the
-      // Firestore snapshot listener (watchBudgets) will automatically
-      // trigger a BudgetsUpdated event when it detects the deletion.
     } catch (e) {
       emit(BudgetError(e.toString()));
     }
@@ -87,8 +82,6 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   ) async {
     final budgets = await budgetRepository.getBudgets(userId);
 
-    // Simplification: We fetch transactions for the current month.
-    // In a fully dynamic app with different dates, we'd query all transactions matching periods.
     final now = DateTime.now();
     final transactions = await transactionRepository.getTransactionsForMonth(
       userId,
@@ -104,15 +97,13 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       spentAmounts[b.id] = 0.0;
     }
 
-    // Accumulate expenses to budget IDs based on category matching
     for (var t in transactions) {
       if (t.type == 'expense') {
-        // Find if this transaction's category matches any budget category
         for (var b in budgets) {
           if (b.categoryName == t.categoryName) {
             spentAmounts[b.id] = (spentAmounts[b.id] ?? 0.0) + t.amount;
             totalSpent += t.amount;
-            break; // Assuming a transaction only maps to one budget category
+            break;
           }
         }
       }

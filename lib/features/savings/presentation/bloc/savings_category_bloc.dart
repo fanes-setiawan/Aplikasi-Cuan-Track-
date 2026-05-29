@@ -4,7 +4,8 @@ import '../../domain/repositories/savings_category_repository.dart';
 import 'savings_category_event.dart';
 import 'savings_category_state.dart';
 
-class SavingsCategoryBloc extends Bloc<SavingsCategoryEvent, SavingsCategoryState> {
+class SavingsCategoryBloc
+    extends Bloc<SavingsCategoryEvent, SavingsCategoryState> {
   final SavingsCategoryRepository _repository;
   StreamSubscription? _subscription;
 
@@ -22,7 +23,9 @@ class SavingsCategoryBloc extends Bloc<SavingsCategoryEvent, SavingsCategoryStat
   ) async {
     emit(SavingsCategoryLoading());
     await _subscription?.cancel();
-    _subscription = _repository.getSavingsCategories(event.userId).listen((categories) {
+    _subscription = _repository.getSavingsCategories(event.userId).listen((
+      categories,
+    ) {
       add(SavingsCategoriesUpdated(categories));
     });
   }

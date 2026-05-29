@@ -77,7 +77,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Create New Budget Button
                   Padding(
                     padding: const EdgeInsets.all(AppDimens.md),
                     child: SizedBox(
@@ -120,7 +119,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     ),
                   ),
 
-                  // Budget Summary
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.md,
@@ -189,7 +187,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                   const SizedBox(height: AppDimens.md),
 
-                  // Budget Items
                   if (state.budgets.isEmpty)
                     const EmptyState(
                       title: 'Belum Ada Anggaran',

@@ -24,7 +24,6 @@ class CurrencyFormatter extends TextInputFormatter {
 
     final int value = int.tryParse(newText) ?? 0;
 
-    // Format without the currency symbol and decimals, just grouped digits
     final formatter = NumberFormat.decimalPattern(_locale);
     final String formattedText = formatter.format(value);
 

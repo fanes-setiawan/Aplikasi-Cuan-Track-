@@ -20,7 +20,6 @@ class ExcelHelper {
     var excel = Excel.createExcel();
     Sheet sheetObject = excel['Sheet1'];
 
-    // Add headers
     for (var i = 0; i < headers.length; i++) {
       var cell = sheetObject.cell(
         CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0),
@@ -29,7 +28,6 @@ class ExcelHelper {
       cell.cellStyle = CellStyle(bold: true);
     }
 
-    // Add example row
     var exampleRow = [
       '07/03/2026',
       'Contoh Transaksi',
@@ -74,7 +72,6 @@ class ExcelHelper {
       var rows = excel.tables[table]!.rows;
       if (rows.isEmpty) continue;
 
-      // Skip header
       for (var i = 1; i < rows.length; i++) {
         var row = rows[i];
         if (row.isEmpty || row[0] == null) continue;
@@ -100,7 +97,6 @@ class ExcelHelper {
   static DateTime _parseDate(String? value) {
     if (value == null || value.isEmpty) return DateTime.now();
     try {
-      // Try common formats
       if (value.contains('/')) {
         return DateFormat('dd/MM/yyyy').parse(value);
       } else if (value.contains('-')) {

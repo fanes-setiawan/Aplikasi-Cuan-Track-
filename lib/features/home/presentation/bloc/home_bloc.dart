@@ -31,7 +31,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     emit(HomeLoading());
     try {
-      // Fetch data concurrently for better performance
       final results = await Future.wait([
         repository.getTotalBalance(event.userId),
         repository.getCurrentMonthIncome(event.userId),
@@ -51,7 +50,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           totalBalance: totalBalance,
           monthlyIncome: monthlyIncome,
           monthlyExpenses: monthlyExpenses,
-          // ignore: cast_from_type
           recentTransactions: List.from(recentTransactions),
           expenseChartData: expenseChartData,
         ),

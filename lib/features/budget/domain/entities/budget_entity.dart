@@ -5,7 +5,7 @@ class BudgetEntity extends Equatable {
   final String userId;
   final String categoryName;
   final double amount;
-  final String period; // 'Mingguan', 'Bulanan', 'Tahunan'
+  final String period;
   final bool remindMe;
   final DateTime createdAt;
 

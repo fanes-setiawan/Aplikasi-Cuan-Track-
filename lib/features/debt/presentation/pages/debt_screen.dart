@@ -501,7 +501,8 @@ class _DebtScreenState extends State<DebtScreen>
     if (debts.isEmpty) {
       return EmptyState(
         title: 'Tidak ada data $typeName',
-        subtitle: 'Mulai catat $typeName Anda untuk melacak keuangan dengan lebih rinci.',
+        subtitle:
+            'Mulai catat $typeName Anda untuk melacak keuangan dengan lebih rinci.',
         imageWidth: 100,
       );
     }
@@ -514,7 +515,6 @@ class _DebtScreenState extends State<DebtScreen>
         final dateStr = DateFormat('dd MMM yyyy').format(debt.dueDate);
         final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
 
-        // Icon selection
         IconData itemIcon = Icons.person_outline;
         if (debt.description.toLowerCase().contains('toko') ||
             debt.description.toLowerCase().contains('warung')) {

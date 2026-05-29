@@ -134,7 +134,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                         child: FadeInAnimation(child: widget),
                       ),
                       children: [
-                        // Donut Chart Mockup Placeholder
                         Center(
                           child: Container(
                             width: 250,
@@ -186,7 +185,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                         ),
                         const SizedBox(height: 32),
 
-                        // Categories Legend
                         if (state.topCategories.isNotEmpty)
                           Builder(
                             builder: (context) {
@@ -201,7 +199,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                               ];
 
                               if (categories.length > 5) {
-                                // Show first 4
                                 for (int i = 0; i < 4; i++) {
                                   final cat = categories[i];
                                   pills.add(
@@ -212,7 +209,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                     ),
                                   );
                                 }
-                                // Group others
                                 double othersPercent = 0;
                                 for (int i = 4; i < categories.length; i++) {
                                   othersPercent += categories[i].percentage;
@@ -246,7 +242,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                           ),
                         const SizedBox(height: 48),
 
-                        // Monthly Trend & Comparative Analysis
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -356,7 +351,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                         ),
                         const SizedBox(height: 48),
 
-                        // Insight Box
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -421,7 +415,6 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                         ),
                         const SizedBox(height: 48),
 
-                        // Detail Sub-Category Section
                         if (state.topSubCategories.isNotEmpty &&
                             state.topCategories.isNotEmpty) ...[
                           Text(

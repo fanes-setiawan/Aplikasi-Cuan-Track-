@@ -57,7 +57,6 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Provider Info Card
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -143,7 +142,6 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            // Default Toggle
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
@@ -235,9 +233,8 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                   AddPaymentMethod(newMethod),
                 );
 
-                // Save logic here
-                Navigator.pop(context); // Go back to the sheet
-                Navigator.pop(context); // Go back to the methods screen
+                Navigator.pop(context);
+                Navigator.pop(context);
                 AppHelpers.showSnackBar(
                   context,
                   '${_nameController.text} berhasil ditambahkan',

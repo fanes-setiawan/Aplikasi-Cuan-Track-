@@ -17,11 +17,9 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
   ) async {
     emit(AnalysisLoading());
     try {
-      // 1. Fetch current month transactions
       final currentMonthTransactions = await transactionRepository
           .getTransactionsForMonth(event.userId, event.selectedMonth);
 
-      // 2. Fetch previous month transactions
       final previousMonth = DateTime(
         event.selectedMonth.year,
         event.selectedMonth.month - 1,
@@ -29,7 +27,6 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       final previousMonthTransactions = await transactionRepository
           .getTransactionsForMonth(event.userId, previousMonth);
 
-      // 3. Calculate Totals and Weekly Aggregation (Expenses only)
       double currentTotal = 0;
       final Map<String, double> categoryTotals = {};
       final Map<String, List<double>> categoryWeeklyTotals = {};
@@ -47,7 +44,7 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
           if (weekIdx > 4) weekIdx = 4;
           currentWeekly[weekIdx] += t.amount;
 
-          final weekdayIdx = t.date.weekday - 1; // 0 for Monday, 6 for Sunday
+          final weekdayIdx = t.date.weekday - 1;
           currentWeekday[weekdayIdx] += t.amount;
 
           if (!categoryWeeklyTotals.containsKey(catName)) {
@@ -75,15 +72,13 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         }
       }
 
-      // 4. Comparison Percentage
       double comparison = 0;
       if (previousTotal > 0) {
         comparison = ((currentTotal - previousTotal) / previousTotal) * 100;
       } else if (currentTotal > 0) {
-        comparison = 100; // 100% increase if previous month was 0
+        comparison = 100;
       }
 
-      // 5. Average Per Day
       final now = DateTime.now();
       int daysElapsed;
       if (event.selectedMonth.year == now.year &&
@@ -98,18 +93,15 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
       }
       final avgPerDay = daysElapsed > 0 ? (currentTotal / daysElapsed) : 0;
 
-      // 6. Category Analysis
       final sortedCategories = categoryTotals.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
 
       final List<CategoryAnalysis> topCategories = [];
       for (var entry in sortedCategories.take(3)) {
-        // Show top 3
         final percentage = currentTotal > 0
             ? ((entry.value / currentTotal) * 100).toDouble()
             : 0.0;
 
-        // Mock trend logic for categories based on lack of individual historical breakdown
         topCategories.add(
           CategoryAnalysis(
             categoryName: entry.key,
@@ -124,20 +116,17 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         );
       }
 
-      // 6.5 Top Category Transactions (Sub-Categories)
       final List<SubCategoryAnalysis> topSubCategories = [];
       if (sortedCategories.isNotEmpty) {
         final topCatName = sortedCategories.first.key;
         final topCatTotal = sortedCategories.first.value;
 
-        // Filter transactions for top category
         final topCatTransactions = currentMonthTransactions.where(
           (t) =>
               t.type == 'expense' &&
               (t.categoryName ?? 'Lainnya') == topCatName,
         );
 
-        // Group by title (acting as sub-category)
         final Map<String, double> subCategoryTotals = {};
         for (var t in topCatTransactions) {
           final title = t.title.isEmpty ? 'Lain-lain' : t.title;
@@ -161,14 +150,12 @@ class AnalysisBloc extends Bloc<AnalysisEvent, AnalysisState> {
         }
       }
 
-      // 6.75 Top Transactions
       final allExpenses = currentMonthTransactions
           .where((t) => t.type == 'expense')
           .toList();
       allExpenses.sort((a, b) => b.amount.compareTo(a.amount));
       final topTransactionsList = allExpenses.take(3).toList();
 
-      // 7. Dynamic Insights
       int highestWeekIdx = 0;
       double highestWeekVal = currentWeekly[0];
       int lowestWeekIdx = 0;

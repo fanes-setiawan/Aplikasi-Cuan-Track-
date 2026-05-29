@@ -180,7 +180,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.category_outlined, color: AppColors.primary),
-                  Text('Tujuan', style: TextStyle(fontSize: 10, color: AppColors.primary)),
+                  Text(
+                    'Tujuan',
+                    style: TextStyle(fontSize: 10, color: AppColors.primary),
+                  ),
                 ],
               ),
             ),
@@ -239,7 +242,6 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         else
                           ...state.goals.map((goal) => _buildGoalItem(goal)),
 
-                        // History Section Placeholder
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -265,7 +267,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
               alignment: Alignment.topCenter,
               child: ConfettiWidget(
                 confettiController: _confettiController,
-                blastDirection: pi / 2, // down
+                blastDirection: pi / 2,
                 maxBlastForce: 5,
                 minBlastForce: 2,
                 emissionFrequency: 0.05,
@@ -311,7 +313,6 @@ class _SavingsScreenState extends State<SavingsScreen> {
       ),
       child: Stack(
         children: [
-          // Background subtle pattern
           Positioned(
             right: -20,
             bottom: -20,
@@ -407,7 +408,6 @@ class _SavingsScreenState extends State<SavingsScreen> {
   Widget _buildPurposeSummary(List<dynamic> goals) {
     if (goals.isEmpty) return const SizedBox.shrink();
 
-    // Grouping logic
     final Map<String, Map<String, dynamic>> summary = {};
     for (var goal in goals) {
       final name = goal.categoryName ?? 'Lainnya';
@@ -432,9 +432,13 @@ class _SavingsScreenState extends State<SavingsScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: summary.entries.map((entry) {
-              final progress = (entry.value['collected'] / entry.value['target']).clamp(0.0, 1.0);
+              final progress =
+                  (entry.value['collected'] / entry.value['target']).clamp(
+                    0.0,
+                    1.0,
+                  );
               final icon = AppHelpers.getCategoryIcon(entry.value['icon']);
-              final color = entry.value['color'] != null 
+              final color = entry.value['color'] != null
                   ? Color(int.parse(entry.value['color']))
                   : AppColors.primary;
 
@@ -457,7 +461,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         Expanded(
                           child: Text(
                             entry.key,
-                            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                            style: AppStyles.bodyText.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -470,7 +476,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       children: [
                         Text(
                           '${(progress * 100).toStringAsFixed(0)}%',
-                          style: AppStyles.caption.copyWith(color: AppColors.primary, fontWeight: FontWeight.bold),
+                          style: AppStyles.caption.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         Text(
                           AppHelpers.formatCurrencyIdr(entry.value['target']),
@@ -491,7 +500,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     const SizedBox(height: 8),
                     Text(
                       'Terkumpul: ${AppHelpers.formatCurrencyIdr(entry.value['collected'])}',
-                      style: AppStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 10),
+                      style: AppStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: 10,
+                      ),
                     ),
                   ],
                 ),
@@ -557,7 +569,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Hapus Target'),
-        content: Text('Apakah Anda yakin ingin menghapus target "${goal.title}"?'),
+        content: Text(
+          'Apakah Anda yakin ingin menghapus target "${goal.title}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
@@ -565,7 +579,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              context.read<SavingsBloc>().add(DeleteSavingsGoal(_userId, goal.id));
+              context.read<SavingsBloc>().add(
+                DeleteSavingsGoal(_userId, goal.id),
+              );
               Navigator.pop(ctx);
             },
             child: const Text('Hapus', style: TextStyle(color: Colors.red)),
@@ -578,14 +594,13 @@ class _SavingsScreenState extends State<SavingsScreen> {
   Widget _buildGoalItem(dynamic goal) {
     final progress = (goal.currentAmount / goal.targetAmount).clamp(0.0, 1.0);
     final remaining = goal.targetAmount - goal.currentAmount;
-    
+
     final IconData icon = AppHelpers.getCategoryIcon(goal.categoryIconName);
     final Color iconColor = goal.categoryColorHex != null
         ? Color(int.parse(goal.categoryColorHex))
         : AppColors.primary;
     final Color iconBgColor = iconColor.withOpacity(0.1);
 
-    // Format the date assuming deadline is in DateTime
     final monthNames = [
       'Jan',
       'Feb',

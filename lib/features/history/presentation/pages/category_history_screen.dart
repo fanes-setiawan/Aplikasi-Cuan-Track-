@@ -63,9 +63,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _userId = user.uid;
-      context.read<HistoryBloc>().add(
-        ChangeMonthEvent(_userId, widget.month),
-      );
+      context.read<HistoryBloc>().add(ChangeMonthEvent(_userId, widget.month));
     }
   }
 
@@ -119,16 +117,17 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
           }
 
           if (state is HistoryLoaded) {
-            // Filter transaksi berdasarkan kategori
-            final filtered = state.transactions
-                .where((t) => t.categoryName == widget.categoryName)
-                .toList()
-              ..sort((a, b) => a.date.compareTo(b.date));
+            final filtered =
+                state.transactions
+                    .where((t) => t.categoryName == widget.categoryName)
+                    .toList()
+                  ..sort((a, b) => a.date.compareTo(b.date));
 
             if (filtered.isEmpty) {
               return const EmptyState(
                 title: 'Tidak Ada Transaksi',
-                subtitle: 'Tidak ada transaksi untuk kategori ini di bulan ini.',
+                subtitle:
+                    'Tidak ada transaksi untuk kategori ini di bulan ini.',
                 imageWidth: 120,
               );
             }
@@ -143,10 +142,8 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Summary card
                   _buildSummaryCard(filtered.length, totalAmount),
                   const SizedBox(height: AppDimens.md),
-                  // Excel table
                   _buildTable(filtered, totalAmount),
                   const SizedBox(height: AppDimens.xl * 2),
                 ],
@@ -252,15 +249,12 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         child: Column(
           children: [
-            // ── Header Row ──
             _buildHeaderRow(),
-            // ── Data Rows ──
             ...transactions.asMap().entries.map((entry) {
               final index = entry.key;
               final t = entry.value;
               return _buildDataRow(index, t);
             }),
-            // ── Footer / Total Row ──
             _buildFooterRow(transactions.length, totalAmount),
           ],
         ),
@@ -293,10 +287,9 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
       flex: flex,
       child: Text(
         label,
-        textAlign:
-            center
-                ? TextAlign.center
-                : (right ? TextAlign.right : TextAlign.left),
+        textAlign: center
+            ? TextAlign.center
+            : (right ? TextAlign.right : TextAlign.left),
         style: AppStyles.caption.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -328,13 +321,10 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         ),
       ),
       child: Container(
-        color: isEven
-            ? Colors.white
-            : widget.categoryColor.withOpacity(0.04),
+        color: isEven ? Colors.white : widget.categoryColor.withOpacity(0.04),
         padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
         child: Row(
           children: [
-            // No
             Expanded(
               flex: 1,
               child: Text(
@@ -346,7 +336,6 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 ),
               ),
             ),
-            // Tanggal
             Expanded(
               flex: 3,
               child: Text(
@@ -357,7 +346,6 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 ),
               ),
             ),
-            // Keterangan
             Expanded(
               flex: 4,
               child: Text(
@@ -371,7 +359,6 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            // Jumlah
             Expanded(
               flex: 4,
               child: Text(
@@ -396,11 +383,8 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       child: Row(
         children: [
-          // No (kosong)
           const Expanded(flex: 1, child: SizedBox()),
-          // Tanggal (kosong)
           const Expanded(flex: 3, child: SizedBox()),
-          // Label TOTAL
           Expanded(
             flex: 4,
             child: Text(
@@ -413,7 +397,6 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               ),
             ),
           ),
-          // Nilai Total
           Expanded(
             flex: 4,
             child: Text(
@@ -439,7 +422,10 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
           children: [
             AppShimmer.rectangular(height: 90, borderRadius: AppDimens.radiusL),
             const SizedBox(height: AppDimens.md),
-            AppShimmer.rectangular(height: 300, borderRadius: AppDimens.radiusL),
+            AppShimmer.rectangular(
+              height: 300,
+              borderRadius: AppDimens.radiusL,
+            ),
           ],
         ),
       ),

@@ -67,7 +67,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           id: t.categoryId,
           userId: t.userId,
           name: t.categoryName!,
-          iconName: 'category', // placeholder, will try to match real one later
+          iconName: 'category',
           colorHex: '#27AE60',
           type: t.type,
         );
@@ -84,7 +84,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         );
       }
     } else {
-      // Use initial values if provided via constructor
       if (widget.initialAmount != null && widget.initialAmount! > 0) {
         _rawAmount = widget.initialAmount!.toStringAsFixed(0);
       }
@@ -151,7 +150,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: AppDimens.xl),
-                      // Nominal Display
                       Center(
                         child: Column(
                           children: [
@@ -197,7 +195,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: AppDimens.xl + 10),
 
-                      // Category Selection
                       Text(
                         'Pilih Kategori',
                         style: AppStyles.bodyText.copyWith(
@@ -245,14 +242,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: AppDimens.xl),
 
-                      // Payment Method Selection
                       BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
                         builder: (context, state) {
                           String value = "Loading...";
                           if (state is PaymentMethodLoaded) {
                             if (state.paymentMethods.isNotEmpty) {
-                              // If editing and a payment method was pre-selected in initState, try to match it
-                              // Otherwise, default to the first payment method
                               if (widget.transactionForEdit != null &&
                                   _selectedPaymentMethod != null) {
                                 _selectedPaymentMethod = state.paymentMethods
@@ -374,7 +368,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: AppDimens.md),
 
-                      // Date Selection
                       _buildInputTile(
                         label: 'TANGGAL',
                         value: DateFormat(
@@ -398,7 +391,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       ),
                       const SizedBox(height: AppDimens.md),
 
-                      // Note Input
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: AppDimens.md,
@@ -432,10 +424,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ),
                 ),
               ),
-              // Custom Numeric Keypad
               if (MediaQuery.of(context).viewInsets.bottom == 0)
                 _buildNumericKeypad(),
-              // Save Button
               Padding(
                 padding: const EdgeInsets.all(AppDimens.md),
                 child: SizedBox(
@@ -643,12 +633,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 _rawAmount = "0";
               }
             } else if (key == '.') {
-              // ignore decimal for IDR format
             } else {
               if (_rawAmount == "0") {
                 _rawAmount = key;
               } else {
-                // limit length to avoid overflow
                 if (_rawAmount.length < 12) {
                   _rawAmount += key;
                 }
@@ -687,7 +675,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    // Parse amount
     final amountParsed = double.tryParse(_rawAmount) ?? 0.0;
 
     if (amountParsed <= 0) {

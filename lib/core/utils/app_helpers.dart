@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class AppHelpers {
   AppHelpers._();
-
-  // --- UI Helpers ---
-
-  /// Menampilkan snackbar kustom (Pill shaped, Icon + Text)
   static void showSnackBar(
     BuildContext context,
     String message, {
@@ -52,24 +47,18 @@ class AppHelpers {
     );
   }
 
-  /// Menutup keyboard dengan mudah
   static void unfocus(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
 
-  /// Mendapatkan lebar layar
   static double screenWidth(BuildContext context) {
     return MediaQuery.of(context).size.width;
   }
 
-  /// Mendapatkan tinggi layar
   static double screenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
 
-  // --- Formatters ---
-
-  /// Format Rupiah (contoh: Rp 10.000)
   static String formatCurrencyIdr(double amount) {
     final NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id_ID',
@@ -79,19 +68,14 @@ class AppHelpers {
     return currencyFormatter.format(amount);
   }
 
-  /// Format Tanggal (contoh: 12 Okt 2023)
   static String formatDate(DateTime date) {
     return DateFormat('dd MMM yyyy', 'id_ID').format(date);
   }
 
-  /// Format Waktu (contoh: 14:30)
   static String formatTime(DateTime date) {
     return DateFormat('HH:mm').format(date);
   }
 
-  // --- Validators ---
-
-  /// Validasi input tidak boleh kosong
   static String? validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName tidak boleh kosong';
@@ -99,7 +83,6 @@ class AppHelpers {
     return null;
   }
 
-  /// Validasi format email
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email tidak boleh kosong';
@@ -111,7 +94,6 @@ class AppHelpers {
     return null;
   }
 
-  /// Validasi panjang minimal password
   static String? validatePassword(String? value, {int minLength = 6}) {
     if (value == null || value.trim().isEmpty) {
       return 'Password tidak boleh kosong';
@@ -122,14 +104,10 @@ class AppHelpers {
     return null;
   }
 
-  // --- Utilities ---
-
-  /// Delay eksekusi beberapa saat
   static Future<void> delay(int milliseconds) async {
     await Future.delayed(Duration(milliseconds: milliseconds));
   }
 
-  /// Mendapatkan IconData berdasarkan nama ikon kategori
   static IconData getCategoryIcon(String? name) {
     if (name == null) return Icons.category_outlined;
     final iconName = name.toLowerCase();
@@ -140,7 +118,8 @@ class AppHelpers {
     if (iconName.contains('food')) return Icons.fastfood_outlined;
     if (iconName.contains('transport')) return Icons.directions_car_outlined;
     if (iconName.contains('shopping')) return Icons.shopping_bag_outlined;
-    if (iconName.contains('entertainment')) return Icons.sports_esports_outlined;
+    if (iconName.contains('entertainment'))
+      return Icons.sports_esports_outlined;
     if (iconName.contains('home')) return Icons.home_outlined;
     if (iconName.contains('heart')) return Icons.favorite_border_outlined;
     if (iconName.contains('cafe')) return Icons.local_cafe_outlined;

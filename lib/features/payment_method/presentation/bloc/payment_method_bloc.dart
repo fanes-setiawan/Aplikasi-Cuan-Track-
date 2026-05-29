@@ -48,9 +48,7 @@ class PaymentMethodBloc extends Bloc<PaymentMethodEvent, PaymentMethodState> {
   ) async {
     try {
       await repository.addPaymentMethod(event.paymentMethod);
-    } catch (e) {
-      // Could emit error state if necessary, but stream handles loaded state.
-    }
+    } catch (e) {}
   }
 
   Future<void> _onDeletePaymentMethod(
@@ -59,9 +57,7 @@ class PaymentMethodBloc extends Bloc<PaymentMethodEvent, PaymentMethodState> {
   ) async {
     try {
       await repository.deletePaymentMethod(event.userId, event.methodId);
-    } catch (e) {
-      // Could emit error state if necessary
-    }
+    } catch (e) {}
   }
 
   @override

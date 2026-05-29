@@ -51,7 +51,6 @@ class BiometricActivationScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Close Button
             Align(
               alignment: Alignment.topRight,
               child: Padding(
@@ -81,12 +80,10 @@ class BiometricActivationScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // Graphic
             Center(
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Outer Rings (Simplified from mockup)
                   Container(
                     width: 250,
                     height: 250,
@@ -122,7 +119,6 @@ class BiometricActivationScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Vertical and Horizontal lines for crosshair effect
                   Container(
                     width: 1,
                     height: 250,
@@ -133,7 +129,6 @@ class BiometricActivationScreen extends StatelessWidget {
                     height: 1,
                     color: const Color(0xFFE2E8F0),
                   ),
-                  // Center Icon
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: const BoxDecoration(
@@ -150,7 +145,6 @@ class BiometricActivationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 48),
-            // Text Content
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
@@ -174,7 +168,6 @@ class BiometricActivationScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            // Buttons
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
               child: Column(
@@ -217,7 +210,6 @@ class BiometricActivationScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 48),
-            // Footer
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

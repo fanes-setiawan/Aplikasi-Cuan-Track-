@@ -25,9 +25,7 @@ class NotificationScreen extends StatelessWidget {
         title: Text('Notifikasi', style: AppStyles.heading2),
         actions: [
           TextButton(
-            onPressed: () {
-              // TODO: Mark all as read
-            },
+            onPressed: () {},
             child: Text(
               'Tandai Semua Dibaca',
               style: AppStyles.caption.copyWith(

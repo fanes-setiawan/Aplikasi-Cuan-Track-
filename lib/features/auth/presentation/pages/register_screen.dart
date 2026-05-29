@@ -86,7 +86,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header Texts
                   Text(
                     'Mulai Perjalanan\nFinansialmu',
                     style: AppStyles.heading1.copyWith(fontSize: 28),
@@ -98,7 +97,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Form Fields
                   CustomTextField(
                     label: 'Nama Lengkap',
                     hintText: 'Masukkan nama lengkap',
@@ -131,7 +129,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Register Button
                   isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : CustomButton(
@@ -169,7 +166,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Divider "ATAU DAFTAR DENGAN"
                   Row(
                     children: [
                       Expanded(child: Divider(color: AppColors.divider)),
@@ -191,7 +187,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Google Register Button
                   CustomButton(
                     text: 'Daftar dengan Google',
                     onPressed: () {
@@ -207,7 +202,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: AppDimens.xl),
 
-                  // Login Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -217,9 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pop(
-                            context,
-                          ); // Goes back to Login if navigated from there
+                          Navigator.pop(context);
                         },
                         child: Text(
                           'Masuk',

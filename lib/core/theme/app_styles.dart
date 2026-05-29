@@ -4,7 +4,6 @@ import 'app_colors.dart';
 class AppStyles {
   AppStyles._();
 
-  // Headings
   static const TextStyle heading1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
@@ -23,7 +22,6 @@ class AppStyles {
     color: AppColors.textPrimary,
   );
 
-  // Body Texts
   static const TextStyle bodyText = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
@@ -36,14 +34,12 @@ class AppStyles {
     color: AppColors.textSecondary,
   );
 
-  // Small Texts / Captions
   static const TextStyle caption = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );
 
-  // Button Texts
   static const TextStyle buttonText = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,

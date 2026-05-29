@@ -189,7 +189,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Dots Indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -210,7 +209,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const SizedBox(height: AppDimens.xl),
 
-          // Action Buttons
           _buildActionButtons(index),
         ],
       ),
@@ -244,9 +242,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return Column(
         children: [
           SizedBox(
-            width: index == 1
-                ? 200
-                : double.infinity, // Page 2 button is smaller
+            width: index == 1 ? 200 : double.infinity,
             height: AppDimens.buttonHeightM,
             child: ElevatedButton(
               onPressed: () => _goToNextPage(index),

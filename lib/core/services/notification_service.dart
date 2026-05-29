@@ -14,16 +14,12 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    // Request permission (Apple & Web)
     await _requestPermission();
 
-    // Initialize local notifications
     await _initLocalNotifications();
 
-    // Setup foreground message listener
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-    // Get FCM Token
     try {
       final token = await _fcm.getToken();
       log('FCM Token: $token', name: 'NotificationService');
@@ -53,7 +49,6 @@ class NotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // For iOS
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
           requestSoundPermission: true,
@@ -77,12 +72,10 @@ class NotificationService {
       },
     );
 
-    // Create a channel for Android (required for high priority notifications)
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel', // id
-      'High Importance Notifications', // name
-      description:
-          'This channel is used for important notifications.', // description
+      'high_importance_channel',
+      'High Importance Notifications',
+      description: 'This channel is used for important notifications.',
       importance: Importance.max,
     );
 
@@ -110,8 +103,8 @@ class NotificationService {
   Future<void> _showLocalNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-          'high_importance_channel', // channelId
-          'High Importance Notifications', // channelName
+          'high_importance_channel',
+          'High Importance Notifications',
           channelDescription:
               'This channel is used for important notifications.',
           importance: Importance.max,

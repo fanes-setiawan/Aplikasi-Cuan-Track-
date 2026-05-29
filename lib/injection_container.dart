@@ -43,27 +43,20 @@ import 'features/category/domain/repositories/category_repository.dart';
 import 'features/category/data/repositories/firestore_category_repository_impl.dart';
 import 'features/category/presentation/bloc/category_bloc.dart';
 
-final sl = GetIt.instance; // sl = Service Locator
+final sl = GetIt.instance;
 
 Future<void> init() async {
-  // --- External Dependencies ---
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
 
-  // --- Core / Shared ---
-
-  // --- Features: Auth ---
-  // Repositories
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
 
-  // Use Cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => LoginWithGoogleUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
 
-  // BLoC
   sl.registerFactory(
     () => AuthBloc(
       loginUseCase: sl(),
@@ -75,7 +68,6 @@ Future<void> init() async {
     ),
   );
 
-  // --- Features: Transactions / Home Options ---
   sl.registerLazySingleton<TransactionRepository>(
     () => FirestoreTransactionRepositoryImpl(firestore: sl()),
   );
@@ -90,10 +82,8 @@ Future<void> init() async {
 
   sl.registerFactory(() => HistoryBloc(repository: sl()));
 
-  // Blocs - Analytics
   sl.registerFactory(() => AnalyticsBloc(repository: sl()));
 
-  // --- Features: Savings Goal ---
   sl.registerLazySingleton<FirestoreSavingsRepositoryImpl>(
     () => FirestoreSavingsRepositoryImpl(firestore: sl()),
   );
@@ -106,14 +96,12 @@ Future<void> init() async {
 
   sl.registerFactory(() => SavingsCategoryBloc(sl()));
 
-  // --- Features: Debt Tracking ---
   sl.registerLazySingleton<FirestoreDebtRepositoryImpl>(
     () => FirestoreDebtRepositoryImpl(firestore: sl()),
   );
 
   sl.registerFactory(() => DebtBloc(repository: sl()));
 
-  // --- Features: Budget ---
   sl.registerLazySingleton<BudgetRepository>(
     () => FirestoreBudgetRepositoryImpl(firestore: sl()),
   );
@@ -125,21 +113,18 @@ Future<void> init() async {
   sl.registerFactory(() => AddBudgetBloc(budgetRepository: sl()));
   sl.registerFactory(() => EditBudgetBloc(budgetRepository: sl()));
 
-  // --- Features: Payment Methods ---
   sl.registerLazySingleton<PaymentMethodRepository>(
     () => FirestorePaymentMethodRepositoryImpl(firestore: sl()),
   );
 
   sl.registerFactory(() => PaymentMethodBloc(repository: sl()));
 
-  // --- Features: Custom Categories ---
   sl.registerLazySingleton<CategoryRepository>(
     () => FirestoreCategoryRepositoryImpl(firestore: sl()),
   );
 
   sl.registerFactory(() => CategoryBloc(repository: sl()));
 
-  // --- Features: AI Chatbot ---
   sl.registerLazySingleton(() => AIChatRepository(firestore: sl()));
   sl.registerFactory(() => AIChatBloc(repository: sl(), authRepository: sl()));
 }

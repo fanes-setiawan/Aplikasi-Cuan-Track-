@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -116,26 +115,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: AppDimens.lg),
                       _buildActionButtons(context),
                       const SizedBox(height: AppDimens.xl),
-                      
+
                       if (expenseData.isNotEmpty) ...[
                         _buildExpenseAnalysis(expenseData),
                         const SizedBox(height: AppDimens.lg),
                       ],
 
-                      _buildSummaryCards(context, isDataEmpty: recentTrx.isEmpty),
+                      _buildSummaryCards(
+                        context,
+                        isDataEmpty: recentTrx.isEmpty,
+                      ),
                       const SizedBox(height: AppDimens.lg),
-                      
+
                       if (recentTrx.isEmpty)
                         EmptyState(
                           title: 'Belum ada transaksi',
-                          subtitle: 'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
-                          imageWidth: 140, // Reduced size
-                          padding: const EdgeInsets.symmetric(vertical: AppDimens.md),
+                          subtitle:
+                              'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
+                          imageWidth: 140,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppDimens.md,
+                          ),
                           onAction: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AddTransactionScreen(),
+                                builder: (context) =>
+                                    const AddTransactionScreen(),
                               ),
                             );
                           },
@@ -292,7 +298,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBalanceCard(double totalBalance, double income, double expense, {bool showTrend = true}) {
+  Widget _buildBalanceCard(
+    double totalBalance,
+    double income,
+    double expense, {
+    bool showTrend = true,
+  }) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -314,7 +325,6 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         child: Stack(
           children: [
-            // Background Pattern/Wave
             Positioned(
               top: -50,
               right: -50,
@@ -363,7 +373,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(AppDimens.round),
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.round,
+                            ),
                           ),
                           child: Row(
                             children: [
@@ -566,14 +578,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildSummaryCards(BuildContext context, {bool isDataEmpty = false}) {
     return Row(
       children: [
-        Expanded(child: _buildSavingsSummaryCard(context, showTrend: !isDataEmpty)),
+        Expanded(
+          child: _buildSavingsSummaryCard(context, showTrend: !isDataEmpty),
+        ),
         const SizedBox(width: AppDimens.md),
         Expanded(child: _buildDebtSummaryCard(context)),
       ],
     );
   }
 
-  Widget _buildSavingsSummaryCard(BuildContext context, {bool showTrend = true}) {
+  Widget _buildSavingsSummaryCard(
+    BuildContext context, {
+    bool showTrend = true,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -594,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFE0F7FA), // Light cyan
+                color: const Color(0xFFE0F7FA),
                 borderRadius: BorderRadius.circular(AppDimens.radiusS),
               ),
               child: const Icon(
@@ -677,7 +694,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E0), // Light orange
+                color: const Color(0xFFFFF3E0),
                 borderRadius: BorderRadius.circular(AppDimens.radiusS),
               ),
               child: const Icon(
@@ -787,7 +804,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final totalExpense = expenseData.values.fold(0.0, (sum, val) => sum + val);
 
-    // Sort and group: Top 4 + others as "Lainnya"
     final sortedEntries = expenseData.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -995,7 +1011,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ? Icons.account_balance_wallet
                 : Icons.shopping_bag;
 
-            // Format Date
             final dateStr = DateFormat('dd MMM yyyy • HH:mm').format(trx.date);
 
             return AnimationConfiguration.staggeredList(
@@ -1105,7 +1120,7 @@ class DonutChartPainter extends CustomPainter {
       radius: (size.width - strokeWidth) / 2,
     );
 
-    double startAngle = -1.5708; // Start from top (-90 degrees)
+    double startAngle = -1.5708;
 
     for (int i = 0; i < ratios.length; i++) {
       final double sweepAngle = ratios[i] * 2 * 3.14159;

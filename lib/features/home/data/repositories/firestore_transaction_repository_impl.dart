@@ -12,7 +12,6 @@ class FirestoreTransactionRepositoryImpl implements TransactionRepository {
   Future<void> addTransaction(TransactionEntity transaction) async {
     try {
       final data = transaction.toMap();
-      // Date conversion handled implicitly by plugin when passing DateTime
       await _firestore.collection('transactions').add(data);
     } catch (e) {
       throw Exception('Failed to add transaction: $e');
@@ -26,8 +25,6 @@ class FirestoreTransactionRepositoryImpl implements TransactionRepository {
         throw Exception('Cannot update transaction without an ID');
       }
       final data = transaction.toMap();
-      // Ensure we don't accidentally write the internal ID into the document payload map
-      // if it behaves like that, though fromMap usually handles it.
       await _firestore
           .collection('transactions')
           .doc(transaction.id)

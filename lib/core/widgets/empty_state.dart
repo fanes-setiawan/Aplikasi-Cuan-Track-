@@ -27,27 +27,25 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topCenter, // Ensures it starts high
+      alignment: Alignment.topCenter,
       child: Padding(
-        padding: padding ?? const EdgeInsets.symmetric(
-          horizontal: AppDimens.lg,
-          vertical: AppDimens.sm, // Reduced vertical padding
-        ),
+        padding:
+            padding ??
+            const EdgeInsets.symmetric(
+              horizontal: AppDimens.lg,
+              vertical: AppDimens.sm,
+            ),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Only take required space
+          mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               assetPath ?? 'assets/images/img_emty.svg',
-              width: imageWidth ?? 120, // Tighter default image width
+              width: imageWidth ?? 120,
             ),
-            const SizedBox(height: AppDimens.md), // Reduced from lg
-            Text(
-              title,
-              style: AppStyles.heading3,
-              textAlign: TextAlign.center,
-            ),
+            const SizedBox(height: AppDimens.md),
+            Text(title, style: AppStyles.heading3, textAlign: TextAlign.center),
             if (subtitle != null) ...[
-              const SizedBox(height: 6), // Reduced from sm
+              const SizedBox(height: 6),
               Text(
                 subtitle!,
                 style: AppStyles.bodyTextSecondary,
@@ -55,13 +53,13 @@ class EmptyState extends StatelessWidget {
               ),
             ],
             if (onAction != null && actionLabel != null) ...[
-              const SizedBox(height: AppDimens.lg), // Reduced from xl
+              const SizedBox(height: AppDimens.lg),
               ElevatedButton(
                 onPressed: onAction,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  minimumSize: const Size(200, 48), // Explicit minimum size
+                  minimumSize: const Size(200, 48),
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppDimens.xl,
                     vertical: AppDimens.md,
@@ -69,7 +67,7 @@ class EmptyState extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppDimens.radiusM),
                   ),
-                  elevation: 0, // Cleaner look
+                  elevation: 0,
                 ),
                 child: Text(actionLabel!),
               ),

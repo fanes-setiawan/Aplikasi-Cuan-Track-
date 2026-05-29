@@ -9,16 +9,15 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final TransactionRepository repository;
   StreamSubscription? _transactionSubscription;
 
-  // A set of colors to use for the pie chart slices.
   final List<Color> _chartColors = const [
-    Color(0xFF27AE60), // Green (Primary)
-    Color(0xFF2D9CDB), // Blue
-    Color(0xFFF2C94C), // Yellow
-    Color(0xFFEB5757), // Red
-    Color(0xFFBB6BD9), // Purple
-    Color(0xFFF2994A), // Orange
-    Color(0xFF56CCF2), // Light Blue
-    Color(0xFFFF8A65), // Peach
+    Color(0xFF27AE60),
+    Color(0xFF2D9CDB),
+    Color(0xFFF2C94C),
+    Color(0xFFEB5757),
+    Color(0xFFBB6BD9),
+    Color(0xFFF2994A),
+    Color(0xFF56CCF2),
+    Color(0xFFFF8A65),
   ];
 
   AnalyticsBloc({required this.repository}) : super(AnalyticsInitial()) {
@@ -87,7 +86,6 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     final List<CategoryExpenseData> expensesList = [];
     int colorIndex = 0;
 
-    // Sort categories by highest expense
     final sortedCategories = expenseByCategory.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 

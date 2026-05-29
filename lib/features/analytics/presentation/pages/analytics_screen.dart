@@ -147,7 +147,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            // Chart Shimmer
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
               child: AppShimmer.rectangular(
@@ -156,7 +155,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            // Legend Shimmer
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
               child: Column(
@@ -269,7 +267,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               }).toList(),
             ),
           ),
-          // Center Text showing Total Expense
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -371,7 +368,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusM,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.02),
