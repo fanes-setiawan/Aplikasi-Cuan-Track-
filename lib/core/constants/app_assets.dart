@@ -21,4 +21,6 @@ class AppAssets {
   static const String iconGoogle = '$pathIcons/ic_google.svg';
   static const String iconBot = '$pathIcons/ic_boot.svg';
   static const String iconDownload = '$pathIcons/ic_download.svg';
+  static const String iconDocument = '$pathIcons/ic_document.svg';
+  static const String iconMoney = '$pathIcons/ic_monay.svg';
 }

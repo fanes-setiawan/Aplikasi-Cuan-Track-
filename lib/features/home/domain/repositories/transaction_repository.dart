@@ -25,5 +25,7 @@ abstract class TransactionRepository {
 
   Future<Map<String, double>> getCurrentMonthExpenseChart(String userId);
 
+  Future<List<TransactionEntity>> getAllTransactions(String userId);
+
   Stream<void> watchTransactions(String userId);
 }

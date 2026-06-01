@@ -25,3 +25,21 @@ class TransactionsUpdated extends HistoryEvent {
   @override
   List<Object?> get props => [originalEvent];
 }
+
+class LoadAllTimeTransactionsEvent extends HistoryEvent {
+  final String userId;
+
+  const LoadAllTimeTransactionsEvent(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+
+class AllTimeTransactionsUpdated extends HistoryEvent {
+  final String userId;
+
+  const AllTimeTransactionsUpdated(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}

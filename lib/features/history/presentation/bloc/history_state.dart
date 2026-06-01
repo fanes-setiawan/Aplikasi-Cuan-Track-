@@ -42,3 +42,18 @@ class HistoryError extends HistoryState {
   @override
   List<Object?> get props => [message];
 }
+
+class AllTimeHistoryLoaded extends HistoryState {
+  final List<TransactionEntity> transactions;
+  final double totalIncome;
+  final double totalExpense;
+
+  const AllTimeHistoryLoaded({
+    required this.transactions,
+    required this.totalIncome,
+    required this.totalExpense,
+  });
+
+  @override
+  List<Object?> get props => [transactions, totalIncome, totalExpense];
+}

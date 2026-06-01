@@ -217,6 +217,25 @@ class FirestoreTransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
+  Future<List<TransactionEntity>> getAllTransactions(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('transactions')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      final entities = snapshot.docs.map((doc) {
+        return TransactionEntity.fromMap(doc.data(), doc.id);
+      }).toList();
+
+      entities.sort((a, b) => b.date.compareTo(a.date));
+      return entities;
+    } catch (e) {
+      throw Exception('Failed to get all transactions: $e');
+    }
+  }
+
+  @override
   Stream<void> watchTransactions(String userId) {
     return _firestore
         .collection('transactions')

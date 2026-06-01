@@ -17,6 +17,7 @@ import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/empty_state.dart';
 
 import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
+import 'all_time_report_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   final bool showBackButton;
@@ -96,6 +97,28 @@ class _HistoryScreenState extends State<HistoryScreen> {
             : null,
         title: Text('Riwayat Transaksi', style: AppStyles.heading2),
         actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AllTimeReportScreen(),
+                ),
+              ).then((_) {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  context.read<HistoryBloc>().add(ChangeMonthEvent(user.uid, _selectedDate));
+                }
+              });
+            },
+            child: SvgPicture.asset(
+              AppAssets.iconDocument,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+            ),
+          ),
+          const SizedBox(width: AppDimens.md),
           GestureDetector(
             onTap: () => _showReportPreview(context),
             child: SvgPicture.asset(

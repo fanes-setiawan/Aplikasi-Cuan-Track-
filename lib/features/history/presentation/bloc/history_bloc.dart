@@ -11,6 +11,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   HistoryBloc({required this.repository}) : super(HistoryInitial()) {
     on<ChangeMonthEvent>(_onChangeMonth);
     on<TransactionsUpdated>(_onTransactionsUpdated);
+    on<LoadAllTimeTransactionsEvent>(_onLoadAllTimeTransactions);
+    on<AllTimeTransactionsUpdated>(_onAllTimeTransactionsUpdated);
   }
 
   void _onChangeMonth(
@@ -47,6 +49,36 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
+  void _onLoadAllTimeTransactions(
+    LoadAllTimeTransactionsEvent event,
+    Emitter<HistoryState> emit,
+  ) async {
+    emit(HistoryLoading());
+    try {
+      _transactionSubscription?.cancel();
+      _transactionSubscription = repository
+          .watchTransactions(event.userId)
+          .listen((_) {
+            add(AllTimeTransactionsUpdated(event.userId));
+          });
+
+      await _fetchAllTimeData(event.userId, emit);
+    } catch (e) {
+      emit(HistoryError(e.toString()));
+    }
+  }
+
+  void _onAllTimeTransactionsUpdated(
+    AllTimeTransactionsUpdated event,
+    Emitter<HistoryState> emit,
+  ) async {
+    try {
+      await _fetchAllTimeData(event.userId, emit);
+    } catch (e) {
+      emit(HistoryError(e.toString()));
+    }
+  }
+
   Future<void> _fetchMonthlyData(
     String userId,
     DateTime month,
@@ -74,6 +106,32 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         totalIncome: income,
         totalExpense: expense,
         currentMonth: month,
+      ),
+    );
+  }
+
+  Future<void> _fetchAllTimeData(
+    String userId,
+    Emitter<HistoryState> emit,
+  ) async {
+    final transactions = await repository.getAllTransactions(userId);
+
+    double income = 0;
+    double expense = 0;
+
+    for (var t in transactions) {
+      if (t.type == 'income') {
+        income += t.amount;
+      } else {
+        expense += t.amount;
+      }
+    }
+
+    emit(
+      AllTimeHistoryLoaded(
+        transactions: transactions,
+        totalIncome: income,
+        totalExpense: expense,
       ),
     );
   }
