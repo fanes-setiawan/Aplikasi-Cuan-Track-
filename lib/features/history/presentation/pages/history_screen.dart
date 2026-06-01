@@ -1,7 +1,9 @@
+import 'package:cuan_track/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -94,13 +96,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
             : null,
         title: Text('Riwayat Transaksi', style: AppStyles.heading2),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.download_outlined,
-              color: AppColors.textPrimary,
+          GestureDetector(
+            onTap: () => _showReportPreview(context),
+            child: SvgPicture.asset(
+              AppAssets.iconDownload,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
-            onPressed: () => _showReportPreview(context),
           ),
+          const SizedBox(width: AppDimens.md),
         ],
       ),
       body: BlocBuilder<HistoryBloc, HistoryState>(

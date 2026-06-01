@@ -272,23 +272,15 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                               color: AppColors.primary.withOpacity(0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.pie_chart_outline,
-                              size: 24,
-                              color: AppColors.textSecondary,
-                            ),
+                            child: _buildIcon(AppAssets.iconStats, false),
                           ),
                           activeIcon: Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: AppColors.primary.withOpacity(0.7),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.pie_chart,
-                              size: 24,
-                              color: Colors.white,
-                            ),
+                            child: _buildIcon(AppAssets.iconStats, true),
                           ),
                           label: 'Stats',
                         ),

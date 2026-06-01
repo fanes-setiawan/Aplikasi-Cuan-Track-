@@ -203,11 +203,16 @@ class ProfileScreen extends StatelessWidget {
                           final url = remoteConfig.supportContactUrl;
                           final uri = Uri.parse(url);
                           if (await canLaunchUrl(uri)) {
-                            await launchUrl(uri, mode: LaunchMode.externalApplication);
+                            await launchUrl(
+                              uri,
+                              mode: LaunchMode.externalApplication,
+                            );
                           } else {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Tidak dapat membuka: $url')),
+                                SnackBar(
+                                  content: Text('Tidak dapat membuka: $url'),
+                                ),
                               );
                             }
                           }
@@ -446,10 +451,10 @@ class ProfileScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0FDF4),
+                color: AppColors.primary.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: const Color(0xFF27AE60), size: 22),
+              child: Icon(icon, color: AppColors.primary, size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(
