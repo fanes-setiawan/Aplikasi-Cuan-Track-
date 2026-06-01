@@ -149,7 +149,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: AppColors.primary),
+            colorScheme: ColorScheme.light(primary: AppColors.primary),
           ),
           child: child!,
         );
@@ -172,7 +172,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: AppColors.primary),
+            colorScheme: ColorScheme.light(primary: AppColors.primary),
           ),
           child: child!,
         );
@@ -457,7 +457,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                                 : AppColors.textHint,
                           ),
                         ),
-                        const Icon(
+                        Icon(
                           Icons.calendar_today,
                           color: AppColors.primary,
                         ),
@@ -494,7 +494,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                               : AppColors.textHint,
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
                         color: AppColors.primary,
                       ),

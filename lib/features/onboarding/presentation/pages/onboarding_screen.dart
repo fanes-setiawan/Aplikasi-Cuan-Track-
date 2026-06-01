@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cuan_track/injection_container.dart';
+import 'package:cuan_track/core/services/remote_config_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
@@ -29,32 +31,44 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   late PageController _pageController;
-
-  final List<OnboardingModel> _pages = [
-    OnboardingModel(
-      imagePath: AppAssets.onboarding1,
-      title: 'Pantau Setiap Rupiah',
-      subtitle:
-          'Catat dan pantau setiap pengeluaran harianmu dengan mudah untuk pengelolaan keuangan yang lebih baik.',
-    ),
-    OnboardingModel(
-      imagePath: AppAssets.onboarding2,
-      title: 'Atur Anggaran Cerdas',
-      subtitle:
-          'Kelola pengeluaran Anda dengan menetapkan batas anggaran yang realistis setiap bulannya agar target finansial tercapai.',
-    ),
-    OnboardingModel(
-      imagePath: AppAssets.onboarding3,
-      title: 'Capai Kebebasan Finansial',
-      subtitle:
-          'Wujudkan impianmu dengan perencanaan keuangan yang lebih matang, terukur, dan otomatis bersama kami.',
-    ),
-  ];
+  late final List<OnboardingModel> _pages;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+
+    final remoteConfig = sl<RemoteConfigService>();
+    final String ob1 = remoteConfig.onboarding1Url.trim();
+    final String ob2 = remoteConfig.onboarding2Url.trim();
+    final String ob3 = remoteConfig.onboarding3Url.trim();
+
+    debugPrint('--- FVM Remote Config Onboarding URLs ---');
+    debugPrint('onboarding1: "$ob1"');
+    debugPrint('onboarding2: "$ob2"');
+    debugPrint('onboarding3: "$ob3"');
+    debugPrint('----------------------------------------');
+
+    _pages = [
+      OnboardingModel(
+        imagePath: ob1.isNotEmpty && ob1.startsWith('http') ? ob1 : AppAssets.onboarding1,
+        title: 'Pantau Setiap Rupiah',
+        subtitle:
+            'Catat dan pantau setiap pengeluaran harianmu dengan mudah untuk pengelolaan keuangan yang lebih baik.',
+      ),
+      OnboardingModel(
+        imagePath: ob2.isNotEmpty && ob2.startsWith('http') ? ob2 : AppAssets.onboarding2,
+        title: 'Atur Anggaran Cerdas',
+        subtitle:
+            'Kelola pengeluaran Anda dengan menetapkan batas anggaran yang realistis setiap bulannya agar target finansial tercapai.',
+      ),
+      OnboardingModel(
+        imagePath: ob3.isNotEmpty && ob3.startsWith('http') ? ob3 : AppAssets.onboarding3,
+        title: 'Capai Kebebasan Finansial',
+        subtitle:
+            'Wujudkan impianmu dengan perencanaan keuangan yang lebih matang, terukur, dan otomatis bersama kami.',
+      ),
+    ];
   }
 
   @override
@@ -106,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       },
                       itemCount: _pages.length,
                       itemBuilder: (context, index) {
-                        return _buildPageContent(_pages[index]);
+                        return _buildPageContent(_pages[index], index);
                       },
                     ),
                   ),
@@ -159,13 +173,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
   }
 
-  Widget _buildPageContent(OnboardingModel page) {
+  Widget _buildPageContent(OnboardingModel page, int index) {
+    final String fallbackAsset = index == 0
+        ? AppAssets.onboarding1
+        : index == 1
+            ? AppAssets.onboarding2
+            : AppAssets.onboarding3;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppDimens.xl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(page.imagePath, height: 300, fit: BoxFit.contain),
+          SizedBox(
+            height: 300,
+            child: page.imagePath.startsWith('http')
+                ? Image.network(
+                    page.imagePath,
+                    height: 300,
+                    fit: BoxFit.contain,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                          color: AppColors.primary,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        fallbackAsset,
+                        height: 300,
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    page.imagePath,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
+          ),
           const SizedBox(height: AppDimens.xl),
           Text(
             page.title,

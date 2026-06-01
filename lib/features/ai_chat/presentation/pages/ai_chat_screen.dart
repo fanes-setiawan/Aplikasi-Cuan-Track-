@@ -152,7 +152,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
               'assets/icons/ic_boot.svg',
               width: 24,
               height: 24,
-              colorFilter: const ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                 AppColors.primary,
                 BlendMode.srcIn,
               ),
@@ -211,7 +211,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
               'assets/icons/ic_boot.svg',
               width: 60,
               height: 60,
-              colorFilter: const ColorFilter.mode(
+              colorFilter: ColorFilter.mode(
                 AppColors.primary,
                 BlendMode.srcIn,
               ),
@@ -335,7 +335,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
                 ),
               ],
             ),
-            child: const SpinKitThreeBounce(
+            child: SpinKitThreeBounce(
               color: AppColors.primary,
               size: 20.0,
             ),
@@ -356,7 +356,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
         'assets/icons/ic_boot.svg',
         width: 18,
         height: 18,
-        colorFilter: const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
       ),
     );
   }
@@ -468,7 +468,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
               onTap: _sendMessage,
               child: Container(
                 padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),

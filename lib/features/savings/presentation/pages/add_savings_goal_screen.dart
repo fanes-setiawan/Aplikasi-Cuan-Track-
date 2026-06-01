@@ -121,7 +121,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(primary: AppColors.primary),
+            colorScheme: ColorScheme.light(primary: AppColors.primary),
           ),
           child: child!,
         );
@@ -230,7 +230,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                               : AppColors.textHint,
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
                         color: AppColors.primary,
                       ),

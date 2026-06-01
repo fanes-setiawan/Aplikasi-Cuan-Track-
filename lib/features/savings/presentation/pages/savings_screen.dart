@@ -176,7 +176,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   builder: (context) => const AddSavingsCategorySheet(),
                 );
               },
-              icon: const Column(
+              icon: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.category_outlined, color: AppColors.primary),
@@ -799,7 +799,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
               color: Color(0xFFE8F5E9),
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.savings_outlined,
               color: AppColors.primary,
               size: 20,

@@ -23,7 +23,6 @@ import '../../../ai_chat/presentation/bloc/ai_chat_bloc.dart';
 import '../../../../injection_container.dart';
 import '../../../../core/services/remote_config_service.dart';
 
-
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
       GlobalKey<_MainScreenState>();
@@ -281,7 +280,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           ),
                           activeIcon: Container(
                             padding: const EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
@@ -307,7 +306,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-          floatingActionButton: _isAppLocked || !sl<RemoteConfigService>().enableAIChat
+          floatingActionButton:
+              _isAppLocked || !sl<RemoteConfigService>().enableAIChat
               ? null
               : FloatingActionButton(
                   onPressed: () {

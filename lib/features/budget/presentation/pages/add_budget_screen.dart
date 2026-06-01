@@ -61,7 +61,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
             margin: const EdgeInsets.only(left: 16),
             child: Row(
               children: [
-                const Icon(Icons.chevron_left, color: AppColors.primary),
+                Icon(Icons.chevron_left, color: AppColors.primary),
                 Text(
                   'Kembali',
                   style: AppStyles.bodyText.copyWith(
@@ -275,7 +275,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                 color: const Color(0xFFD1FAE5),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.notifications_active_outlined,
                                 color: AppColors.primary,
                               ),

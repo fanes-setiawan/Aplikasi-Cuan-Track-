@@ -796,7 +796,7 @@ class _DebtScreenState extends State<DebtScreen>
                       if (debt.isInstallment) ...[
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.replay,
                               color: AppColors.primary,
                               size: 10,
@@ -805,7 +805,7 @@ class _DebtScreenState extends State<DebtScreen>
                             Expanded(
                               child: Text(
                                 '${debt.paidMonths}/${debt.totalMonths} Bln',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10,

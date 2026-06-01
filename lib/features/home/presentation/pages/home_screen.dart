@@ -307,15 +307,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF27AE60), Color(0xFF2ECC71)],
+        gradient: LinearGradient(
+          colors: [AppColors.primary.withOpacity(0.8), AppColors.primary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF27AE60).withOpacity(0.3),
+            color: AppColors.primary.withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -508,8 +508,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildActionButton(
               'Tambah',
               Icons.add_circle_outline,
-              const Color(0xFFE8F5E9),
-              const Color(0xFF1B5E20),
+              AppColors.primary.withOpacity(0.2),
+              AppColors.primary,
             ),
           ),
         ),
@@ -529,9 +529,9 @@ class _HomeScreenState extends State<HomeScreen> {
               'Catat',
               Icons.receipt_long,
               Colors.white,
-              const Color(0xFF1B5E20),
+              AppColors.primary,
               isOutlined: true,
-              borderColor: const Color(0xFFE8F5E9),
+              borderColor: AppColors.primary.withOpacity(0.2),
             ),
           ),
         ),
@@ -553,7 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
         color: bgColor,
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
         border: isOutlined
-            ? Border.all(color: borderColor ?? AppColors.divider, width: 1.5)
+            ? Border.all(
+                color: borderColor ?? AppColors.primary.withOpacity(0.2),
+                width: 1.5,
+              )
             : null,
       ),
       child: Center(

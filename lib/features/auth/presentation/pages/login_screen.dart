@@ -36,31 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: AppDimens.md),
-          child: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.divider),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.arrow_back_ios_new,
-                  size: 16,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-      ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticated) {

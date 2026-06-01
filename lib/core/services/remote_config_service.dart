@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,28 +13,27 @@ class RemoteConfigService {
       // Set baseline in-app default values
       await _remoteConfig.setDefaults(<String, dynamic>{
         'enable_ai_chat': true,
-        'support_contact_url': 'https://wa.me/62088225409824',
+        'support_contact_url': '',
         'min_app_version': '1.0.0',
         'maintenance_mode': false,
         'background': '0xFFFFFFFF',
         'maintenance_bg_start_color': '0xFFFFFFFF',
         'maintenance_bg_end_color': '0xFFF3E5D8',
+        'onboarding1': '',
+        'onboarding2': '',
+        'onboarding3': '',
+        'primary': '0xFF4CAF50',
+        'primaryGradient': '["0xFF1B5E20", "0xFF2E7D32"]',
       });
 
-      // Configure Remote Config settings
       await _remoteConfig.setConfigSettings(
         RemoteConfigSettings(
           fetchTimeout: const Duration(seconds: 10),
           minimumFetchInterval: kDebugMode
-              ? Duration
-                    .zero // Instant fetch in debug mode for rapid testing
-              : const Duration(
-                  hours: 1,
-                ), // Fetch cached values every 1 hour in production
+              ? Duration.zero
+              : const Duration(hours: 1),
         ),
       );
-
-      // Fetch from server and activate values instantly
       await _remoteConfig.fetchAndActivate();
     } catch (e) {
       debugPrint('Firebase Remote Config Initialization Failed: $e');
@@ -57,4 +57,23 @@ class RemoteConfigService {
       _remoteConfig.getString('maintenance_bg_end_color');
 
   String get background => _remoteConfig.getString('background');
+
+  String get onboarding1Url => _remoteConfig.getString('onboarding1');
+  String get onboarding2Url => _remoteConfig.getString('onboarding2');
+  String get onboarding3Url => _remoteConfig.getString('onboarding3');
+
+  String get primaryColor => _remoteConfig.getString('primary');
+
+  List<String> get primaryGradientColors {
+    try {
+      final String jsonStr = _remoteConfig.getString('primaryGradient');
+      if (jsonStr.isNotEmpty) {
+        final decoded = jsonDecode(jsonStr);
+        if (decoded is List) {
+          return decoded.map((e) => e.toString()).toList();
+        }
+      }
+    } catch (_) {}
+    return [];
+  }
 }
