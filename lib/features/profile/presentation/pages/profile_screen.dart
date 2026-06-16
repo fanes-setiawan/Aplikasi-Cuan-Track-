@@ -571,20 +571,23 @@ class ProfileScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Akses Premium Bulanan',
-                              style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Batalkan kapan saja.',
-                              style: AppStyles.caption.copyWith(color: AppColors.textSecondary),
-                            ),
-                          ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Akses Premium Bulanan',
+                                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Batalkan kapan saja.',
+                                style: AppStyles.caption.copyWith(color: AppColors.textSecondary),
+                              ),
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 12),
                         Text(
                           'Rp 29.000 / bln',
                           style: AppStyles.heading2.copyWith(color: const Color(0xFFFF8F00), fontSize: 16),
