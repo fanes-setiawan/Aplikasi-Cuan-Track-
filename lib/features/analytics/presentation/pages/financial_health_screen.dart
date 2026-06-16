@@ -11,6 +11,8 @@ import '../../../../features/debt/presentation/bloc/debt_state.dart';
 import '../../../../features/home/presentation/bloc/home_bloc.dart';
 import '../../../../features/home/presentation/bloc/home_state.dart';
 import '../widgets/gauge_painter.dart';
+import '../../../../injection_container.dart';
+import '../../../../core/services/remote_config_service.dart';
 
 class FinancialHealthScreen extends StatefulWidget {
   const FinancialHealthScreen({super.key});
@@ -35,6 +37,11 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final remoteConfig = sl<RemoteConfigService>();
+    final targetSaving = remoteConfig.fhTargetSavingRatio;
+    final targetDebt = remoteConfig.fhTargetDebtRatio;
+    final targetEmergency = remoteConfig.fhTargetEmergencyMonths;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFB),
       appBar: AppBar(
@@ -84,7 +91,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: () {
-                AppHelpers.showSnackBar(context, 'Fitur berbagi segera hadir!');
+                AppHelpers.showSnackBar(context, remoteConfig.fhShareToastMessage);
               },
             ),
           ),
@@ -140,22 +147,24 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       : 0;
 
                   // 4. Hitung Skor per Metrik (Skala 0 - 100)
-                  double savingScore = savingRatio >= 0.20
+                  double savingScore = savingRatio >= targetSaving
                       ? 100
-                      : (savingRatio / 0.20) * 100;
+                      : (savingRatio / (targetSaving > 0 ? targetSaving : 0.01)) * 100;
 
                   double debtScore = 0;
-                  if (debtRatio <= 0.35) {
+                  if (debtRatio <= targetDebt) {
                     debtScore = 100;
                   } else if (debtRatio >= 1.0) {
                     debtScore = 0;
                   } else {
-                    debtScore = (1.0 - (debtRatio - 0.35) / 0.65) * 100;
+                    double denominator = 1.0 - targetDebt;
+                    if (denominator <= 0) denominator = 0.01;
+                    debtScore = (1.0 - (debtRatio - targetDebt) / denominator) * 100;
                   }
 
-                  double emergencyScore = emergencyFundRatio >= 3.0
+                  double emergencyScore = emergencyFundRatio >= targetEmergency
                       ? 100
-                      : (emergencyFundRatio / 3.0) * 100;
+                      : (emergencyFundRatio / (targetEmergency > 0 ? targetEmergency : 0.01)) * 100;
 
                   // 5. Skor Kesehatan Keuangan Total
                   double overallScore =
@@ -205,8 +214,8 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                         _buildMetricItem(
                           title: 'Saving Ratio',
                           value: '${(savingRatio * 100).toStringAsFixed(0)}%',
-                          target: 'Target: >20%',
-                          progress: savingRatio / 0.20,
+                          target: 'Target: >${(targetSaving * 100).toStringAsFixed(0)}%',
+                          progress: savingRatio / (targetSaving > 0 ? targetSaving : 0.01),
                           score: savingScore,
                           desc: savingScore >= 100
                               ? 'Sangat bagus! Rasio tabungan Anda memenuhi standar ideal.'
@@ -222,8 +231,8 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                         _buildMetricItem(
                           title: 'Debt-to-Income Ratio',
                           value: '${(debtRatio * 100).toStringAsFixed(0)}%',
-                          target: 'Target: <35%',
-                          progress: debtRatio > 0 ? (0.35 / debtRatio) : 1.0,
+                          target: 'Target: <${(targetDebt * 100).toStringAsFixed(0)}%',
+                          progress: debtRatio > 0 ? (targetDebt / debtRatio) : 1.0,
                           score: debtScore,
                           desc: debtScore >= 100
                               ? 'Sangat aman! Beban cicilan hutang Anda terkendali dengan baik.'
@@ -235,7 +244,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                                     : const Color(0xFFE53935)),
                           isInverseProgress: true,
                           ratioPercent: debtRatio,
-                          ratioLimit: 0.35,
+                          ratioLimit: targetDebt,
                         ),
                         const SizedBox(height: 16),
 
@@ -243,11 +252,11 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                           title: 'Dana Darurat (Emergency Fund)',
                           value:
                               '${emergencyFundRatio.toStringAsFixed(1)} Bulan',
-                          target: 'Target: 3-6 Bulan',
-                          progress: emergencyFundRatio / 3.0,
+                          target: 'Target: ${targetEmergency.toStringAsFixed(0)}-${(targetEmergency * 2).toStringAsFixed(0)} Bulan',
+                          progress: emergencyFundRatio / (targetEmergency > 0 ? targetEmergency : 0.01),
                           score: emergencyScore,
                           desc: emergencyScore >= 100
-                              ? 'Sangat sehat! Dana darurat mencukupi untuk 3 bulan pengeluaran atau lebih.'
+                              ? 'Sangat sehat! Dana darurat mencukupi untuk ${targetEmergency.toStringAsFixed(0)} bulan pengeluaran atau lebih.'
                               : 'Kritis! Tabungan Anda belum mencukupi untuk menopang pengeluaran darurat.',
                           activeColor: emergencyScore >= 100
                               ? const Color(0xFF4CAF50)
@@ -262,49 +271,51 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                         const SizedBox(height: 32),
 
                         // Tombol Simulasi
-                        SizedBox(
-                          width: double.infinity,
-                          height: 52,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _showSimulationSheet(
-                                realIncome: realIncome,
-                                realExpense: realExpense,
-                                realSavings: realSavings,
-                                realDebt: realDebt,
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF1B5E20),
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
+                        if (remoteConfig.fhEnableSimulation) ...[
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showSimulationSheet(
+                                  realIncome: realIncome,
+                                  realExpense: realExpense,
+                                  realSavings: realSavings,
+                                  realDebt: realDebt,
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF1B5E20),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    _isSimulating
+                                        ? Icons.settings_backup_restore
+                                        : Icons.tune,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _isSimulating
+                                        ? 'Reset Simulasi'
+                                        : 'Mulai Simulasi Perbaikan',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  _isSimulating
-                                      ? Icons.settings_backup_restore
-                                      : Icons.tune,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  _isSimulating
-                                      ? 'Reset Simulasi'
-                                      : 'Mulai Simulasi Perbaikan',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
+                        ],
                         const SizedBox(height: 80),
                       ],
                     ),
@@ -823,21 +834,20 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
       _aiLoading = true;
     });
     try {
+      final remoteConfig = sl<RemoteConfigService>();
       final ai = await FirebaseAI.googleAI();
-      final model = ai.generativeModel(model: 'gemini-2.5-flash');
-      final prompt =
-          """
-Rangkum kondisi keuangan pengguna berikut dalam 2-3 kalimat ramah dan solutif (panggil 'kamu', berikan 1 saran spesifik untuk meningkatkan skor kesehatan keuangan mereka):
-- Pendapatan Bulanan: Rp ${income.toStringAsFixed(0)}
-- Pengeluaran Bulanan: Rp ${expense.toStringAsFixed(0)}
-- Total Tabungan saat ini: Rp ${savings.toStringAsFixed(0)}
-- Total Hutang saat ini: Rp ${debt.toStringAsFixed(0)}
-- Saving Ratio: ${(savingRatio * 100).toStringAsFixed(0)}% (Target: >20%)
-- Debt-to-Income Ratio: ${(debtRatio * 100).toStringAsFixed(0)}% (Target: <35%)
-- Dana Darurat: ${emergencyFundRatio.toStringAsFixed(1)} bulan pengeluaran (Target: 3-6 bulan)
-
-Jawab langsung dengan saran praktis tanpa kalimat pengantar basa-basi formal. Gunakan bahasa Indonesia.
-""";
+      final model = ai.generativeModel(model: remoteConfig.fhAiModel);
+      final prompt = remoteConfig.fhAiPromptTemplate
+          .replaceAll('{income}', income.toStringAsFixed(0))
+          .replaceAll('{expense}', expense.toStringAsFixed(0))
+          .replaceAll('{savings}', savings.toStringAsFixed(0))
+          .replaceAll('{debt}', debt.toStringAsFixed(0))
+          .replaceAll('{savingRatio}', (savingRatio * 100).toStringAsFixed(0))
+          .replaceAll('{targetSaving}', (remoteConfig.fhTargetSavingRatio * 100).toStringAsFixed(0))
+          .replaceAll('{debtRatio}', (debtRatio * 100).toStringAsFixed(0))
+          .replaceAll('{targetDebt}', (remoteConfig.fhTargetDebtRatio * 100).toStringAsFixed(0))
+          .replaceAll('{emergencyFundRatio}', emergencyFundRatio.toStringAsFixed(1))
+          .replaceAll('{targetEmergency}', remoteConfig.fhTargetEmergencyMonths.toStringAsFixed(0));
       final response = await model.generateContent([Content.text(prompt)]);
       setState(() {
         _aiRecommendation = response.text ?? 'Gagal membuat rekomendasi AI.';

@@ -1,0 +1,136 @@
+{
+  "parameters": {
+    "maintenance_mode": {
+      "defaultValue": {
+        "value": "false"
+      },
+      "valueType": "BOOLEAN"
+    },
+    "support_contact_url": {
+      "defaultValue": {
+        "value": "https://wa.me/6288225409824"
+      },
+      "valueType": "STRING"
+    },
+    "min_app_version": {
+      "defaultValue": {
+        "value": "1.0.2"
+      },
+      "valueType": "STRING"
+    },
+    "background": {
+      "defaultValue": {
+        "value": "0XFF0CFFB0"
+      },
+      "valueType": "STRING"
+    },
+    "enable_ai_chat": {
+      "defaultValue": {
+        "value": "true"
+      },
+      "valueType": "BOOLEAN"
+    }
+  },
+  "parameterGroups": {
+    "images": {
+      "parameters": {
+        "onboarding1": {
+          "defaultValue": {
+            "value": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFVVDNi4HpX0dTR7G8zfgvgaU4tSKygtqfAg&s"
+          },
+          "valueType": "STRING"
+        },
+        "onboarding2": {
+          "defaultValue": {
+            "value": "https://doran.id/wp-content/uploads/2023/12/Rencana-Anggaran-Biaya-RAB.jpg"
+          },
+          "valueType": "STRING"
+        },
+        "onboarding3": {
+          "defaultValue": {
+            "value": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEAT-vZh--MHvh3wU6N-i0WVBTOlqLNbp0Uw&s"
+          },
+          "valueType": "STRING"
+        }
+      }
+    },
+    "colors": {
+      "parameters": {
+        "primary": {
+          "defaultValue": {
+            "value": "0XFF#0B77B4"
+          },
+          "valueType": "STRING"
+        },
+        "primaryGradient": {
+          "defaultValue": {
+            "value": "[0XFF#0B77B4,0XFF#0B77B4]"
+          },
+          "valueType": "STRING"
+        }
+      }
+    },
+    "financial_health": {
+      "parameters": {
+        "fh_target_saving_ratio": {
+          "defaultValue": {
+            "value": "0.20"
+          },
+          "valueType": "STRING"
+        },
+        "fh_target_debt_ratio": {
+          "defaultValue": {
+            "value": "0.35"
+          },
+          "valueType": "STRING"
+        },
+        "fh_target_emergency_months": {
+          "defaultValue": {
+            "value": "3.0"
+          },
+          "valueType": "STRING"
+        },
+        "fh_ai_model": {
+          "defaultValue": {
+            "value": "gemini-2.5-flash"
+          },
+          "valueType": "STRING"
+        },
+        "fh_ai_prompt_template": {
+          "defaultValue": {
+            "value": "Rangkum kondisi keuangan pengguna berikut dalam 2-3 kalimat ramah dan solutif (panggil 'kamu', berikan 1 saran spesifik untuk meningkatkan skor kesehatan keuangan mereka):\n- Pendapatan Bulanan: Rp {income}\n- Pengeluaran Bulanan: Rp {expense}\n- Total Tabungan saat ini: Rp {savings}\n- Total Hutang saat ini: Rp {debt}\n- Saving Ratio: {savingRatio}% (Target: >{targetSaving}%)\n- Debt-to-Income Ratio: {debtRatio}% (Target: <{targetDebt}%)\n- Dana Darurat: {emergencyFundRatio} bulan pengeluaran (Target: {targetEmergency} bulan)\n\nJawab langsung dengan saran praktis tanpa kalimat pengantar basa-basi formal. Gunakan bahasa Indonesia."
+          },
+          "valueType": "STRING"
+        },
+        "fh_share_toast_message": {
+          "defaultValue": {
+            "value": "Fitur berbagi segera hadir!"
+          },
+          "valueType": "STRING"
+        },
+        "fh_enable_simulation": {
+          "defaultValue": {
+            "value": "true"
+          },
+          "valueType": "BOOLEAN"
+        }
+      }
+    },
+    "ai_chat": {
+      "parameters": {
+        "chat_ai_model": {
+          "defaultValue": {
+            "value": "gemini-2.5-flash"
+          },
+          "valueType": "STRING"
+        },
+        "chat_ai_system_instruction": {
+          "defaultValue": {
+            "value": "Kamu adalah CuanAI, asisten keuangan pribadi yang sangat cerdas, analitis, sekaligus ramah.\nTugas utamamu adalah membantu pengguna mengelola keuangan dengan bijak, memberikan wawasan mendalam (insights), dan menjawab pertanyaan seputar transaksi mereka dengan detail serta empati.\n\nDATA KEUANGAN PENGGUNA (Gunakan ini sebagai sumber kebenaran):\n{context}\n\nKEPRIBADIAN & GAYA BICARA:\n- Gunakan bahasa yang cerdas, ramah, dan solutif (panggil 'kamu', gunakan 'aku', 'sip', 'mantap').\n- Jadilah asisten yang proaktif namun tetap ringkas. Berikan analisis atau tips hanya jika sangat relevan agar tidak bertele-tele.\n- Gunakan emoji yang relevan namun proporsional (jangan terlalu banyak).\n- JANGAN PERNAH memakai kalimat kaku seperti \"Berdasarkan data yang Anda berikan\" atau \"Saya tidak punya akses ke mutasi\". Berbicaralah seolah-olah kamu adalah partner finansial yang memantau catatan keuangan mereka secara langsung.\n\nATURAN JAWABAN:\n1. DETAIL TRANSAKSI: Gunakan bagian 'TRANSAKSI TERAKHIR' (termasuk kolom 'Catatan/Notes') untuk menjawab pertanyaan spesifik tentang riwayat belanja atau sumber uang. Ini kunci agar kamu terlihat paham detail uang user.\n2. ANALISIS & TIPS: Jika pengeluaran bulan ini sudah mendekati atau melebihi pemasukan, berikan peringatan halus dan tips hemat yang relevan.\n3. FORMAT NOMINAL: Selalu gunakan format 'Rp' dengan titik ribuan (misal: Rp 50.000). JANGAN PERNAH mengarang nominal uang fiktif.\n4. KEASLIAN DATA: JANGAN PERNAH menyebutkan data yang tidak ada di database. Jika data tidak ada, beri tahu dengan gaya asisten yang jujur bahwa kamu belum melihat catatan tersebut.\n6. KERAPIAN: Gunakan bullet points jika memberikan rincian agar mudah dibaca.\n7. SINGKAT & PADAT: Jawablah dengan singkat, padat, dan langsung ke inti (to the point). Jangan memberikan penjelasan yang terlalu panjang atau bertele-tele kecuali diminta rincian mendalam.\n\nATURAN ACTION (PENTING):\nJika user menyatakan ingin mencatat atau menambah transaksi baru:\n1. Konfirmasi detailnya (Nominal, Judul/Catatan, Tipe) di dalam pesan teksmu.\n2. Beritahu user untuk menekan tombol \"Kirim ke Catatan\" yang muncul di bawah pesanmu.\n3. Sertakan tag di akhir jawabanmu dalam format: [ACTION:{\"type\":\"expense|income\", \"amount\":123000, \"note\":\"beli bakso\"}]\n- Hanya sertakan tag jika user memang memberitahu transaksi baru.\n- Jika nominal tidak jelas, gunakan 0.\n- Jangan mengarang data yang tidak disebutkan user."
+          },
+          "valueType": "STRING"
+        }
+      }
+    }
+  }
+}

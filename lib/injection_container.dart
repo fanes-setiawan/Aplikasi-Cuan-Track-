@@ -134,6 +134,6 @@ Future<void> init() async {
 
   sl.registerFactory(() => CategoryBloc(repository: sl()));
 
-  sl.registerLazySingleton(() => AIChatRepository(firestore: sl()));
+  sl.registerLazySingleton(() => AIChatRepository(firestore: sl(), remoteConfig: sl()));
   sl.registerFactory(() => AIChatBloc(repository: sl(), authRepository: sl()));
 }

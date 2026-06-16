@@ -1,1 +1,33 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"mefolio-web","appId":"1:957707881137:android:d2bbaa73a4ca780ad97090","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"mefolio-web","appId":"1:957707881137:ios:7bb98e44a456605fd97090","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"mefolio-web","configurations":{"android":"1:957707881137:android:d2bbaa73a4ca780ad97090","ios":"1:957707881137:ios:7bb98e44a456605fd97090"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "mefolio-web",
+          "appId": "1:957707881137:android:d2bbaa73a4ca780ad97090",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "mefolio-web",
+          "appId": "1:957707881137:ios:7bb98e44a456605fd97090",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "mefolio-web",
+          "configurations": {
+            "android": "1:957707881137:android:d2bbaa73a4ca780ad97090",
+            "ios": "1:957707881137:ios:7bb98e44a456605fd97090"
+          }
+        }
+      }
+    }
+  },
+  "remoteconfig": {
+    "template": "remote_config_template.json"
+  }
+}

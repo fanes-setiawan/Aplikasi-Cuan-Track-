@@ -1,19 +1,25 @@
 import 'package:firebase_ai/firebase_ai.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../core/services/remote_config_service.dart';
+import '../../../../injection_container.dart';
 
 class AIChatRepository {
   GenerativeModel? _model;
   final FirebaseFirestore _firestore;
+  final RemoteConfigService _remoteConfig;
   ChatSession? _chatSession;
 
-  AIChatRepository({FirebaseFirestore? firestore})
-    : _firestore = firestore ?? FirebaseFirestore.instance;
+  AIChatRepository({
+    FirebaseFirestore? firestore,
+    RemoteConfigService? remoteConfig,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _remoteConfig = remoteConfig ?? sl<RemoteConfigService>();
 
   Future<void> _initModel() async {
     if (_model != null) return;
 
     final ai = await FirebaseAI.googleAI();
-    _model = ai.generativeModel(model: 'gemini-2.5-flash');
+    _model = ai.generativeModel(model: _remoteConfig.chatAiModel);
   }
 
   Future<String> getAIResponse(String message, String userId) async {
@@ -23,37 +29,8 @@ class AIChatRepository {
       final context = await _getFinancialContext(userId);
 
       if (_chatSession == null) {
-        final systemInstruction =
-            """
-Kamu adalah CuanAI, asisten keuangan pribadi yang sangat cerdas, analitis, sekaligus ramah.
-Tugas utamamu adalah membantu pengguna mengelola keuangan dengan bijak, memberikan wawasan mendalam (insights), dan menjawab pertanyaan seputar transaksi mereka dengan detail serta empati.
-
-DATA KEUANGAN PENGGUNA (Gunakan ini sebagai sumber kebenaran):
-$context
-
-KEPRIBADIAN & GAYA BICARA:
-- Gunakan bahasa yang cerdas, ramah, dan solutif (panggil 'kamu', gunakan 'aku', 'sip', 'mantap').
-- Jadilah asisten yang proaktif namun tetap ringkas. Berikan analisis atau tips hanya jika sangat relevan agar tidak bertele-tele.
-- Gunakan emoji yang relevan namun proporsional (jangan terlalu banyak).
-- JANGAN PERNAH memakai kalimat kaku seperti "Berdasarkan data yang Anda berikan" atau "Saya tidak punya akses ke mutasi". Berbicaralah seolah-olah kamu adalah partner finansial yang memantau catatan keuangan mereka secara langsung.
-
-ATURAN JAWABAN:
-1. DETAIL TRANSAKSI: Gunakan bagian 'TRANSAKSI TERAKHIR' (termasuk kolom 'Catatan/Notes') untuk menjawab pertanyaan spesifik tentang riwayat belanja atau sumber uang. Ini kunci agar kamu terlihat paham detail uang user.
-2. ANALISIS & TIPS: Jika pengeluaran bulan ini sudah mendekati atau melebihi pemasukan, berikan peringatan halus dan tips hemat yang relevan.
-3. FORMAT NOMINAL: Selalu gunakan format 'Rp' dengan titik ribuan (misal: Rp 50.000). JANGAN PERNAH mengarang nominal uang fiktif.
-4. KEASLIAN DATA: JANGAN PERNAH menyebutkan data yang tidak ada di database. Jika data tidak ada, beri tahu dengan gaya asisten yang jujur bahwa kamu belum melihat catatan tersebut.
-6. KERAPIAN: Gunakan bullet points jika memberikan rincian agar mudah dibaca.
-7. SINGKAT & PADAT: Jawablah dengan singkat, padat, dan langsung ke inti (to the point). Jangan memberikan penjelasan yang terlalu panjang atau bertele-tele kecuali diminta rincian mendalam.
-
-ATURAN ACTION (PENTING):
-Jika user menyatakan ingin mencatat atau menambah transaksi baru:
-1. Konfirmasi detailnya (Nominal, Judul/Catatan, Tipe) di dalam pesan teksmu.
-2. Beritahu user untuk menekan tombol **"Kirim ke Catatan"** yang muncul di bawah pesanmu.
-3. Sertakan tag di akhir jawabanmu dalam format: [ACTION:{"type":"expense|income", "amount":123000, "note":"beli bakso"}]
-- Hanya sertakan tag jika user memang memberitahu transaksi baru.
-- Jika nominal tidak jelas, gunakan 0.
-- Jangan mengarang data yang tidak disebutkan user.
-""";
+        final systemInstruction = _remoteConfig.chatAiSystemInstruction
+            .replaceAll('{context}', context);
 
         _chatSession = _model!.startChat(
           history: [
