@@ -19,7 +19,7 @@ class AdService {
 
   static String get bannerAdUnitId {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'ca-app-pub-3940256099942544/6300978111';
+      return 'ca-app-pub-6679810659415180/9715489903';
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return 'ca-app-pub-3940256099942544/2934735716';
     }
