@@ -21,6 +21,7 @@ import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/ad_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 @pragma('vm:entry-point')
@@ -39,6 +40,7 @@ void main() async {
 
   await initializeDateFormatting('id_ID', null);
   await di.init();
+  await di.sl<AdService>().init();
   runApp(const MyApp());
 }
 

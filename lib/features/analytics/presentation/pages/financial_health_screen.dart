@@ -13,6 +13,7 @@ import '../../../../features/home/presentation/bloc/home_state.dart';
 import '../widgets/gauge_painter.dart';
 import '../../../../injection_container.dart';
 import '../../../../core/services/remote_config_service.dart';
+import '../../../../core/widgets/cuan_banner_ad_widget.dart';
 
 class FinancialHealthScreen extends StatefulWidget {
   const FinancialHealthScreen({super.key});
@@ -316,7 +317,8 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                             ),
                           ),
                         ],
-                        const SizedBox(height: 80),
+                        const CuanBannerAdWidget(),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   );

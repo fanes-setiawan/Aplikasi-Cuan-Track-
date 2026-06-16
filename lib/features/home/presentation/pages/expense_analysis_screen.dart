@@ -4,6 +4,7 @@ import '../../../../core/theme/app_styles.dart';
 import '../../../../core/utils/app_helpers.dart';
 import 'weekly_trend_analysis_screen.dart';
 import 'comparative_analysis_screen.dart';
+import '../../../../core/widgets/cuan_banner_ad_widget.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../injection_container.dart' as di;
@@ -458,7 +459,8 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                           ),
                           const SizedBox(height: 48),
                         ],
-                        const SizedBox(height: 100),
+                        const CuanBannerAdWidget(),
+                        const SizedBox(height: 48),
                       ],
                     ),
                   ),

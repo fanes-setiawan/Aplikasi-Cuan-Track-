@@ -24,6 +24,7 @@ import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 import '../bloc/home_state.dart';
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/empty_state.dart';
+import '../../../../core/widgets/cuan_banner_ad_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -155,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       else
                         _buildRecentTransactions(context, recentTrx),
+                      const CuanBannerAdWidget(),
                     ],
                   ),
                 ),

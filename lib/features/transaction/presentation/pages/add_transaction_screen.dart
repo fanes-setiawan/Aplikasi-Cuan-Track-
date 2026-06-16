@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/services/ad_service.dart';
+import '../../../../injection_container.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -133,6 +135,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             if (user != null) {
               context.read<HomeBloc>().add(LoadHomeData(user.uid));
             }
+            sl<AdService>().showInterstitialAd();
             Navigator.pop(context);
           } else if (state is AddTransactionFailure) {
             ScaffoldMessenger.of(

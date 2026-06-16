@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'core/services/remote_config_service.dart';
+import 'core/services/ad_service.dart';
 
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -54,6 +55,9 @@ Future<void> init() async {
   final remoteConfigService = RemoteConfigService();
   await remoteConfigService.initialize();
   sl.registerSingleton<RemoteConfigService>(remoteConfigService);
+
+  final adService = AdService();
+  sl.registerSingleton<AdService>(adService);
 
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() {
