@@ -280,7 +280,6 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                         const Center(child: Text("Belum ada data transaksi."))
                       else
                         ...state.topTransactions.asMap().entries.map((entry) {
-                          final idx = entry.key;
                           final t = entry.value;
                           return GestureDetector(
                             onTap: () {

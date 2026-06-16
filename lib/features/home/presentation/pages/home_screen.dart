@@ -1,3 +1,4 @@
+import 'package:cuan_track/features/analytics/presentation/pages/financial_health_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,6 @@ import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../../../transaction/presentation/pages/transaction_detail_screen.dart';
 import '../bloc/home_state.dart';
-
 import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/empty_state.dart';
 
@@ -114,7 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: AppDimens.lg),
                       _buildActionButtons(context),
-                      const SizedBox(height: AppDimens.xl),
+                      const SizedBox(height: AppDimens.lg),
+                      _buildFinancialHealthCard(
+                        context,
+                        monthlyIncome,
+                        monthlyExpenses,
+                      ),
+                      const SizedBox(height: AppDimens.lg),
 
                       if (expenseData.isNotEmpty) ...[
                         _buildExpenseAnalysis(expenseData),
@@ -1105,6 +1111,149 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFinancialHealthCard(
+    BuildContext context,
+    double monthlyIncome,
+    double monthlyExpenses,
+  ) {
+    return BlocBuilder<SavingsBloc, SavingsState>(
+      builder: (context, savingsState) {
+        return BlocBuilder<DebtBloc, DebtState>(
+          builder: (context, debtState) {
+            double savings = 0;
+            double debt = 0;
+
+            if (savingsState is SavingsLoaded) {
+              savings = savingsState.goals.fold(
+                0.0,
+                (sum, goal) => sum + goal.currentAmount,
+              );
+            }
+
+            if (debtState is DebtLoaded) {
+              for (var d in debtState.debts) {
+                final remaining = d.amount - d.paidAmount;
+                if (remaining > 0 && d.type == 'hutang') {
+                  debt += remaining;
+                }
+              }
+            }
+
+            // Hitung Rasio
+            double denomIncome = monthlyIncome <= 0 ? 1.0 : monthlyIncome;
+            double savingRatio = savings / denomIncome;
+            double debtRatio = debt / denomIncome;
+            double emergencyFundRatio = monthlyExpenses > 0
+                ? (savings / monthlyExpenses)
+                : 0;
+
+            // Hitung Skor
+            double savingScore = savingRatio >= 0.20
+                ? 100
+                : (savingRatio / 0.20) * 100;
+            double debtScore = debtRatio <= 0.35
+                ? 100
+                : (debtRatio >= 1.0
+                      ? 0
+                      : (1.0 - (debtRatio - 0.35) / 0.65) * 100);
+            double emergencyScore = emergencyFundRatio >= 3.0
+                ? 100
+                : (emergencyFundRatio / 3.0) * 100;
+
+            double score = (savingScore + debtScore + emergencyScore) / 3;
+            if (score < 0) score = 0;
+            if (score > 100) score = 100;
+
+            String status = 'Bahaya';
+            Color statusColor = const Color(0xFFE53935);
+            if (score > 70) {
+              status = 'Sehat';
+              statusColor = const Color(0xFF4CAF50);
+            } else if (score > 35) {
+              status = 'Cukup Sehat';
+              statusColor = Colors.orange[800]!;
+            }
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FinancialHealthScreen(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppDimens.radiusL),
+                  border: Border.all(color: AppColors.divider, width: 1),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFE8F5E9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.favorite,
+                        color: Color(0xFF1B5E20),
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'KESEHATAN KEUANGAN',
+                            style: AppStyles.caption.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                'Skor: ${score.toStringAsFixed(0)}/100',
+                                style: AppStyles.bodyText.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '($status)',
+                                style: AppStyles.caption.copyWith(
+                                  color: statusColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textSecondary,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

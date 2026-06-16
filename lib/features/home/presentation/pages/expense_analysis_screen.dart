@@ -671,18 +671,4 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
       ),
     );
   }
-
-  IconData _getIconForCategory(String categoryName) {
-    final name = categoryName.toLowerCase();
-    if (name.contains('makan') || name.contains('kuliner'))
-      return Icons.restaurant;
-    if (name.contains('transport')) return Icons.directions_car;
-    if (name.contains('belanja')) return Icons.shopping_bag;
-    if (name.contains('sekolah') || name.contains('pendidikan'))
-      return Icons.school;
-    if (name.contains('kesehatan')) return Icons.medical_services;
-    if (name.contains('hiburan')) return Icons.sports_esports;
-    if (name.contains('tagihan')) return Icons.receipt;
-    return Icons.category;
-  }
 }
