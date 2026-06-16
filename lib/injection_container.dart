@@ -56,7 +56,14 @@ Future<void> init() async {
   sl.registerSingleton<RemoteConfigService>(remoteConfigService);
 
   sl.registerLazySingleton(() => FirebaseAuth.instance);
-  sl.registerLazySingleton(() => FirebaseFirestore.instance);
+  sl.registerLazySingleton(() {
+    final firestore = FirebaseFirestore.instance;
+    firestore.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    return firestore;
+  });
 
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
 
