@@ -209,6 +209,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           }
         },
         child: Scaffold(
+          backgroundColor: const Color(0xFF020617),
           body: Stack(
             children: [
               IndexedStack(index: _currentIndex, children: _pages),
