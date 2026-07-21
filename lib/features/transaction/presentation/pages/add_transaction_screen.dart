@@ -166,7 +166,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           _showNumericKeypadBottomSheet();
                         },
                         child: Center(
-                        child: Column(
+                          child: Column(
                           children: [
                             Text(
                               'NOMINAL',
@@ -207,6 +207,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                             ),
                           ],
                         ),
+                      ),
                       ),
                       const SizedBox(height: AppDimens.xl + 10),
 
