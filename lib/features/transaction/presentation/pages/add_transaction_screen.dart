@@ -9,6 +9,7 @@ import '../../../../injection_container.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../../../core/services/audio_service.dart';
 import '../../../home/domain/entities/transaction_entity.dart';
 import '../../../home/presentation/bloc/home_bloc.dart';
 import '../../../home/presentation/bloc/home_event.dart';
@@ -132,6 +133,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       body: BlocConsumer<AddTransactionBloc, AddTransactionState>(
         listener: (context, state) {
           if (state is AddTransactionSuccess) {
+            if (widget.isIncome) {
+              AudioService().playIncome();
+            } else {
+              AudioService().playSuccess();
+            }
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               context.read<HomeBloc>().add(LoadHomeData(user.uid));
@@ -139,6 +145,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             sl<AdService>().showInterstitialAd();
             Navigator.pop(context);
           } else if (state is AddTransactionFailure) {
+            AudioService().playError();
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));

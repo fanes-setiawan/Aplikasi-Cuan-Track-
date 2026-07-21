@@ -12,6 +12,7 @@ class EmptyState extends StatelessWidget {
   final String? actionLabel;
   final double? imageWidth;
   final EdgeInsetsGeometry? padding;
+  final Widget? customAnimation;
 
   const EmptyState({
     super.key,
@@ -22,6 +23,7 @@ class EmptyState extends StatelessWidget {
     this.actionLabel,
     this.imageWidth,
     this.padding,
+    this.customAnimation,
   });
 
   @override
@@ -38,10 +40,13 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(
-              assetPath ?? 'assets/images/img_emty.svg',
-              width: imageWidth ?? 120,
-            ),
+            if (customAnimation != null)
+              customAnimation!
+            else
+              SvgPicture.asset(
+                assetPath ?? 'assets/images/img_emty.svg',
+                width: imageWidth ?? 120,
+              ),
             const SizedBox(height: AppDimens.md),
             Text(title, style: AppStyles.heading3, textAlign: TextAlign.center),
             if (subtitle != null) ...[

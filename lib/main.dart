@@ -22,6 +22,7 @@ import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/audio_service.dart';
 import 'core/services/ad_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -38,6 +39,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await NotificationService().init();
+  await AudioService().init();
 
   await initializeDateFormatting('id_ID', null);
   await di.init();

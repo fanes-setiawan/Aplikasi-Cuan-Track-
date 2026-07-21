@@ -10,6 +10,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_dimens.dart';
 import 'package:flutter/services.dart';
+import '../../../../core/services/audio_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/utils/local_auth_helper.dart';
@@ -23,6 +24,7 @@ import '../../../ai_chat/presentation/pages/ai_chat_screen.dart';
 import '../../../ai_chat/presentation/bloc/ai_chat_bloc.dart';
 import '../../../../injection_container.dart';
 import '../../../../core/services/remote_config_service.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_pulse_glow_widget.dart';
 
 class MainScreen extends StatefulWidget {
   static final GlobalKey<_MainScreenState> mainScreenKey =
@@ -158,6 +160,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   ];
 
   void _updateIndex(int index) {
+    if (_currentIndex != index) {
+      AudioService().playClick();
+    }
     setState(() {
       _currentIndex = index;
     });
@@ -222,18 +227,24 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
               ? null
               : Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFF0F172A),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(AppDimens.radiusXL),
                       topRight: Radius.circular(AppDimens.radiusXL),
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withOpacity(0.3),
                         blurRadius: 20,
                         offset: const Offset(0, -10),
                       ),
                     ],
+                    border: Border(
+                      top: BorderSide(
+                        color: const Color(0xFF1E293B),
+                        width: 1,
+                      ),
+                    ),
                   ),
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -244,11 +255,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                       currentIndex: _currentIndex,
                       onTap: _updateIndex,
                       type: BottomNavigationBarType.fixed,
-                      backgroundColor: Colors.white,
-                      selectedItemColor: AppColors.primary,
-                      unselectedItemColor: AppColors.textSecondary.withOpacity(
-                        0.5,
-                      ),
+                      backgroundColor: const Color(0xFF0F172A),
+                      selectedItemColor: const Color(0xFF10B981),
+                      unselectedItemColor: const Color(0xFF64748B),
                       selectedFontSize: 12,
                       unselectedFontSize: 10,
                       selectedLabelStyle: const TextStyle(
@@ -270,7 +279,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           icon: Container(
                             padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: const Color(0xFF10B981).withOpacity(0.1),
                               shape: BoxShape.circle,
                             ),
                             child: _buildIcon(AppAssets.iconStats, false),
@@ -278,7 +287,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           activeIcon: Container(
                             padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.7),
+                              color: const Color(0xFF10B981).withOpacity(0.2),
                               shape: BoxShape.circle,
                             ),
                             child: _buildIcon(AppAssets.iconStats, true),
@@ -302,28 +311,31 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
           floatingActionButton:
               _isAppLocked || !sl<RemoteConfigService>().enableAIChat
               ? null
-              : FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (context) => sl<AIChatBloc>(),
-                          child: const AIChatScreen(),
+              : AnimatedPulseGlowWidget(
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      AudioService().playClick();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => sl<AIChatBloc>(),
+                            child: const AIChatScreen(),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  backgroundColor: AppColors.primary,
-                  elevation: 4,
-                  shape: const CircleBorder(),
-                  child: Container(
-                    padding: EdgeInsets.all(AppSizes.padding12),
-                    child: SvgPicture.asset(
-                      AppAssets.iconBot,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+                      );
+                    },
+                    backgroundColor: const Color(0xFF10B981),
+                    elevation: 4,
+                    shape: const CircleBorder(),
+                    child: Container(
+                      padding: EdgeInsets.all(AppSizes.padding12),
+                      child: SvgPicture.asset(
+                        AppAssets.iconBot,
+                        colorFilter: const ColorFilter.mode(
+                          Color(0xFF020617),
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ),
@@ -341,7 +353,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         width: AppSizes.padding24,
         height: AppSizes.paddingV24,
         colorFilter: ColorFilter.mode(
-          isActive ? AppColors.primary : AppColors.textSecondary,
+          isActive ? const Color(0xFF10B981) : const Color(0xFF64748B),
           BlendMode.srcIn,
         ),
       ),

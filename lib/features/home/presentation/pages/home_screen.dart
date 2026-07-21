@@ -8,9 +8,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/scene_1_receipt_anim.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_float_widget.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_pulse_glow_widget.dart';
 import 'expense_analysis_screen.dart';
 import '../../../main/presentation/pages/main_screen.dart';
 import '../../../savings/presentation/pages/savings_screen.dart';
@@ -71,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       body: SafeArea(
         child: BlocBuilder<HomeBloc, HomeState>(
           builder: (context, state) {
@@ -140,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           title: 'Belum ada transaksi',
                           subtitle:
                               'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
-                          imageWidth: 140,
+                          customAnimation: const Scene1ReceiptAnim(),
                           padding: const EdgeInsets.symmetric(
                             vertical: AppDimens.md,
                           ),
@@ -276,11 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
               _getGreeting(),
               style: AppStyles.bodyTextSecondary.copyWith(
                 fontSize: AppSizes.font12,
+                color: const Color(0xFFCBD5E1),
               ),
             ),
             Text(
               'Halo, $_userName!',
-              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18, color: Colors.white),
             ),
           ],
         ),
@@ -297,14 +302,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             padding: EdgeInsets.all(AppSizes.padding8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF0F172A),
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.divider),
+              border: Border.all(color: const Color(0xFF1E293B)),
             ),
-            child: const Icon(
-              Icons.notifications_none,
-              size: 24,
-              color: AppColors.textPrimary,
+            child: const AnimatedPulseGlowWidget(
+              child: Icon(
+                Icons.notifications_none,
+                size: 24,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -318,14 +325,15 @@ class _HomeScreenState extends State<HomeScreen> {
     double expense, {
     bool showTrend = true,
   }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primary.withOpacity(0.8), AppColors.primary],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+    return AnimatedFloatWidget(
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF10B981), Color(0xFF2DD4BF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
@@ -466,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildBalanceStat(String label, String value, Color bulletColor) {
@@ -522,8 +530,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildActionButton(
               'Tambah',
               Icons.add_circle_outline,
-              AppColors.primary.withOpacity(0.2),
-              AppColors.primary,
+              const Color(0xFF0F172A),
+              const Color(0xFF10B981),
+              isOutlined: true,
+              borderColor: const Color(0xFF1E293B),
             ),
           ),
         ),
@@ -542,10 +552,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildActionButton(
               'Catat',
               Icons.receipt_long,
-              Colors.white,
-              AppColors.primary,
+              const Color(0xFF0F172A),
+              const Color(0xFF2DD4BF),
               isOutlined: true,
-              borderColor: AppColors.primary.withOpacity(0.2),
+              borderColor: const Color(0xFF1E293B),
             ),
           ),
         ),
@@ -618,9 +628,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimens.md),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusL),
-          border: Border.all(color: AppColors.divider, width: 1),
+          border: Border.all(color: const Color(0xFF1E293B), width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -641,7 +651,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'TABUNGAN',
               style: AppStyles.caption.copyWith(
-                color: AppColors.textSecondary,
+                color: const Color(0xFF94A3B8),
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.0,
               ),
@@ -659,7 +669,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Text(
                   _formatCurrencyCompact(totalSavings),
                   style: AppStyles.heading3.copyWith(
-                    color: const Color(0xFF1B5E20),
+                    color: const Color(0xFF34D399),
                   ),
                 );
               },
@@ -701,9 +711,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimens.md),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusL),
-          border: Border.all(color: AppColors.divider, width: 1),
+          border: Border.all(color: const Color(0xFF1E293B), width: 1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -724,7 +734,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'HUTANG/PIUTANG',
               style: AppStyles.caption.copyWith(
-                color: AppColors.textSecondary,
+                color: const Color(0xFF94A3B8),
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.0,
               ),
@@ -870,7 +880,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'Analisis Pengeluaran',
               style: AppStyles.heading2.copyWith(
                 fontSize: AppSizes.font18,
-                color: const Color(0xFF1B5E20),
+                color: const Color(0xFF34D399),
               ),
             ),
             TextButton(
@@ -902,9 +912,9 @@ class _HomeScreenState extends State<HomeScreen> {
         Container(
           padding: const EdgeInsets.all(AppDimens.lg),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFF0F172A),
             borderRadius: BorderRadius.circular(AppDimens.radiusL),
-            border: Border.all(color: AppColors.divider, width: 1),
+            border: Border.all(color: const Color(0xFF1E293B), width: 1),
           ),
           child: Row(
             children: [
@@ -934,11 +944,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'TOTAL',
-                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
                 ),
                 Text(
                   '100%',
-                  style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16),
+                  style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16, color: Colors.white),
                 ),
               ],
             ),
@@ -978,7 +988,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Text(
               label,
-              style: AppStyles.bodyTextSecondary,
+              style: AppStyles.bodyTextSecondary.copyWith(color: Colors.white),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -1001,7 +1011,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Transaksi Terakhir', style: AppStyles.heading2),
+            Text('Transaksi Terakhir', style: AppStyles.heading2.copyWith(color: Colors.white)),
             GestureDetector(
               onTap: () {
                 MainScreen.switchTab(1);
@@ -1087,7 +1097,7 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.only(bottom: AppDimens.md),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
       ),
       child: Row(
@@ -1109,12 +1119,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   title,
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(height: AppSizes.paddingV4),
                 Text(
                   subtitle,
-                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
                 ),
               ],
             ),
@@ -1206,9 +1217,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 padding: EdgeInsets.all(AppSizes.padding16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(0xFF0F172A),
                   borderRadius: BorderRadius.circular(AppDimens.radiusL),
-                  border: Border.all(color: AppColors.divider, width: 1),
+                  border: Border.all(color: const Color(0xFF1E293B), width: 1),
                 ),
                 child: Row(
                   children: [
@@ -1232,7 +1243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             'KESEHATAN KEUANGAN',
                             style: AppStyles.caption.copyWith(
-                              color: AppColors.textSecondary,
+                              color: const Color(0xFF94A3B8),
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.0,
                             ),
@@ -1244,7 +1255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 'Skor: ${score.toStringAsFixed(0)}/100',
                                 style: AppStyles.bodyText.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
+                                  color: Colors.white,
                                 ),
                               ),
                               SizedBox(width: AppSizes.padding8),

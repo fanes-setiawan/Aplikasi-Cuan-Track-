@@ -9,6 +9,8 @@ import '../bloc/budget_state.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/scene_2_budget_anim.dart';
+import 'package:cuan_track/features/category/domain/entities/category_entity.dart';
 import '../../domain/entities/budget_entity.dart';
 import 'add_budget_screen.dart';
 import 'edit_budget_screen.dart';
@@ -196,7 +198,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       title: 'Belum Ada Anggaran',
                       subtitle:
                           'Mulai buat anggaran untuk mengatur pengeluaran Anda dengan lebih baik.',
-                      imageWidth: 120,
+                      customAnimation: Scene2BudgetAnim(),
                     )
                   else
                     ...state.budgets.map((budget) {

@@ -10,6 +10,7 @@ import '../bloc/add_budget_state.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
+import '../../../../core/services/audio_service.dart';
 import 'package:cuan_track/features/category/domain/entities/category_entity.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
@@ -80,9 +81,11 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
       body: BlocConsumer<AddBudgetBloc, AddBudgetState>(
         listener: (context, state) {
           if (state is AddBudgetSuccess) {
+            AudioService().playSuccess();
             AppHelpers.showSnackBar(context, 'Anggaran berhasil disimpan!');
             Navigator.pop(context);
           } else if (state is AddBudgetError) {
+            AudioService().playError();
             AppHelpers.showSnackBar(
               context,
               'Gagal: ${state.message}',

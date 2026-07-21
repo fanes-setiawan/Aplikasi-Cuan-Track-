@@ -11,6 +11,7 @@ import '../../domain/entities/savings_goal_entity.dart';
 import '../bloc/savings_bloc.dart';
 import '../bloc/savings_event.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../../../core/services/audio_service.dart';
 import '../bloc/savings_category_bloc.dart';
 import '../bloc/savings_category_event.dart';
 import '../bloc/savings_category_state.dart';
@@ -103,13 +104,17 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
         );
         context.read<SavingsBloc>().add(AddSavingsGoal(user.uid, goal));
       }
+      AudioService().playSuccess();
       Navigator.pop(context);
     } else if (_selectedDeadline == null) {
+      AudioService().playError();
       AppHelpers.showSnackBar(
         context,
         'Silakan pilih tenggat waktu',
         isError: true,
       );
+    } else {
+      AudioService().playError();
     }
   }
 

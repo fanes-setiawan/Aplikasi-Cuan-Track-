@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import 'package:cuan_track/features/onboarding/presentation/widgets/animations/scene_1_receipt_anim.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../home/domain/entities/transaction_entity.dart';
 import '../bloc/history_bloc.dart';
@@ -81,22 +82,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         centerTitle: true,
         leading: widget.showBackButton
             ? IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_new,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                   size: 20,
                 ),
                 onPressed: () => Navigator.pop(context),
               )
             : null,
-        title: Text('Riwayat Transaksi', style: AppStyles.heading2),
+        title: Text('Riwayat Transaksi', style: AppStyles.heading2.copyWith(color: Colors.white)),
         actions: [
           GestureDetector(
             onTap: () {
@@ -116,7 +117,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               AppAssets.iconDocument,
               width: AppSizes.padding24,
               height: AppSizes.paddingV24,
-              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Color(0xFF34D399), BlendMode.srcIn),
             ),
           ),
           const SizedBox(width: AppDimens.md),
@@ -126,7 +127,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               AppAssets.iconDownload,
               width: AppSizes.padding24,
               height: AppSizes.paddingV24,
-              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Color(0xFF34D399), BlendMode.srcIn),
             ),
           ),
           const SizedBox(width: AppDimens.md),
@@ -163,13 +164,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(AppDimens.lg),
                           decoration: BoxDecoration(
-                            gradient: AppColors.primaryGradient,
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xFF10B981), Color(0xFF2DD4BF)],
+                            ),
                             borderRadius: BorderRadius.circular(
                               AppDimens.radiusL,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
+                                color: const Color(0xFF10B981).withOpacity(0.3),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -219,11 +224,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
       margin: const EdgeInsets.all(AppDimens.md),
       padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
+        border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -236,18 +242,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onTap: () => _changeMonth(-1),
             child: const Icon(
               Icons.chevron_left,
-              color: AppColors.textSecondary,
+              color: Color(0xFF94A3B8),
             ),
           ),
           Text(
             monthStr,
-            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           GestureDetector(
             onTap: () => _changeMonth(1),
             child: const Icon(
               Icons.chevron_right,
-              color: AppColors.textSecondary,
+              color: Color(0xFF94A3B8),
             ),
           ),
         ],
@@ -285,10 +291,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.white,
+                color: isSelected ? const Color(0xFF10B981) : const Color(0xFF0F172A),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.divider,
+                  color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1E293B),
                 ),
               ),
               child: Row(
@@ -300,7 +306,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       size: 16,
                       color: isSelected
                           ? Colors.white
-                          : AppColors.textSecondary,
+                          : const Color(0xFF94A3B8),
                     )
                   else if (_categoryIconMap.containsKey(category))
                     Icon(
@@ -308,7 +314,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       size: 16,
                       color: isSelected
                           ? Colors.white
-                          : AppColors.textSecondary,
+                          : const Color(0xFF94A3B8),
                     ),
                   if (category == 'Semua' ||
                       _categoryIconMap.containsKey(category))
@@ -316,7 +322,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   Text(
                     category,
                     style: AppStyles.bodyText.copyWith(
-                      color: isSelected ? Colors.white : AppColors.textPrimary,
+                      color: isSelected ? Colors.white : const Color(0xFF94A3B8),
                       fontWeight: isSelected
                           ? FontWeight.bold
                           : FontWeight.normal,
@@ -367,7 +373,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       return const EmptyState(
         title: 'Data Masih Kosong',
         subtitle: 'Belum ada transaksi di bulan ini atau untuk kategori ini.',
-        imageWidth: 120,
+        customAnimation: Scene1ReceiptAnim(),
       );
     }
 
@@ -414,7 +420,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             date.toUpperCase(),
             style: AppStyles.caption.copyWith(
               fontWeight: FontWeight.bold,
-              color: AppColors.textSecondary,
+              color: const Color(0xFF94A3B8),
               letterSpacing: 1.1,
             ),
           ),
@@ -426,18 +432,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildHistoryItem(TransactionEntity t) {
     final isExpense = t.type == 'expense';
     final amountColor = isExpense
-        ? const Color(0xFFE57373)
-        : const Color(0xFF66BB6A);
+        ? const Color(0xFFF87171)
+        : const Color(0xFF34D399);
     final amountSign = isExpense ? "-" : "+";
     final timeStr = DateFormat('HH:mm', 'id_ID').format(t.date);
 
     final icon = _categoryIconMap[t.categoryName] ?? Icons.category;
     final iconBgColor = isExpense
-        ? const Color(0xFFFFECE0)
-        : const Color(0xFFE8F5E9);
+        ? const Color(0xFF450A0A)
+        : const Color(0xFF022C22);
     final iconColor = isExpense
-        ? const Color(0xFFFF8A00)
-        : const Color(0xFF4CAF50);
+        ? const Color(0xFFF87171)
+        : const Color(0xFF34D399);
 
     return GestureDetector(
       onTap: () {
@@ -455,8 +461,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         padding: const EdgeInsets.all(AppDimens.md),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusM),
+          border: Border.all(color: const Color(0xFF1E293B)),
         ),
         child: Row(
           children: [
@@ -481,6 +488,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               : (t.categoryName ?? 'Transasksi')),
                     style: AppStyles.bodyText.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(height: AppSizes.paddingV4),
@@ -488,7 +496,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     '$timeStr • ${t.categoryName}',
                     style: AppStyles.caption.copyWith(
                       fontSize: AppSizes.font10,
-                      color: AppColors.textHint,
+                      color: const Color(0xFF94A3B8),
                     ),
                   ),
                 ],
@@ -520,7 +528,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFF020617),
             borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
@@ -532,14 +540,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 width: 40,
                 height: AppSizes.paddingV4,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: const Color(0xFF1E293B),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
               SizedBox(height: AppSizes.paddingV24),
               Text(
                 'Pratinjau Laporan',
-                style: AppStyles.heading2.copyWith(fontSize: 22),
+                style: AppStyles.heading2.copyWith(fontSize: 22, color: Colors.white),
               ),
               SizedBox(height: AppSizes.paddingV24),
 
@@ -547,16 +555,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 width: double.infinity,
                 padding: EdgeInsets.all(AppSizes.padding20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(0xFF0F172A),
                   borderRadius: BorderRadius.circular(AppSizes.radius24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withOpacity(0.2),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
                   ],
-                  border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+                  border: Border.all(color: const Color(0xFF1E293B)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,7 +579,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             Text(
                               'Laporan Keuangan',
                               style: AppStyles.bodyText.copyWith(
-                                color: const Color(0xFF27AE60),
+                                color: const Color(0xFF34D399),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -583,6 +591,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               style: AppStyles.caption.copyWith(
                                 letterSpacing: 1.2,
                                 fontWeight: FontWeight.bold,
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                           ],
@@ -596,12 +605,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         fontSize: AppSizes.font10,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.1,
+                        color: const Color(0xFF94A3B8),
                       ),
                     ),
                     SizedBox(height: AppSizes.paddingV4),
                     Text(
                       _formatCurrency(balance),
-                      style: AppStyles.heading1.copyWith(fontSize: AppSizes.font32),
+                      style: AppStyles.heading1.copyWith(fontSize: AppSizes.font32, color: Colors.white),
                     ),
                     SizedBox(height: AppSizes.paddingV24),
 
@@ -613,7 +623,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           style: AppStyles.caption.copyWith(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF27AE60),
+                            color: const Color(0xFF34D399),
                           ),
                         ),
                         Text(
@@ -621,7 +631,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           style: AppStyles.caption.copyWith(
                             fontSize: 9,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFFEB5757),
+                            color: const Color(0xFFF87171),
                           ),
                         ),
                       ],
@@ -637,7 +647,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 : 1,
                             child: Container(
                               height: AppSizes.paddingV12,
-                              color: const Color(0xFF27AE60),
+                              color: const Color(0xFF34D399),
                             ),
                           ),
                           Expanded(
@@ -646,7 +656,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 : 1,
                             child: Container(
                               height: AppSizes.paddingV12,
-                              color: const Color(0xFFEB5757),
+                              color: const Color(0xFFF87171),
                             ),
                           ),
                         ],
@@ -658,11 +668,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         Text(
                           _formatCurrency(state.totalIncome),
-                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
                         ),
                         Text(
                           _formatCurrency(state.totalExpense),
-                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
                         ),
                       ],
                     ),
@@ -680,7 +690,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     PdfReportGenerator.generateAndDownloadReport(state);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+                    backgroundColor: const Color(0xFF10B981),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSizes.radius16),
                     ),
