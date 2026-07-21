@@ -415,7 +415,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
           _buildKeyboardRow(['1', '2', '3']),
           _buildKeyboardRow(['4', '5', '6']),
           _buildKeyboardRow(['7', '8', '9']),
-          _buildKeyboardRow(['.', '0', 'DEL']),
+          _buildKeyboardRow(['000', '0', 'DEL']),
         ],
       ),
     );
@@ -436,13 +436,17 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
               } else {
                 _rawAmount = "0";
               }
-            } else if (key == '.') {
             } else {
               if (_rawAmount == "0") {
-                _rawAmount = key;
+                if (key != '000' && key != '0') {
+                  _rawAmount = key;
+                }
               } else {
                 if (_rawAmount.length < 12) {
                   _rawAmount += key;
+                  if (_rawAmount.length > 12) {
+                    _rawAmount = _rawAmount.substring(0, 12);
+                  }
                 }
               }
             }

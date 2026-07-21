@@ -495,7 +495,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                   _buildKeyboardRow(['1', '2', '3'], setModalState),
                   _buildKeyboardRow(['4', '5', '6'], setModalState),
                   _buildKeyboardRow(['7', '8', '9'], setModalState),
-                  _buildKeyboardRow(['.', '0', 'DEL'], setModalState),
+                  _buildKeyboardRow(['000', '0', 'DEL'], setModalState),
                 ],
               ),
             );
@@ -555,13 +555,17 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
       } else {
         _rawAmount = "0";
       }
-    } else if (key == '.') {
     } else {
       if (_rawAmount == "0") {
-        _rawAmount = key;
+        if (key != '000' && key != '0') {
+           _rawAmount = key;
+        }
       } else {
         if (_rawAmount.length < 12) {
           _rawAmount += key;
+          if (_rawAmount.length > 12) {
+            _rawAmount = _rawAmount.substring(0, 12);
+          }
         }
       }
     }

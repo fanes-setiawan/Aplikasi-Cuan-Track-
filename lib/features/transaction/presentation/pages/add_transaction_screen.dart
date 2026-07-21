@@ -161,7 +161,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: AppDimens.xl),
-                      Center(
+                      GestureDetector(
+                        onTap: () {
+                          _showNumericKeypadBottomSheet();
+                        },
+                        child: Center(
                         child: Column(
                           children: [
                             Text(
@@ -437,8 +441,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ),
                 ),
               ),
-              if (MediaQuery.of(context).viewInsets.bottom == 0)
-                _buildNumericKeypad(),
+              ),
               Padding(
                 padding: const EdgeInsets.all(AppDimens.md),
                 child: SizedBox(
@@ -616,46 +619,71 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     );
   }
 
-  Widget _buildNumericKeypad() {
-    return Container(
-      color: const Color(0xFF020617),
-      child: Column(
-        children: [
-          _buildKeyboardRow(['1', '2', '3']),
-          _buildKeyboardRow(['4', '5', '6']),
-          _buildKeyboardRow(['7', '8', '9']),
-          _buildKeyboardRow(['.', '0', 'DEL']),
-        ],
+  void _showNumericKeypadBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xFF0F172A),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius24)),
       ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(AppSizes.padding16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const SizedBox(width: 48),
+                        Text('Masukkan Nominal', style: AppStyles.heading3.copyWith(color: Colors.white)),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.check,
+                            color: Color(0xFF10B981),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(AppSizes.padding24),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Rp $_formattedAmount',
+                      style: AppStyles.heading1.copyWith(color: Colors.white),
+                    ),
+                  ),
+                  _buildKeyboardRow(['1', '2', '3'], setModalState),
+                  _buildKeyboardRow(['4', '5', '6'], setModalState),
+                  _buildKeyboardRow(['7', '8', '9'], setModalState),
+                  _buildKeyboardRow(['000', '0', 'DEL'], setModalState),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
-  Widget _buildKeyboardRow(List<String> keys) {
-    return Row(children: keys.map((key) => _buildKey(key)).toList());
+  Widget _buildKeyboardRow(List<String> keys, StateSetter setModalState) {
+    return Row(children: keys.map((key) => _buildKey(key, setModalState)).toList());
   }
 
-  Widget _buildKey(String key) {
+  Widget _buildKey(String key, StateSetter setModalState) {
     return Expanded(
       child: InkWell(
         onTap: () {
-          setState(() {
-            if (key == 'DEL') {
-              if (_rawAmount.length > 1) {
-                _rawAmount = _rawAmount.substring(0, _rawAmount.length - 1);
-              } else {
-                _rawAmount = "0";
-              }
-            } else if (key == '.') {
-            } else {
-              if (_rawAmount == "0") {
-                _rawAmount = key;
-              } else {
-                if (_rawAmount.length < 12) {
-                  _rawAmount += key;
-                }
-              }
-            }
+          setModalState(() {
+            _updateAmount(key);
           });
+          setState(() {});
         },
         child: Container(
           height: 60,
@@ -683,6 +711,29 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         ),
       ),
     );
+  }
+
+  void _updateAmount(String key) {
+    if (key == 'DEL') {
+      if (_rawAmount.length > 1) {
+        _rawAmount = _rawAmount.substring(0, _rawAmount.length - 1);
+      } else {
+        _rawAmount = "0";
+      }
+    } else {
+      if (_rawAmount == "0") {
+        if (key != '000' && key != '0') {
+           _rawAmount = key;
+        }
+      } else {
+        if (_rawAmount.length < 12) {
+          _rawAmount += key;
+          if (_rawAmount.length > 12) {
+            _rawAmount = _rawAmount.substring(0, 12);
+          }
+        }
+      }
+    }
   }
 
   void _saveTransaction() {
