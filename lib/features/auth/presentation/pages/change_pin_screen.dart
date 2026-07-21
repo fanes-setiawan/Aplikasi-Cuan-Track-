@@ -84,14 +84,14 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
     final currentPinDisplay = _isConfirming ? _confirmPin : _firstPin;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
@@ -109,14 +109,14 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             SizedBox(height: AppSizes.paddingV24),
             Text(
               _isConfirming ? 'Konfirmasi PIN Baru' : 'Setel PIN Baru',
-              style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24),
+              style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24, color: Colors.white),
             ),
             SizedBox(height: AppSizes.paddingV8),
             Text(
               _isConfirming
                   ? 'Masukkan kembali 4 digit PIN Anda'
                   : 'Pilih 4 digit angka untuk mengamankan data Anda',
-              style: AppStyles.bodyTextSecondary,
+              style: AppStyles.bodyTextSecondary.copyWith(color: const Color(0xFFcbd5e1)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 48),
@@ -130,7 +130,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                   height: AppSizes.paddingV16,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isActive ? AppColors.primary : AppColors.divider,
+                    color: isActive ? const Color(0xFF10b981) : const Color(0xFF1e293b),
                   ),
                 );
               }),
@@ -181,7 +181,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         child: Center(
           child: Text(
             number.toString(),
-            style: AppStyles.heading1.copyWith(fontSize: 28),
+            style: AppStyles.heading1.copyWith(fontSize: 28, color: Colors.white),
           ),
         ),
       ),
@@ -195,7 +195,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       child: const SizedBox(
         width: 80,
         height: 80,
-        child: Center(child: Icon(Icons.backspace_outlined, size: 24)),
+        child: Center(child: Icon(Icons.backspace_outlined, size: 24, color: Colors.white)),
       ),
     );
   }
