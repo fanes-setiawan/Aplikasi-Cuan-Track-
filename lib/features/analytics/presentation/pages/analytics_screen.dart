@@ -58,12 +58,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         centerTitle: true,
-        title: Text('Statistik Pengeluaran', style: AppStyles.heading2),
+        title: Text('Statistik Pengeluaran', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: BlocBuilder<AnalyticsBloc, AnalyticsState>(
         builder: (context, state) {
@@ -106,11 +106,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       margin: const EdgeInsets.all(AppDimens.md),
       padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
+        border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -123,18 +124,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             onTap: () => _changeMonth(-1),
             child: const Icon(
               Icons.chevron_left,
-              color: AppColors.textSecondary,
+              color: Color(0xFF94A3B8),
             ),
           ),
           Text(
             monthStr,
-            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           GestureDetector(
             onTap: () => _changeMonth(1),
             child: const Icon(
               Icons.chevron_right,
-              color: AppColors.textSecondary,
+              color: Color(0xFF94A3B8),
             ),
           ),
         ],
@@ -165,7 +166,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     margin: const EdgeInsets.only(bottom: 12),
                     padding: EdgeInsets.all(AppSizes.padding16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: const Color(0xFF0F172A),
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                     child: Row(
@@ -212,11 +213,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.md),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
+        border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -273,7 +275,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             children: [
               Text(
                 'Total',
-                style: AppStyles.caption.copyWith(color: AppColors.textHint),
+                style: AppStyles.caption.copyWith(color: const Color(0xFF94A3B8)),
               ),
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0, end: state.totalExpense),
@@ -288,6 +290,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     ).format(value),
                     style: AppStyles.bodyText.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   );
                 },
@@ -316,7 +319,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     'Rincian per Kategori',
                     style: AppStyles.bodyText.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(width: AppSizes.padding8),
@@ -326,13 +329,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: const Color(0xFF10B981).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(AppSizes.radius12),
                     ),
                     child: Text(
                       'Tap untuk detail',
                       style: AppStyles.caption.copyWith(
-                        color: AppColors.primary,
+                        color: const Color(0xFF10B981),
                         fontWeight: FontWeight.w600,
                         fontSize: AppSizes.font10,
                       ),
@@ -368,13 +371,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: EdgeInsets.all(AppSizes.padding16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0F172A),
                           borderRadius: BorderRadius.circular(
                             AppDimens.radiusM,
                           ),
+                          border: Border.all(color: const Color(0xFF1E293B)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.02),
+                              color: Colors.black.withOpacity(0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -396,7 +400,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 expense.categoryName,
                                 style: AppStyles.bodyText.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -415,6 +419,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                       AppHelpers.formatCurrencyIdr(value),
                                       style: AppStyles.bodyText.copyWith(
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     );
                                   },
@@ -430,7 +435,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                     return Text(
                                       '${value.toStringAsFixed(1)}%',
                                       style: AppStyles.caption.copyWith(
-                                        color: AppColors.textSecondary,
+                                        color: const Color(0xFF94A3B8),
                                         fontWeight: FontWeight.w500,
                                       ),
                                     );
@@ -439,10 +444,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               ],
                             ),
                             SizedBox(width: AppSizes.padding8),
-                            Icon(
+                            const Icon(
                               Icons.chevron_right,
                               size: 18,
-                              color: AppColors.textHint,
+                              color: Color(0xFF94A3B8),
                             ),
                           ],
                         ),

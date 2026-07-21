@@ -45,15 +45,15 @@ class _BudgetScreenState extends State<BudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         centerTitle: false,
-        title: Text('Manajemen Anggaran', style: AppStyles.heading2),
+        title: Text('Manajemen Anggaran', style: AppStyles.heading2.copyWith(color: Colors.white)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: AppColors.textPrimary),
+            icon: const Icon(Icons.more_vert, color: Colors.white),
             onPressed: () => _showOptionsMenu(context),
           ),
         ],
@@ -93,14 +93,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF27AE60),
+                          backgroundColor: const Color(0xFF10B981),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppDimens.radiusM,
                             ),
                           ),
                           elevation: 4,
-                          shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
+                          shadowColor: const Color(0xFF10B981).withOpacity(0.3),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -136,12 +136,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                               style: AppStyles.caption.copyWith(
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.1,
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                             SizedBox(height: AppSizes.paddingV4),
                             Text(
                               _formatCurrency(state.totalBudget),
-                              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font24),
+                              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font24, color: Colors.white),
                             ),
                           ],
                         ),
@@ -153,6 +154,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                               style: AppStyles.caption.copyWith(
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.1,
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                             SizedBox(height: AppSizes.paddingV4),
@@ -161,10 +163,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                               style: AppStyles.heading2.copyWith(
                                 fontSize: AppSizes.font24,
                                 color: totalPercent >= 90
-                                    ? const Color(0xFFEF4444)
+                                    ? const Color(0xFFF87171)
                                     : (totalPercent >= 80
-                                          ? const Color(0xFFF97316)
-                                          : const Color(0xFF27AE60)),
+                                          ? const Color(0xFFFB923C)
+                                          : const Color(0xFF34D399)),
                               ),
                             ),
                           ],
@@ -183,6 +185,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       style: AppStyles.caption.copyWith(
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2,
+                        color: const Color(0xFF94A3B8),
                       ),
                     ),
                   ),
@@ -216,10 +219,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         ),
                         iconColor: _getColorForCategory(budget.categoryName),
                         progressColor: progress >= 0.9
-                            ? const Color(0xFFEF4444)
+                            ? const Color(0xFFF87171)
                             : (progress >= 0.8
-                                  ? const Color(0xFFF97316)
-                                  : const Color(0xFF27AE60)),
+                                  ? const Color(0xFFFB923C)
+                                  : const Color(0xFF34D399)),
                         budget: budget,
                       );
                     }).toList(),
@@ -243,7 +246,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFF020617),
             borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
           ),
           child: Column(
@@ -254,7 +257,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 width: 40,
                 height: AppSizes.paddingV4,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: const Color(0xFF1E293B),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -264,19 +267,19 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 title: 'Urutkan Anggaran',
                 onTap: () => Navigator.pop(context),
               ),
-              const Divider(height: 1, indent: 64),
+              const Divider(height: 1, indent: 64, color: Color(0xFF1E293B)),
               _buildMenuItem(
                 icon: Icons.restart_alt,
                 title: 'Atur Ulang Semua',
                 onTap: () => Navigator.pop(context),
               ),
-              const Divider(height: 1, indent: 64),
+              const Divider(height: 1, indent: 64, color: Color(0xFF1E293B)),
               _buildMenuItem(
                 icon: Icons.edit_note,
                 title: 'Edit Kategori',
                 onTap: () => Navigator.pop(context),
               ),
-              const Divider(height: 1, indent: 64),
+              const Divider(height: 1, indent: 64, color: Color(0xFF1E293B)),
               _buildMenuItem(
                 icon: Icons.archive_outlined,
                 title: 'Tampilkan Anggaran Terarsip',
@@ -298,11 +301,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
     return ListTile(
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.padding24, vertical: AppSizes.paddingV8),
-      leading: Icon(icon, color: const Color(0xFF1B5E20), size: 28),
+      leading: Icon(icon, color: const Color(0xFF34D399), size: 28),
       title: Text(
         title,
         style: AppStyles.bodyText.copyWith(
-          color: const Color(0xFF1B5E20),
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -326,11 +329,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
       margin: EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: AppSizes.paddingV8),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
+        border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -357,13 +361,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       title,
                       style: AppStyles.bodyText.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                     SizedBox(height: AppSizes.paddingV4),
                     Text(
                       '$spent / $total',
                       style: AppStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
+                        color: const Color(0xFF94A3B8),
                       ),
                     ),
                   ],
@@ -372,17 +377,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.padding8, vertical: AppSizes.paddingV4),
                 decoration: BoxDecoration(
-                  color: highlightColor ?? const Color(0xFFF0FDF4),
+                  color: highlightColor ?? const Color(0xFF022C22),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   percent,
                   style: AppStyles.caption.copyWith(
                     color: progress >= 0.9
-                        ? const Color(0xFFEF4444)
+                        ? const Color(0xFFF87171)
                         : (progress >= 0.8
-                              ? const Color(0xFFF97316)
-                              : const Color(0xFF27AE60)),
+                              ? const Color(0xFFFB923C)
+                              : const Color(0xFF34D399)),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -391,8 +396,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
               PopupMenuButton<String>(
                 icon: const Icon(
                   Icons.more_vert,
-                  color: AppColors.textSecondary,
+                  color: Color(0xFF94A3B8),
                 ),
+                color: const Color(0xFF1E293B),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppDimens.radiusM),
                 ),
@@ -423,13 +429,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         const Icon(
                           Icons.edit_outlined,
                           size: 20,
-                          color: Color(0xFF2563EB),
+                          color: Color(0xFF38BDF8),
                         ),
                         SizedBox(width: AppSizes.padding12),
                         Text(
                           'Edit',
                           style: AppStyles.bodyText.copyWith(
-                            color: const Color(0xFF2563EB),
+                            color: const Color(0xFF38BDF8),
                           ),
                         ),
                       ],
@@ -442,13 +448,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         const Icon(
                           Icons.delete_outline,
                           size: 20,
-                          color: Color(0xFFEF4444),
+                          color: Color(0xFFF87171),
                         ),
                         SizedBox(width: AppSizes.padding12),
                         Text(
                           'Delete',
                           style: AppStyles.bodyText.copyWith(
-                            color: const Color(0xFFEF4444),
+                            color: const Color(0xFFF87171),
                           ),
                         ),
                       ],
@@ -464,7 +470,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
-              backgroundColor: const Color(0xFFF1F5F9),
+              backgroundColor: const Color(0xFF1E293B),
               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
             ),
           ),
@@ -481,24 +487,25 @@ class _BudgetScreenState extends State<BudgetScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: const Color(0xFF0F172A),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimens.radiusL),
           ),
-          title: Text('Hapus Anggaran', style: AppStyles.heading3),
+          title: Text('Hapus Anggaran', style: AppStyles.heading3.copyWith(color: Colors.white)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 'Apakah Anda yakin ingin menghapus anggaran ini?',
-                style: AppStyles.bodyText,
+                style: AppStyles.bodyText.copyWith(color: const Color(0xFF94A3B8)),
               ),
               SizedBox(height: AppSizes.paddingV16),
               Container(
                 padding: EdgeInsets.all(AppSizes.padding12),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: const Color(0xFF020617),
                   borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                  border: Border.all(color: AppColors.divider),
+                  border: Border.all(color: const Color(0xFF1E293B)),
                 ),
                 child: Row(
                   children: [
@@ -523,12 +530,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                             budget.categoryName,
                             style: AppStyles.bodyText.copyWith(
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                           Text(
                             _formatCurrency(budget.amount),
                             style: AppStyles.caption.copyWith(
-                              color: AppColors.textSecondary,
+                              color: const Color(0xFF94A3B8),
                             ),
                           ),
                         ],
@@ -545,7 +553,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: Text(
                 'Batal',
                 style: AppStyles.bodyText.copyWith(
-                  color: AppColors.textSecondary,
+                  color: const Color(0xFF94A3B8),
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -560,7 +568,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
               child: Text(
                 'Hapus',
                 style: AppStyles.bodyText.copyWith(
-                  color: const Color(0xFFEF4444),
+                  color: const Color(0xFFF87171),
                   fontWeight: FontWeight.bold,
                 ),
               ),

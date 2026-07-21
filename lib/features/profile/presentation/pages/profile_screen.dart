@@ -43,12 +43,12 @@ class ProfileScreen extends StatelessWidget {
         final isPremium = data?['isPremium'] == true;
 
         return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         centerTitle: true,
-        title: Text('Profil dan Pengaturan', style: AppStyles.heading2),
+        title: Text('Profil dan Pengaturan', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: AnimationLimiter(
         child: SingleChildScrollView(
@@ -71,13 +71,13 @@ class ProfileScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: const Color(0xFF10B981).withOpacity(0.1),
                                 width: 1,
                               ),
                             ),
                             child: CircleAvatar(
                               radius: 55,
-                              backgroundColor: const Color(0xFFF3E5D8),
+                              backgroundColor: const Color(0xFF1E293B),
                               backgroundImage: photoUrl != null
                                   ? NetworkImage(photoUrl)
                                   : null,
@@ -96,7 +96,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               padding: EdgeInsets.all(AppSizes.padding8),
                               decoration: const BoxDecoration(
-                                color: Color(0xFF27AE60),
+                                color: Color(0xFF10B981),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -114,7 +114,7 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           Text(
                             name,
-                            style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24),
+                            style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24, color: Colors.white),
                           ),
                           if (isPremium) ...[
                             SizedBox(width: AppSizes.padding8),
@@ -127,7 +127,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: AppSizes.paddingV4),
-                      Text(email, style: AppStyles.bodyTextSecondary),
+                      Text(email, style: AppStyles.bodyTextSecondary.copyWith(color: const Color(0xFF94A3B8))),
                     ],
                   ),
                 ),
@@ -259,7 +259,7 @@ class ProfileScreen extends StatelessWidget {
                         context.read<AuthBloc>().add(LogoutEvent());
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFF5F5),
+                        backgroundColor: const Color(0xFF0F172A),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
@@ -270,12 +270,12 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.logout, color: Color(0xFFFF5252)),
+                          const Icon(Icons.logout, color: Color(0xFFEF4444)),
                           SizedBox(width: AppSizes.padding12),
                           Text(
                             'Keluar',
                             style: AppStyles.bodyText.copyWith(
-                              color: const Color(0xFFFF5252),
+                              color: const Color(0xFFEF4444),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -295,20 +295,21 @@ class ProfileScreen extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(AppDimens.md),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: const Color(0xFF0F172A),
                         borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                        border: Border.all(color: const Color(0xFF1E293B)),
                       ),
                       child: Row(
                         children: [
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFF0F0),
+                              color: const Color(0xFF450a0a),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
                               Icons.delete_forever_outlined,
-                              color: Color(0xFFE53935),
+                              color: Color(0xFFEF4444),
                               size: 22,
                             ),
                           ),
@@ -317,14 +318,14 @@ class ProfileScreen extends StatelessWidget {
                             child: Text(
                               'Hapus Akun',
                               style: AppStyles.bodyText.copyWith(
-                                color: const Color(0xFFE53935),
+                                color: const Color(0xFFEF4444),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                           const Icon(
                             Icons.chevron_right,
-                            color: Color(0xFFE53935),
+                            color: Color(0xFFEF4444),
                             size: 20,
                           ),
                         ],
@@ -337,7 +338,7 @@ class ProfileScreen extends StatelessWidget {
                 Text(
                   'VERSI ${packageInfo.version}',
                   style: AppStyles.caption.copyWith(
-                    color: AppColors.textHint,
+                    color: const Color(0xFF64748B),
                     fontSize: AppSizes.font10,
                     letterSpacing: 1.1,
                   ),
@@ -684,6 +685,7 @@ class ProfileScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0F172A),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimens.radiusL),
         ),
@@ -692,12 +694,12 @@ class ProfileScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF0F0),
+                color: const Color(0xFF450a0a),
                 borderRadius: BorderRadius.circular(AppSizes.radius8),
               ),
               child: const Icon(
                 Icons.warning_amber_rounded,
-                color: Color(0xFFE53935),
+                color: Color(0xFFEF4444),
                 size: 22,
               ),
             ),
@@ -705,7 +707,7 @@ class ProfileScreen extends StatelessWidget {
             Text(
               'Hapus Akun',
               style: AppStyles.heading2.copyWith(
-                color: const Color(0xFFE53935),
+                color: const Color(0xFFEF4444),
               ),
             ),
           ],
@@ -718,14 +720,14 @@ class ProfileScreen extends StatelessWidget {
               'Tindakan ini tidak dapat dibatalkan!',
               style: AppStyles.bodyText.copyWith(
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: AppSizes.paddingV12),
             Text(
               'Semua data berikut akan dihapus secara permanen:',
               style: AppStyles.bodyText.copyWith(
-                color: AppColors.textSecondary,
+                color: const Color(0xFF94A3B8),
                 fontSize: 13,
               ),
             ),
@@ -743,7 +745,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Text(
                   item,
                   style: AppStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
+                    color: const Color(0xFF94A3B8),
                     fontSize: 13,
                   ),
                 ),
@@ -757,7 +759,7 @@ class ProfileScreen extends StatelessWidget {
             child: Text(
               'Batal',
               style: AppStyles.bodyText.copyWith(
-                color: AppColors.textSecondary,
+                color: const Color(0xFF94A3B8),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -768,7 +770,7 @@ class ProfileScreen extends StatelessWidget {
               context.read<AuthBloc>().add(DeleteAccountEvent());
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFE53935),
+              backgroundColor: const Color(0xFFEF4444),
               elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -798,29 +800,30 @@ class ProfileScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppDimens.md),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusM),
+          border: Border.all(color: const Color(0xFF1E293B)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.4),
+                color: const Color(0xFF10B981).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppColors.primary, size: 22),
+              child: Icon(icon, color: const Color(0xFF10B981), size: 22),
             ),
             SizedBox(width: AppSizes.padding16),
             Expanded(
               child: Text(
                 title,
-                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
             const Icon(
               Icons.chevron_right,
-              color: AppColors.textSecondary,
+              color: Color(0xFF94A3B8),
               size: 20,
             ),
           ],
