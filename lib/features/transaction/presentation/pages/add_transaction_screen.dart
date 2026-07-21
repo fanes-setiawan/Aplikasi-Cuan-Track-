@@ -116,18 +116,18 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: AppColors.textPrimary),
+          icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: Text(
           widget.isIncome ? 'Tambah Pemasukan' : 'Tambah Pengeluaran',
-          style: AppStyles.heading2,
+          style: AppStyles.heading2.copyWith(color: Colors.white),
         ),
       ),
       body: BlocConsumer<AddTransactionBloc, AddTransactionState>(
@@ -169,7 +169,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               style: AppStyles.caption.copyWith(
                                 letterSpacing: 1.5,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textSecondary,
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
                             const SizedBox(height: AppDimens.sm),
@@ -210,6 +210,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         'Pilih Kategori',
                         style: AppStyles.bodyText.copyWith(
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: AppDimens.md),
@@ -294,7 +295,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                       backgroundColor: Colors.transparent,
                                       builder: (context) => Container(
                                         decoration: const BoxDecoration(
-                                          color: Colors.white,
+                                          color: Color(0xFF0F172A),
                                           borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(20),
                                           ),
@@ -308,7 +309,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                 height: 5,
                                                 width: 40,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.grey[300],
+                                                  color: const Color(0xFF1E293B),
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                 ),
@@ -316,7 +317,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                               SizedBox(height: AppSizes.paddingV16),
                                               Text(
                                                 'Pilih Metode Pembayaran',
-                                                style: AppStyles.heading2,
+                                                style: AppStyles.heading2.copyWith(color: Colors.white),
                                               ),
                                               SizedBox(height: AppSizes.paddingV16),
                                               ...state.paymentMethods.map(
@@ -326,7 +327,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                         EdgeInsets.all(AppSizes.padding8),
                                                     decoration: BoxDecoration(
                                                       color: const Color(
-                                                        0xFFEFF6FF,
+                                                        0xFF1E293B,
                                                       ),
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -340,7 +341,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                           : Icons
                                                                 .account_balance_wallet,
                                                       color: const Color(
-                                                        0xFF2563EB,
+                                                        0xFF94A3B8,
                                                       ),
                                                     ),
                                                   ),
@@ -350,11 +351,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                         .copyWith(
                                                           fontWeight:
                                                               FontWeight.bold,
+                                                          color: Colors.white,
                                                         ),
                                                   ),
                                                   subtitle: Text(
                                                     m.type,
-                                                    style: AppStyles.caption,
+                                                    style: AppStyles.caption.copyWith(color: const Color(0xFF94A3B8)),
                                                   ),
                                                   onTap: () {
                                                     Navigator.pop(context, m);
@@ -407,12 +409,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           horizontal: AppDimens.md,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xFF0F172A),
                           borderRadius: BorderRadius.circular(
                             AppDimens.radiusM,
                           ),
                           border: Border.all(
-                            color: AppColors.divider.withOpacity(0.5),
+                            color: const Color(0xFF1E293B),
                           ),
                         ),
                         child: TextField(
@@ -420,15 +422,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           decoration: InputDecoration(
                             icon: const Icon(
                               Icons.notes,
-                              color: AppColors.textSecondary,
+                              color: Color(0xFF94A3B8),
                             ),
                             hintText: 'Tambah catatan...',
                             border: InputBorder.none,
                             hintStyle: AppStyles.bodyText.copyWith(
-                              color: AppColors.textSecondary.withOpacity(0.5),
+                              color: const Color(0xFF94A3B8),
                             ),
                           ),
-                          style: AppStyles.bodyText,
+                          style: AppStyles.bodyText.copyWith(color: Colors.white),
                         ),
                       ),
                     ],
@@ -486,10 +488,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         margin: const EdgeInsets.only(right: 12),
         padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE8F5E9) : Colors.white,
+          color: isSelected ? const Color(0xFF10B981).withOpacity(0.1) : const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.round),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.divider,
+            color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1E293B),
             width: 1.5,
           ),
         ),
@@ -498,13 +500,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             Icon(
               _getIconForName(category.iconName),
               size: 18,
-              color: isSelected ? AppColors.primary : AppColors.textSecondary,
+              color: isSelected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
             ),
             SizedBox(width: AppSizes.padding8),
             Text(
               category.name,
               style: AppStyles.bodyText.copyWith(
-                color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                color: isSelected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -547,11 +549,11 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.divider, style: BorderStyle.none),
+          border: Border.all(color: const Color(0xFF1E293B), style: BorderStyle.none),
         ),
         child: Icon(
           Icons.add_circle_outline,
-          color: AppColors.textSecondary.withOpacity(0.3),
+          color: const Color(0xFF94A3B8),
           size: 32,
         ),
       ),
@@ -570,13 +572,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimens.md),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusM),
-          border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+          border: Border.all(color: const Color(0xFF1E293B)),
         ),
         child: Row(
           children: [
-            Icon(icon, color: AppColors.textSecondary, size: 24),
+            Icon(icon, color: const Color(0xFF94A3B8), size: 24),
             const SizedBox(width: AppDimens.md),
             Expanded(
               child: Column(
@@ -588,15 +590,15 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       style: AppStyles.caption.copyWith(
                         fontSize: AppSizes.font10,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textSecondary.withOpacity(0.6),
+                        color: const Color(0xFF94A3B8),
                       ),
                     ),
                   Text(
                     value,
                     style: AppStyles.bodyText.copyWith(
                       color: isNote
-                          ? AppColors.textSecondary.withOpacity(0.5)
-                          : AppColors.textPrimary,
+                          ? const Color(0xFF94A3B8)
+                          : Colors.white,
                     ),
                   ),
                 ],
@@ -605,7 +607,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             if (!isNote)
               const Icon(
                 Icons.chevron_right,
-                color: AppColors.textSecondary,
+                color: Color(0xFF94A3B8),
                 size: 20,
               ),
           ],
@@ -616,7 +618,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
   Widget _buildNumericKeypad() {
     return Container(
-      color: const Color(0xFFF8FAFB),
+      color: const Color(0xFF020617),
       child: Column(
         children: [
           _buildKeyboardRow(['1', '2', '3']),
@@ -659,7 +661,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           height: 60,
           decoration: BoxDecoration(
             border: Border.all(
-              color: AppColors.divider.withOpacity(0.2),
+              color: const Color(0xFF1E293B),
               width: 0.5,
             ),
           ),
@@ -667,13 +669,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             child: key == 'DEL'
                 ? const Icon(
                     Icons.backspace_outlined,
-                    color: AppColors.textSecondary,
+                    color: Color(0xFF94A3B8),
                     size: 20,
                   )
                 : Text(
                     key,
                     style: AppStyles.heading2.copyWith(
                       fontWeight: FontWeight.normal,
+                      color: Colors.white,
                     ),
                   ),
           ),

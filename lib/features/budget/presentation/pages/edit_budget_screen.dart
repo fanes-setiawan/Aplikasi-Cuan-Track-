@@ -62,7 +62,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -72,16 +72,16 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
           child: Container(
             margin: EdgeInsets.all(AppSizes.padding8),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: Color(0xFF0F172A),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.chevron_left, color: AppColors.textPrimary),
+            child: const Icon(Icons.chevron_left, color: Colors.white),
           ),
         ),
         centerTitle: true,
         title: Text(
           'Edit Anggaran',
-          style: AppStyles.heading2.copyWith(fontWeight: FontWeight.bold),
+          style: AppStyles.heading2.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: BlocConsumer<EditBudgetBloc, EditBudgetState>(
@@ -113,7 +113,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                         'KATEGORI',
                         style: AppStyles.caption.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textSecondary,
+                          color: const Color(0xFF94A3B8),
                         ),
                       ),
                       SizedBox(height: AppSizes.paddingV8),
@@ -169,12 +169,13 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                             return _buildSelectionContainer(
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<CategoryEntity>(
-                                  value: _selectedCategory,
-                                  isExpanded: true,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: AppColors.textSecondary,
-                                  ),
+                                    value: _selectedCategory,
+                                    dropdownColor: const Color(0xFF0F172A),
+                                    isExpanded: true,
+                                    icon: const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: Color(0xFF94A3B8),
+                                    ),
                                   items: expenseCategories.map((
                                     CategoryEntity cat,
                                   ) {
@@ -190,9 +191,10 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                           SizedBox(width: AppSizes.padding12),
                                           Text(
                                             cat.name,
-                                            style: AppStyles.bodyText.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                            ),
+                                              style: AppStyles.bodyText.copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              ),
                                           ),
                                         ],
                                       ),
@@ -217,7 +219,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                         'BATAS ANGGARAN',
                         style: AppStyles.caption.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textSecondary,
+                          color: const Color(0xFF94A3B8),
                         ),
                       ),
                       SizedBox(height: AppSizes.paddingV8),
@@ -240,13 +242,13 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                     Text(
                                       'Rp ',
                                       style: AppStyles.heading2.copyWith(
-                                        color: AppColors.textPrimary,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     Text(
                                       _formattedAmount,
                                       style: AppStyles.heading2.copyWith(
-                                        color: AppColors.textPrimary,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -271,10 +273,11 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                             value: _selectedPeriod.isEmpty
                                 ? 'Bulanan'
                                 : _selectedPeriod,
+                            dropdownColor: const Color(0xFF0F172A),
                             isExpanded: true,
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
-                              color: AppColors.textSecondary,
+                              color: Color(0xFF94A3B8),
                             ),
                             items: ['Mingguan', 'Bulanan', 'Tahunan'].map((
                               String period,
@@ -293,6 +296,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                       period,
                                       style: AppStyles.bodyText.copyWith(
                                         fontWeight: FontWeight.w600,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -316,7 +320,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFDCFCE7),
+                                color: const Color(0xFF10B981).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(AppSizes.radius12),
                               ),
                               child: const Icon(
@@ -333,13 +337,14 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                     'Ingatkan Saya',
                                     style: AppStyles.bodyText.copyWith(
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   Text(
                                     'Beritahu saat mencapai 80% limit',
                                     style: AppStyles.caption.copyWith(
                                       fontSize: AppSizes.font12,
-                                      color: AppColors.textSecondary,
+                                      color: const Color(0xFF94A3B8),
                                     ),
                                   ),
                                 ],
@@ -410,7 +415,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                         child: Text(
                           'Batal',
                           style: AppStyles.bodyText.copyWith(
-                            color: AppColors.textSecondary,
+                            color: const Color(0xFF94A3B8),
                             fontWeight: FontWeight.bold,
                             fontSize: AppSizes.font16,
                           ),
@@ -432,8 +437,9 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppSizes.radius16),
+        border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.01),
@@ -450,7 +456,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF0F172A),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius24)),
       ),
@@ -467,7 +473,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const SizedBox(width: 48),
-                        Text('Masukkan Nominal', style: AppStyles.heading3),
+                        Text('Masukkan Nominal', style: AppStyles.heading3.copyWith(color: Colors.white)),
                         IconButton(
                           icon: const Icon(
                             Icons.check,
@@ -483,7 +489,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                     alignment: Alignment.center,
                     child: Text(
                       'Rp $_formattedAmount',
-                      style: AppStyles.heading1,
+                      style: AppStyles.heading1.copyWith(color: Colors.white),
                     ),
                   ),
                   _buildKeyboardRow(['1', '2', '3'], setModalState),
@@ -518,7 +524,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
           height: 60,
           decoration: BoxDecoration(
             border: Border.all(
-              color: AppColors.divider.withOpacity(0.2),
+              color: const Color(0xFF1E293B),
               width: 0.5,
             ),
           ),
@@ -526,13 +532,14 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
             child: key == 'DEL'
                 ? const Icon(
                     Icons.backspace_outlined,
-                    color: AppColors.textSecondary,
+                    color: Color(0xFF94A3B8),
                     size: 20,
                   )
                 : Text(
                     key,
                     style: AppStyles.heading2.copyWith(
                       fontWeight: FontWeight.normal,
+                      color: Colors.white,
                     ),
                   ),
           ),
