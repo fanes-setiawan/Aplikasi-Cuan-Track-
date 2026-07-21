@@ -441,7 +441,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   ),
                 ),
               ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(AppDimens.md),
                 child: SizedBox(
