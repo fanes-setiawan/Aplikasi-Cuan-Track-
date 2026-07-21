@@ -1,5 +1,4 @@
 import 'package:cuan_track/features/main/presentation/pages/main_screen.dart';
-import 'package:cuan_track/core/theme/app_styles.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:cuan_track/core/presentation/pages/maintenance_screen.dart';
 import 'package:cuan_track/core/services/remote_config_service.dart';
@@ -10,9 +9,7 @@ import 'package:cuan_track/features/splash/presentation/bloc/splash_state.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_dimens.dart';
-import '../../../../core/constants/app_assets.dart';
 import '../../../onboarding/presentation/pages/onboarding_screen.dart';
 import '../../../auth/presentation/pages/login_screen.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -50,18 +47,19 @@ class _SplashScreenState extends State<SplashScreen> {
   ) async {
     final remoteConfig = sl<RemoteConfigService>();
 
-    // 1. Maintenance Mode Blocker Check
     if (remoteConfig.maintenanceMode) {
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MaintenanceScreen(isUpdateRequired: false)),
+          MaterialPageRoute(
+            builder: (context) =>
+                const MaintenanceScreen(isUpdateRequired: false),
+          ),
         );
       }
       return;
     }
 
-    // 2. Force Update / Min Version Blocker Check
     final packageInfo = sl<PackageInfo>();
     final currentVersion = packageInfo.version;
     final minVersion = remoteConfig.minAppVersion;
@@ -70,7 +68,10 @@ class _SplashScreenState extends State<SplashScreen> {
       if (context.mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MaintenanceScreen(isUpdateRequired: true)),
+          MaterialPageRoute(
+            builder: (context) =>
+                const MaintenanceScreen(isUpdateRequired: true),
+          ),
         );
       }
       return;
@@ -138,7 +139,11 @@ class _SplashScreenState extends State<SplashScreen> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFFE0F7FA), Color(0xFFC8E6C9)],
+                colors: [
+                  Color(0xFFd1fae5),
+                  Color(0xFFecfdf5),
+                  Color(0xFFccfbf1),
+                ],
               ),
             ),
             child: SafeArea(
@@ -146,35 +151,154 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const SizedBox(height: 40),
+
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        AppAssets.logoApp,
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(height: AppDimens.xl),
+                      Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 150,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: const Color(0xFF6ee7b7).withOpacity(0.4),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF6ee7b7,
+                                  ).withOpacity(0.4),
+                                  blurRadius: 40,
+                                  spreadRadius: 10,
+                                ),
+                              ],
+                            ),
+                          ),
 
-                      Image.asset(
-                        AppAssets.logoText,
-                        height: 48,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(height: AppDimens.sm),
+                          Container(
+                            width: 112,
+                            height: 112,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF10b981),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: const Color(0xFF34d399),
+                                width: 4,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF10b981,
+                                  ).withOpacity(0.4),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF059669).withOpacity(0.2),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.9),
+                                  width: 4,
+                                ),
+                              ),
+                              alignment: Alignment.bottomCenter,
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 24,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(4),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    width: 10,
+                                    height: 40,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(4),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Container(
+                                    width: 10,
+                                    height: 32,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(4),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
 
-                      Text(
+                          const Positioned(
+                            top: -10,
+                            right: -10,
+                            child: Text('✨', style: TextStyle(fontSize: 24)),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: AppDimens.xxl),
+
+                      RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Cuan',
+                              style: TextStyle(
+                                color: Color(0xFF0f172a),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Track',
+                              style: TextStyle(
+                                color: Color(0xFF10b981),
+                                fontSize: 32,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
                         'SMART WEALTH MANAGER',
-                        style: AppStyles.caption.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                          letterSpacing: 1.5,
+                        style: TextStyle(
+                          color: Color(0xFF047857),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 2.0,
                         ),
                       ),
                     ],
                   ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.xl + 8,
@@ -182,14 +306,46 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text(
-                          'SECURE SYNC',
-                          style: AppStyles.caption.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryDark.withOpacity(0.6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFa7f3d0).withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFF34d399).withOpacity(0.6),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(
+                                Icons.shield_outlined,
+                                color: Color(0xFF059669),
+                                size: 12,
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                'SECURE SYNC',
+                                style: TextStyle(
+                                  color: Color(0xFF022c22),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              SizedBox(width: 6),
+                              Icon(
+                                Icons.cloud_sync_outlined,
+                                color: Color(0xFF059669),
+                                size: 12,
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: AppDimens.md - 4),
+                        const SizedBox(height: AppDimens.md),
+
                         BlocBuilder<SplashBloc, SplashState>(
                           builder: (context, state) {
                             double progress = 0.0;
@@ -198,30 +354,40 @@ class _SplashScreenState extends State<SplashScreen> {
                             } else if (state is SplashLoaded) {
                               progress = 1.0;
                             }
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                AppDimens.radiusM + 2,
+                            return Container(
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFa7f3d0).withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: const Color(
+                                    0xFF6ee7b7,
+                                  ).withOpacity(0.8),
+                                ),
                               ),
-                              child: LinearProgressIndicator(
-                                value: progress,
-                                backgroundColor: AppColors.surface.withOpacity(
-                                  0.5,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: LinearProgressIndicator(
+                                  value: progress,
+                                  backgroundColor: Colors.transparent,
+                                  valueColor:
+                                      const AlwaysStoppedAnimation<Color>(
+                                        Color(0xFF10b981),
+                                      ),
                                 ),
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.primaryDark,
-                                ),
-                                minHeight: 6,
                               ),
                             );
                           },
                         ),
                         const SizedBox(height: AppDimens.md),
-                        Text(
+
+                        const Text(
                           'STABILITY & HEALTH • SINCE 2026',
-                          style: AppStyles.caption.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primaryDark.withOpacity(0.4),
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF065f46),
+                            letterSpacing: 1.0,
                           ),
                         ),
                       ],
