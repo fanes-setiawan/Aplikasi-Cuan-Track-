@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -80,7 +81,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                       context: context,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.md,
@@ -111,7 +112,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.add_circle, color: Colors.white),
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSizes.padding8),
                             Text(
                               'Tambah Kategori Baru',
                               style: AppStyles.bodyText.copyWith(
@@ -124,7 +125,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             );
@@ -156,7 +157,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
     required BuildContext context,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: AppSizes.paddingV8),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -172,14 +173,14 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSizes.padding12),
             decoration: BoxDecoration(
               color: iconBgColor,
               borderRadius: BorderRadius.circular(AppDimens.radiusM),
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +191,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.paddingV4),
                 Text(
                   description,
                   style: AppStyles.caption.copyWith(

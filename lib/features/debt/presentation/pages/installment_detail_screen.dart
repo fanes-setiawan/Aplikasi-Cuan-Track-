@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -56,7 +57,7 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSizes.radius16),
           ),
           title: Text(
             'Ubah Status - $monthLabel $yearLabel',
@@ -186,12 +187,12 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                   }
                 },
                 itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: 'delete',
                     child: Row(
                       children: [
                         Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                        SizedBox(width: 8),
+                        SizedBox(width: AppSizes.padding8),
                         Text(
                           'Hapus Catatan',
                           style: TextStyle(color: Colors.red),
@@ -233,20 +234,20 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                               fontWeight: FontWeight.bold,
                               color: AppColors.textHint,
                               letterSpacing: 0.8,
-                              fontSize: 10,
+                              fontSize: AppSizes.font10,
                             ),
                           ),
                           Text(
                             '$progressPercent%',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Color(0xFF0D47A1),
                               fontWeight: FontWeight.bold,
-                              fontSize: 14,
+                              fontSize: AppSizes.font14,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppSizes.paddingV8),
                       Text(
                         '${debt.paidMonths} dari ${debt.totalMonths} bulan lunas',
                         style: AppStyles.bodyText.copyWith(
@@ -254,9 +255,9 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(AppSizes.radius4),
                         child: LinearProgressIndicator(
                           value: percent,
                           backgroundColor: const Color(0xFFE0E0E0),
@@ -266,9 +267,9 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                           minHeight: 8,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       const Divider(height: 1),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       Row(
                         children: [
                           Expanded(
@@ -280,15 +281,15 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                                   style: AppStyles.caption.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.textHint,
-                                    fontSize: 10,
+                                    fontSize: AppSizes.font10,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: AppSizes.paddingV4),
                                 Text(
                                   AppHelpers.formatCurrencyIdr(totalRemaining),
                                   style: AppStyles.bodyText.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                    fontSize: AppSizes.font16,
                                   ),
                                 ),
                               ],
@@ -302,19 +303,19 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                                 style: AppStyles.caption.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.textHint,
-                                  fontSize: 10,
+                                  fontSize: AppSizes.font10,
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: AppSizes.paddingV4),
                               Text(
                                 DateFormat(
                                   'dd MMM yyyy',
                                   'id_ID',
                                 ).format(debt.dueDate),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Color(0xFFD32F2F),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+                                  fontSize: AppSizes.font14,
                                 ),
                               ),
                             ],
@@ -324,17 +325,17 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.paddingV24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       'Rincian Bulanan',
-                      style: AppStyles.heading2.copyWith(fontSize: 18),
+                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.padding12,
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
@@ -343,16 +344,16 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                       ),
                       child: Text(
                         'Tahun ${debt.effectiveStartDate.year}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF0D47A1),
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: AppSizes.font12,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.paddingV16),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -454,10 +455,10 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV8, horizontal: AppSizes.padding4),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSizes.radius12),
           border: border ?? Border.all(color: Colors.grey.withOpacity(0.1)),
           boxShadow: [
             BoxShadow(
@@ -475,9 +476,9 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 12,
+                    fontSize: AppSizes.font12,
                     color: AppColors.textPrimary,
                   ),
                   textAlign: TextAlign.center,
@@ -508,21 +509,21 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                   child: Text(
                     AppHelpers.formatCurrencyIdr(amount),
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: AppSizes.font10,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey[600],
                     ),
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.paddingV4),
                 Container(
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 4,
+                    vertical: AppSizes.paddingV4,
                   ),
                   decoration: BoxDecoration(
                     color: badgeBgColor,
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(AppSizes.radius4),
                   ),
                   child: Text(
                     badgeText,

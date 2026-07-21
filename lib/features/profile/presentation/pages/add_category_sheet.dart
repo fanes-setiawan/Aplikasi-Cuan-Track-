@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,24 +57,24 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Container(
             width: 40,
-            height: 4,
+            height: AppSizes.paddingV4,
             decoration: BoxDecoration(
               color: AppColors.divider,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
             child: Row(
               children: [
                 IconButton(
@@ -84,7 +85,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                   child: Center(
                     child: Text(
                       'Tambah Kategori',
-                      style: AppStyles.heading2.copyWith(fontSize: 18),
+                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
                     ),
                   ),
                 ),
@@ -92,10 +93,10 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSizes.paddingV24),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,7 +106,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   Row(
                     children: [
                       Expanded(
@@ -113,12 +114,12 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                           onTap: () =>
                               setState(() => _selectedType = 'expense'),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
                             decoration: BoxDecoration(
                               color: _selectedType == 'expense'
                                   ? const Color(0xFF27AE60)
                                   : Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(AppSizes.radius16),
                               border: Border.all(
                                 color: _selectedType == 'expense'
                                     ? Colors.transparent
@@ -138,17 +139,17 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: AppSizes.padding16),
                       Expanded(
                         child: GestureDetector(
                           onTap: () => setState(() => _selectedType = 'income'),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
                             decoration: BoxDecoration(
                               color: _selectedType == 'income'
                                   ? const Color(0xFF27AE60)
                                   : Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(AppSizes.radius16),
                               border: Border.all(
                                 color: _selectedType == 'income'
                                     ? Colors.transparent
@@ -170,14 +171,14 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Nama Kategori',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -187,28 +188,28 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       ),
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.padding16,
+                        vertical: AppSizes.paddingV16,
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSizes.radius16),
                         borderSide: const BorderSide(color: AppColors.divider),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSizes.radius16),
                         borderSide: const BorderSide(color: Color(0xFF27AE60)),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Pilih Ikon',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -229,7 +230,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                             color: isSelected
                                 ? const Color(0xFF27AE60)
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppSizes.radius16),
                             border: Border.all(
                               color: isSelected
                                   ? Colors.transparent
@@ -258,14 +259,14 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       );
                     },
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Pilih Warna',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   Wrap(
                     spacing: 16,
                     runSpacing: 16,
@@ -282,7 +283,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                             border: isSelected
                                 ? Border.all(
                                     color: color.withOpacity(0.3),
-                                    width: 4,
+                                    width: AppSizes.padding4,
                                     strokeAlign: BorderSide.strokeAlignOutside,
                                   )
                                 : null,
@@ -366,7 +367,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       Navigator.pop(context);
                     },
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             ),

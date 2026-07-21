@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -54,11 +55,11 @@ class BiometricActivationScreen extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.padding16),
                 child: GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(AppSizes.padding8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -130,7 +131,7 @@ class BiometricActivationScreen extends StatelessWidget {
                     color: const Color(0xFFE2E8F0),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(AppSizes.padding24),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -154,12 +155,12 @@ class BiometricActivationScreen extends StatelessWidget {
                     style: AppStyles.heading1.copyWith(fontSize: 28),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   Text(
                     'Gunakan sidik jari atau pemindaian wajah Anda untuk akses yang lebih cepat dan aman.',
                     style: AppStyles.bodyTextSecondary.copyWith(
                       color: const Color(0xFF64748B),
-                      fontSize: 16,
+                      fontSize: AppSizes.font16,
                       height: 1.5,
                     ),
                     textAlign: TextAlign.center,
@@ -180,7 +181,7 @@ class BiometricActivationScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF27AE60),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(AppSizes.radius16),
                         ),
                         elevation: 4,
                         shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
@@ -190,12 +191,12 @@ class BiometricActivationScreen extends StatelessWidget {
                         style: AppStyles.bodyText.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: AppSizes.font18,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text(
@@ -218,19 +219,19 @@ class BiometricActivationScreen extends StatelessWidget {
                   color: Color(0xFF94A3B8),
                   size: 16,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: AppSizes.padding8),
                 Text(
                   'DATA TERENKRIPSI & AMAN',
                   style: AppStyles.caption.copyWith(
                     color: const Color(0xFF94A3B8),
                     letterSpacing: 1.2,
-                    fontSize: 10,
+                    fontSize: AppSizes.font10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.paddingV16),
           ],
         ),
       ),

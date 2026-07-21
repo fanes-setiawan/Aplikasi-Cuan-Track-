@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,7 +70,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
-            margin: const EdgeInsets.all(8),
+            margin: EdgeInsets.all(AppSizes.padding8),
             decoration: const BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -115,7 +116,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppSizes.paddingV8),
                       BlocConsumer<CategoryBloc, CategoryState>(
                         listener: (context, catState) {
                           if (catState is CategoryLoaded &&
@@ -139,9 +140,9 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           if (catState is CategoryLoading ||
                               catState is CategoryInitial) {
                             return _buildSelectionContainer(
-                              child: const Center(
+                              child: Center(
                                 child: Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: EdgeInsets.all(AppSizes.padding8),
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
@@ -154,8 +155,8 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                             if (expenseCategories.isEmpty) {
                               return _buildSelectionContainer(
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: AppSizes.paddingV8,
                                   ),
                                   child: Text(
                                     "Belum ada kategori pengeluaran",
@@ -186,7 +187,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                             color: const Color(0xFF27AE60),
                                             size: 24,
                                           ),
-                                          const SizedBox(width: 12),
+                                          SizedBox(width: AppSizes.padding12),
                                           Text(
                                             cat.name,
                                             style: AppStyles.bodyText.copyWith(
@@ -211,7 +212,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           return const SizedBox.shrink();
                         },
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: AppSizes.paddingV24),
                       Text(
                         'BATAS ANGGARAN',
                         style: AppStyles.caption.copyWith(
@@ -219,7 +220,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppSizes.paddingV8),
                       _buildSelectionContainer(
                         child: Row(
                           children: [
@@ -228,7 +229,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                               color: Color(0xFF27AE60),
                               size: 24,
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: AppSizes.padding12),
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
@@ -255,7 +256,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: AppSizes.paddingV24),
                       Text(
                         'PERIODE',
                         style: AppStyles.caption.copyWith(
@@ -263,7 +264,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           color: AppColors.textSecondary,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: AppSizes.paddingV8),
                       _buildSelectionContainer(
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
@@ -287,7 +288,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                       color: Color(0xFF27AE60),
                                       size: 24,
                                     ),
-                                    const SizedBox(width: 12),
+                                    SizedBox(width: AppSizes.padding12),
                                     Text(
                                       period,
                                       style: AppStyles.bodyText.copyWith(
@@ -308,7 +309,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: AppSizes.paddingV24),
                       _buildSelectionContainer(
                         child: Row(
                           children: [
@@ -316,14 +317,14 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFDCFCE7),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppSizes.radius12),
                               ),
                               child: const Icon(
                                 Icons.notifications_active,
                                 color: Color(0xFF27AE60),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: AppSizes.padding16),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,7 +338,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                   Text(
                                     'Beritahu saat mencapai 80% limit',
                                     style: AppStyles.caption.copyWith(
-                                      fontSize: 12,
+                                      fontSize: AppSizes.font12,
                                       color: AppColors.textSecondary,
                                     ),
                                   ),
@@ -379,14 +380,14 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF27AE60),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppSizes.radius16),
                           ),
                           elevation: 0,
                         ),
                         child: state is EditBudgetLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
+                            ? SizedBox(
+                                width: AppSizes.padding24,
+                                height: AppSizes.paddingV24,
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                 ),
@@ -396,12 +397,12 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                                 style: AppStyles.bodyText.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: AppSizes.font16,
                                 ),
                               ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.paddingV16),
                     SizedBox(
                       width: double.infinity,
                       child: TextButton(
@@ -411,12 +412,12 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                           style: AppStyles.bodyText.copyWith(
                             color: AppColors.textSecondary,
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: AppSizes.font16,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.paddingV24),
                   ],
                 ),
               ),
@@ -429,10 +430,10 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
 
   Widget _buildSelectionContainer({required Widget child}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizes.radius16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.01),
@@ -450,8 +451,8 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius24)),
       ),
       builder: (context) {
         return StatefulBuilder(
@@ -461,7 +462,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.padding16),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -478,7 +479,7 @@ class _EditBudgetScreenState extends State<EditBudgetScreen> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    padding: EdgeInsets.all(AppSizes.padding24),
                     alignment: Alignment.center,
                     child: Text(
                       'Rp $_formattedAmount',

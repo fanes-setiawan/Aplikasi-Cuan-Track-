@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -163,7 +164,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                 'Nama Target',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -178,13 +179,13 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                 validator: (value) =>
                     value!.isEmpty ? 'Nama target wajib diisi' : null,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Text(
                 'Nominal Target',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _amountController,
                 keyboardType: TextInputType.number,
@@ -202,17 +203,17 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                 validator: (value) =>
                     value!.isEmpty ? 'Nominal wajib diisi' : null,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Text(
                 'Tenggat Waktu / Deadline',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               GestureDetector(
                 onTap: _pickDate,
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(AppSizes.padding16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -238,7 +239,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -259,11 +260,11 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                       );
                     },
                     icon: const Icon(Icons.add_circle_outline, size: 16),
-                    label: const Text('Kelola', style: TextStyle(fontSize: 12)),
+                    label: Text('Kelola', style: TextStyle(fontSize: AppSizes.font12)),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               BlocBuilder<SavingsCategoryBloc, SavingsCategoryState>(
                 builder: (context, state) {
                   if (state is SavingsCategoryLoaded) {
@@ -291,7 +292,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                                 color: Color(int.parse(category.colorHex)),
                                 size: 18,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: AppSizes.padding8),
                               Text(category.name),
                             ],
                           ),
@@ -311,7 +312,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                     );
                   }
                   return Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.padding16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -320,7 +321,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
 
               SizedBox(
                 width: double.infinity,
@@ -335,10 +336,10 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                   ),
                   child: Text(
                     widget.goal != null ? 'Simpan Perubahan' : 'Simpan Target',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: AppSizes.font16,
                     ),
                   ),
                 ),

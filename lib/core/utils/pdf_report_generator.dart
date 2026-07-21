@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -8,8 +9,27 @@ import '../../features/history/presentation/bloc/history_state.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 class PdfReportGenerator {
+  static Future<pw.ThemeData> _getTheme() async {
+    pw.Font? emojiFont;
+    pw.Font? symbolFont;
+    try {
+      emojiFont = await PdfGoogleFonts.notoColorEmoji();
+      symbolFont = await PdfGoogleFonts.notoSansJPRegular();
+    } catch (e) {
+      print('Failed to load fallback fonts: $e');
+    }
+
+    return pw.ThemeData.withFont(
+      fontFallback: [
+        if (emojiFont != null) emojiFont,
+        if (symbolFont != null) symbolFont,
+      ],
+    );
+  }
+
   static Future<void> generateAndDownloadReport(HistoryLoaded state) async {
     final pdf = pw.Document();
+    final theme = await _getTheme();
 
     final monthStr = DateFormat(
       'MMMM yyyy',
@@ -38,7 +58,8 @@ class PdfReportGenerator {
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(32),
+        margin: pw.EdgeInsets.all(AppSizes.padding32),
+        theme: theme,
         build: (pw.Context context) {
           return [
             pw.Header(
@@ -49,7 +70,7 @@ class PdfReportGenerator {
                   pw.Text(
                     'Laporan Keuangan',
                     style: pw.TextStyle(
-                      fontSize: 24,
+                      fontSize: AppSizes.font24,
                       fontWeight: pw.FontWeight.bold,
                     ),
                   ),
@@ -57,7 +78,7 @@ class PdfReportGenerator {
                     'Cuan Track',
                     style: pw.TextStyle(
                       color: PdfColors.green700,
-                      fontSize: 20,
+                      fontSize: AppSizes.font20,
                       fontWeight: pw.FontWeight.bold,
                     ),
                   ),
@@ -67,15 +88,15 @@ class PdfReportGenerator {
             pw.SizedBox(height: 10),
             pw.Text(
               'Periode: ${monthStr.toUpperCase()}',
-              style: pw.TextStyle(fontSize: 14, color: PdfColors.grey700),
+              style: pw.TextStyle(fontSize: AppSizes.font14, color: PdfColors.grey700),
             ),
-            pw.SizedBox(height: 20),
+            pw.SizedBox(height: AppSizes.paddingV20),
 
             pw.Container(
-              padding: const pw.EdgeInsets.all(16),
+              padding: pw.EdgeInsets.all(AppSizes.padding16),
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(color: PdfColors.grey300),
-                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                borderRadius: pw.BorderRadius.all(pw.Radius.circular(AppSizes.radius8)),
               ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -83,7 +104,7 @@ class PdfReportGenerator {
                   pw.Text(
                     'RINGKASAN',
                     style: pw.TextStyle(
-                      fontSize: 12,
+                      fontSize: AppSizes.font12,
                       fontWeight: pw.FontWeight.bold,
                     ),
                   ),
@@ -121,7 +142,7 @@ class PdfReportGenerator {
                         idrFormat.format(balance),
                         style: pw.TextStyle(
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: AppSizes.font16,
                         ),
                       ),
                     ],
@@ -133,7 +154,7 @@ class PdfReportGenerator {
 
             pw.Text(
               'Rincian Transaksi',
-              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+              style: pw.TextStyle(fontSize: AppSizes.font18, fontWeight: pw.FontWeight.bold),
             ),
             pw.SizedBox(height: 10),
 
@@ -143,79 +164,72 @@ class PdfReportGenerator {
                 style: const pw.TextStyle(color: PdfColors.grey),
               )
             else
-              pw.Column(
-                children: grouped.entries.map((entry) {
-                  return pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: double.infinity,
-                        padding: const pw.EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        color: PdfColors.grey200,
-                        child: pw.Text(
-                          entry.key,
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
+              ...grouped.entries.expand((entry) {
+                return [
+                  pw.Container(
+                    width: double.infinity,
+                    padding: pw.EdgeInsets.symmetric(
+                      vertical: AppSizes.paddingV4,
+                      horizontal: AppSizes.padding8,
+                    ),
+                    color: PdfColors.grey200,
+                    child: pw.Text(
+                      entry.key,
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: AppSizes.font12,
                       ),
-                      pw.SizedBox(height: 5),
-                      ...entry.value.map((t) {
-                        final isExpense = t.type == 'expense';
-                        final amountSign = isExpense ? "-" : "+";
-                        return pw.Padding(
-                          padding: const pw.EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8,
-                          ),
-                          child: pw.Row(
-                            mainAxisAlignment:
-                                pw.MainAxisAlignment.spaceBetween,
-                            children: [
-                              pw.Expanded(
-                                child: pw.Column(
-                                  crossAxisAlignment:
-                                      pw.CrossAxisAlignment.start,
-                                  children: [
-                                    pw.Text(
-                                      t.title.isNotEmpty
-                                          ? t.title
-                                          : t.categoryName ?? 'Transaksi',
-                                      style: pw.TextStyle(
-                                        fontWeight: pw.FontWeight.bold,
-                                      ),
-                                    ),
-                                    pw.Text(
-                                      '${t.categoryName ?? ''} - ${t.notes ?? ''}',
-                                      style: const pw.TextStyle(
-                                        fontSize: 10,
-                                        color: PdfColors.grey,
-                                      ),
-                                    ),
-                                  ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 5),
+                  ...entry.value.map((t) {
+                    final isExpense = t.type == 'expense';
+                    final amountSign = isExpense ? "-" : "+";
+                    return pw.Padding(
+                      padding: pw.EdgeInsets.symmetric(
+                        vertical: AppSizes.paddingV4,
+                        horizontal: AppSizes.padding8,
+                      ),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Expanded(
+                            child: pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text(
+                                  t.title.isNotEmpty
+                                      ? t.title
+                                      : t.categoryName ?? 'Transaksi',
+                                  style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              pw.Text(
-                                '$amountSign${idrFormat.format(t.amount)}',
-                                style: pw.TextStyle(
-                                  color: isExpense
-                                      ? PdfColors.red700
-                                      : PdfColors.green700,
+                                pw.Text(
+                                  '${t.categoryName ?? ''} - ${t.notes ?? ''}',
+                                  style: pw.TextStyle(
+                                    fontSize: AppSizes.font10,
+                                    color: PdfColors.grey,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        );
-                      }).toList(),
-                      pw.SizedBox(height: 15),
-                    ],
-                  );
-                }).toList(),
-              ),
+                          pw.Text(
+                            '$amountSign${idrFormat.format(t.amount)}',
+                            style: pw.TextStyle(
+                              color: isExpense
+                                  ? PdfColors.red700
+                                  : PdfColors.green700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  pw.SizedBox(height: 15),
+                ];
+              }),
           ];
         },
       ),
@@ -236,8 +250,12 @@ class PdfReportGenerator {
     double totalExpense,
   ) async {
     final pdf = pw.Document();
+    final theme = await _getTheme();
     final balance = totalIncome - totalExpense;
-    final printDate = DateFormat('dd MMMM yyyy, HH:mm', 'id_ID').format(DateTime.now());
+    final printDate = DateFormat(
+      'dd MMMM yyyy, HH:mm',
+      'id_ID',
+    ).format(DateTime.now());
 
     pw.MemoryImage? logoImage;
     try {
@@ -266,16 +284,13 @@ class PdfReportGenerator {
     final pageTheme = pw.PageTheme(
       pageFormat: PdfPageFormat.a4,
       margin: const pw.EdgeInsets.all(36),
+      theme: theme,
       buildBackground: (pw.Context context) {
         return pw.Center(
           child: pw.Opacity(
             opacity: 0.12,
             child: logoImage != null
-                ? pw.Image(
-                    logoImage,
-                    width: 220,
-                    height: 220,
-                  )
+                ? pw.Image(logoImage, width: 220, height: 220)
                 : pw.Transform.rotate(
                     angle: 0.45,
                     child: pw.Text(
@@ -307,7 +322,7 @@ class PdfReportGenerator {
                     pw.Text(
                       'LAPORAN KEUANGAN KESELURUHAN',
                       style: pw.TextStyle(
-                        fontSize: 16,
+                        fontSize: AppSizes.font16,
                         fontWeight: pw.FontWeight.bold,
                         color: PdfColors.blueGrey800,
                       ),
@@ -330,7 +345,7 @@ class PdfReportGenerator {
                       'Cuan Track',
                       style: pw.TextStyle(
                         color: PdfColors.green700,
-                        fontSize: 20,
+                        fontSize: AppSizes.font20,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
@@ -345,9 +360,9 @@ class PdfReportGenerator {
                 ),
               ],
             ),
-            pw.SizedBox(height: 8),
+            pw.SizedBox(height: AppSizes.paddingV8),
             pw.Divider(thickness: 1.5, color: PdfColors.blueGrey100),
-            pw.SizedBox(height: 12),
+            pw.SizedBox(height: AppSizes.paddingV12),
 
             pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -364,18 +379,36 @@ class PdfReportGenerator {
                           color: PdfColors.blueGrey400,
                         ),
                       ),
-                      pw.SizedBox(height: 4),
+                      pw.SizedBox(height: AppSizes.paddingV4),
                       pw.Row(
                         children: [
-                          pw.Text('Pemilik Akun: ', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                          pw.Text(userName, style: const pw.TextStyle(fontSize: 9)),
+                          pw.Text(
+                            'Pemilik Akun: ',
+                            style: pw.TextStyle(
+                              fontSize: 9,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            userName,
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
                         ],
                       ),
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Periode Laporan: ', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                          pw.Text('Semua Waktu (All-Time)', style: const pw.TextStyle(fontSize: 9)),
+                          pw.Text(
+                            'Periode Laporan: ',
+                            style: pw.TextStyle(
+                              fontSize: 9,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            'Semua Waktu (All-Time)',
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
                         ],
                       ),
                     ],
@@ -385,19 +418,44 @@ class PdfReportGenerator {
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('METADATA SISTEM', style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.blueGrey400)),
-                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'METADATA SISTEM',
+                        style: pw.TextStyle(
+                          fontSize: 8,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.blueGrey400,
+                        ),
+                      ),
+                      pw.SizedBox(height: AppSizes.paddingV4),
                       pw.Row(
                         children: [
-                          pw.Text('Tanggal Cetak: ', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                          pw.Text(printDate, style: const pw.TextStyle(fontSize: 9)),
+                          pw.Text(
+                            'Tanggal Cetak: ',
+                            style: pw.TextStyle(
+                              fontSize: 9,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            printDate,
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
                         ],
                       ),
                       pw.SizedBox(height: 2),
                       pw.Row(
                         children: [
-                          pw.Text('Total Transaksi: ', style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                          pw.Text('${transactions.length} kali', style: const pw.TextStyle(fontSize: 9)),
+                          pw.Text(
+                            'Total Transaksi: ',
+                            style: pw.TextStyle(
+                              fontSize: 9,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            '${transactions.length} kali',
+                            style: const pw.TextStyle(fontSize: 9),
+                          ),
                         ],
                       ),
                     ],
@@ -407,21 +465,41 @@ class PdfReportGenerator {
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
-                      pw.Text('STATUS FINANSIAL', style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.blueGrey400)),
-                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'STATUS FINANSIAL',
+                        style: pw.TextStyle(
+                          fontSize: 8,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.blueGrey400,
+                        ),
+                      ),
+                      pw.SizedBox(height: AppSizes.paddingV4),
                       pw.Container(
-                        padding: const pw.EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                        padding: pw.EdgeInsets.symmetric(
+                          vertical: AppSizes.paddingV4,
+                          horizontal: AppSizes.padding8,
+                        ),
                         decoration: pw.BoxDecoration(
-                          color: balance >= 0 ? PdfColors.green50 : PdfColors.red50,
-                          borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
-                          border: pw.Border.all(color: balance >= 0 ? PdfColors.green200 : PdfColors.red200),
+                          color: balance >= 0
+                              ? PdfColors.green50
+                              : PdfColors.red50,
+                          borderRadius: pw.BorderRadius.all(
+                            pw.Radius.circular(AppSizes.radius4),
+                          ),
+                          border: pw.Border.all(
+                            color: balance >= 0
+                                ? PdfColors.green200
+                                : PdfColors.red200,
+                          ),
                         ),
                         child: pw.Text(
                           balance >= 0 ? 'SURPLUS' : 'DEFISIT',
                           style: pw.TextStyle(
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             fontWeight: pw.FontWeight.bold,
-                            color: balance >= 0 ? PdfColors.green700 : PdfColors.red700,
+                            color: balance >= 0
+                                ? PdfColors.green700
+                                : PdfColors.red700,
                           ),
                         ),
                       ),
@@ -430,14 +508,14 @@ class PdfReportGenerator {
                 ),
               ],
             ),
-            pw.SizedBox(height: 16),
+            pw.SizedBox(height: AppSizes.paddingV16),
 
             pw.Container(
-              padding: const pw.EdgeInsets.all(16),
+              padding: pw.EdgeInsets.all(AppSizes.padding16),
               decoration: pw.BoxDecoration(
                 color: PdfColors.grey50,
                 border: pw.Border.all(color: PdfColors.grey200),
-                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                borderRadius: pw.BorderRadius.all(pw.Radius.circular(AppSizes.radius8)),
               ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -445,30 +523,44 @@ class PdfReportGenerator {
                   pw.Text(
                     'RINGKASAN LENGKAP',
                     style: pw.TextStyle(
-                      fontSize: 10,
+                      fontSize: AppSizes.font10,
                       fontWeight: pw.FontWeight.bold,
                       color: PdfColors.blueGrey800,
                     ),
                   ),
-                  pw.SizedBox(height: 8),
+                  pw.SizedBox(height: AppSizes.paddingV8),
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Text('Total Pemasukan:', style: const pw.TextStyle(fontSize: 10)),
+                      pw.Text(
+                        'Total Pemasukan:',
+                        style: pw.TextStyle(fontSize: AppSizes.font10),
+                      ),
                       pw.Text(
                         idrFormat.format(totalIncome),
-                        style: pw.TextStyle(color: PdfColors.green700, fontWeight: pw.FontWeight.bold, fontSize: 11),
+                        style: pw.TextStyle(
+                          color: PdfColors.green700,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
-                  pw.SizedBox(height: 4),
+                  pw.SizedBox(height: AppSizes.paddingV4),
                   pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Text('Total Pengeluaran:', style: const pw.TextStyle(fontSize: 10)),
+                      pw.Text(
+                        'Total Pengeluaran:',
+                        style: pw.TextStyle(fontSize: AppSizes.font10),
+                      ),
                       pw.Text(
                         idrFormat.format(totalExpense),
-                        style: pw.TextStyle(color: PdfColors.red700, fontWeight: pw.FontWeight.bold, fontSize: 11),
+                        style: pw.TextStyle(
+                          color: PdfColors.red700,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 11,
+                        ),
                       ),
                     ],
                   ),
@@ -478,14 +570,20 @@ class PdfReportGenerator {
                     children: [
                       pw.Text(
                         'Saldo Bersih Keseluruhan:',
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 11, color: PdfColors.blueGrey900),
+                        style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: 11,
+                          color: PdfColors.blueGrey900,
+                        ),
                       ),
                       pw.Text(
                         idrFormat.format(balance),
                         style: pw.TextStyle(
                           fontWeight: pw.FontWeight.bold,
-                          fontSize: 14,
-                          color: balance >= 0 ? PdfColors.green800 : PdfColors.red800,
+                          fontSize: AppSizes.font14,
+                          color: balance >= 0
+                              ? PdfColors.green800
+                              : PdfColors.red800,
                         ),
                       ),
                     ],
@@ -493,13 +591,17 @@ class PdfReportGenerator {
                 ],
               ),
             ),
-            pw.SizedBox(height: 24),
+            pw.SizedBox(height: AppSizes.paddingV24),
 
             pw.Text(
               'JURNAL TRANSAKSI LIFETIME',
-              style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blueGrey800),
+              style: pw.TextStyle(
+                fontSize: AppSizes.font12,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blueGrey800,
+              ),
             ),
-            pw.SizedBox(height: 8),
+            pw.SizedBox(height: AppSizes.paddingV8),
 
             if (transactions.isEmpty)
               pw.Text(
@@ -507,77 +609,76 @@ class PdfReportGenerator {
                 style: const pw.TextStyle(color: PdfColors.grey500),
               )
             else
-              pw.Column(
-                children: grouped.entries.map((entry) {
-                  return pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        width: double.infinity,
-                        padding: const pw.EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        color: PdfColors.blueGrey50,
-                        child: pw.Text(
-                          entry.key,
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            fontSize: 10,
-                            color: PdfColors.blueGrey800,
-                          ),
-                        ),
+              ...grouped.entries.expand((entry) {
+                return [
+                  pw.Container(
+                    width: double.infinity,
+                    padding: pw.EdgeInsets.symmetric(
+                      vertical: AppSizes.paddingV4,
+                      horizontal: AppSizes.padding8,
+                    ),
+                    color: PdfColors.blueGrey50,
+                    child: pw.Text(
+                      entry.key,
+                      style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: AppSizes.font10,
+                        color: PdfColors.blueGrey800,
                       ),
-                      pw.SizedBox(height: 3),
-                      ...entry.value.map((t) {
-                        final isExpense = t.type == 'expense';
-                        final amountSign = isExpense ? "-" : "+";
-                        return pw.Padding(
-                          padding: const pw.EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8,
-                          ),
-                          child: pw.Row(
-                            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                            children: [
-                              pw.Expanded(
-                                child: pw.Column(
-                                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                                  children: [
-                                    pw.Text(
-                                      t.title.isNotEmpty ? t.title : (t.categoryName ?? 'Transaksi'),
-                                      style: pw.TextStyle(
-                                        fontWeight: pw.FontWeight.bold,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                    pw.Text(
-                                      '${t.categoryName ?? ''} - ${t.notes ?? ''}',
-                                      style: const pw.TextStyle(
-                                        fontSize: 8,
-                                        color: PdfColors.grey600,
-                                      ),
-                                    ),
-                                  ],
+                    ),
+                  ),
+                  pw.SizedBox(height: 3),
+                  ...entry.value.map((t) {
+                    final isExpense = t.type == 'expense';
+                    final amountSign = isExpense ? "-" : "+";
+                    return pw.Padding(
+                      padding: pw.EdgeInsets.symmetric(
+                        vertical: AppSizes.paddingV4,
+                        horizontal: AppSizes.padding8,
+                      ),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Expanded(
+                            child: pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text(
+                                  t.title.isNotEmpty
+                                      ? t.title
+                                      : (t.categoryName ?? 'Transaksi'),
+                                  style: pw.TextStyle(
+                                    fontWeight: pw.FontWeight.bold,
+                                    fontSize: AppSizes.font10,
+                                  ),
                                 ),
-                              ),
-                              pw.Text(
-                                '$amountSign${idrFormat.format(t.amount)}',
-                                style: pw.TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: pw.FontWeight.bold,
-                                  color: isExpense ? PdfColors.red700 : PdfColors.green700,
+                                pw.Text(
+                                  '${t.categoryName ?? ''} - ${t.notes ?? ''}',
+                                  style: const pw.TextStyle(
+                                    fontSize: 8,
+                                    color: PdfColors.grey600,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        );
-                      }).toList(),
-                      pw.SizedBox(height: 10),
-                    ],
-                  );
-                }).toList(),
-              ),
+                          pw.Text(
+                            '$amountSign${idrFormat.format(t.amount)}',
+                            style: pw.TextStyle(
+                              fontSize: AppSizes.font10,
+                              fontWeight: pw.FontWeight.bold,
+                              color: isExpense
+                                  ? PdfColors.red700
+                                  : PdfColors.green700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  pw.SizedBox(height: 10),
+                ];
+              }),
           ];
         },
       ),

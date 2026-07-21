@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -113,8 +114,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             },
             child: SvgPicture.asset(
               AppAssets.iconDocument,
-              width: 24,
-              height: 24,
+              width: AppSizes.padding24,
+              height: AppSizes.paddingV24,
               colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
           ),
@@ -123,8 +124,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onTap: () => _showReportPreview(context),
             child: SvgPicture.asset(
               AppAssets.iconDownload,
-              width: 24,
-              height: 24,
+              width: AppSizes.padding24,
+              height: AppSizes.paddingV24,
               colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
           ),
@@ -216,7 +217,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(_selectedDate);
     return Container(
       margin: const EdgeInsets.all(AppDimens.md),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -270,7 +271,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
         scrollDirection: Axis.horizontal,
         itemCount: categoryList.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => SizedBox(width: AppSizes.padding8),
         itemBuilder: (context, index) {
           final category = categoryList[index];
           final isSelected = category == _selectedCategoryFilter;
@@ -282,7 +283,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               });
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -319,7 +320,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: isSelected
                           ? FontWeight.bold
                           : FontWeight.normal,
-                      fontSize: 14,
+                      fontSize: AppSizes.font14,
                     ),
                   ),
                 ],
@@ -343,7 +344,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: AppSizes.paddingV4),
         Text(
           value,
           style: AppStyles.bodyText.copyWith(
@@ -460,7 +461,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(AppSizes.padding12),
               decoration: BoxDecoration(
                 color: iconBgColor,
                 borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -482,11 +483,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: AppSizes.paddingV4),
                   Text(
                     '$timeStr • ${t.categoryName}',
                     style: AppStyles.caption.copyWith(
-                      fontSize: 10,
+                      fontSize: AppSizes.font10,
                       color: AppColors.textHint,
                     ),
                   ),
@@ -518,36 +519,36 @@ class _HistoryScreenState extends State<HistoryScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
           ),
           padding: const EdgeInsets.symmetric(horizontal: AppDimens.lg),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.paddingV12),
               Container(
                 width: 40,
-                height: 4,
+                height: AppSizes.paddingV4,
                 decoration: BoxDecoration(
                   color: AppColors.divider,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.paddingV24),
               Text(
                 'Pratinjau Laporan',
                 style: AppStyles.heading2.copyWith(fontSize: 22),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.paddingV24),
 
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(AppSizes.padding20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(AppSizes.radius24),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.05),
@@ -588,21 +589,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: AppSizes.paddingV32),
                     Text(
                       'SALDO AKHIR',
                       style: AppStyles.caption.copyWith(
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.1,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.paddingV4),
                     Text(
                       _formatCurrency(balance),
-                      style: AppStyles.heading1.copyWith(fontSize: 32),
+                      style: AppStyles.heading1.copyWith(fontSize: AppSizes.font32),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: AppSizes.paddingV24),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -625,9 +626,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.paddingV8),
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(AppSizes.radius8),
                       child: Row(
                         children: [
                           Expanded(
@@ -635,7 +636,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ? (state.totalIncome).toInt()
                                 : 1,
                             child: Container(
-                              height: 12,
+                              height: AppSizes.paddingV12,
                               color: const Color(0xFF27AE60),
                             ),
                           ),
@@ -644,24 +645,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ? (state.totalExpense).toInt()
                                 : 1,
                             child: Container(
-                              height: 12,
+                              height: AppSizes.paddingV12,
                               color: const Color(0xFFEB5757),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.paddingV4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           _formatCurrency(state.totalIncome),
-                          style: AppStyles.caption.copyWith(fontSize: 10),
+                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
                         ),
                         Text(
                           _formatCurrency(state.totalExpense),
-                          style: AppStyles.caption.copyWith(fontSize: 10),
+                          style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
                         ),
                       ],
                     ),
@@ -669,7 +670,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
               SizedBox(
                 width: double.infinity,
                 height: 54,
@@ -681,7 +682,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSizes.radius16),
                     ),
                     elevation: 0,
                   ),
@@ -692,7 +693,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         Icons.picture_as_pdf_outlined,
                         color: Colors.white,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: AppSizes.padding12),
                       Text(
                         'Unduh PDF',
                         style: AppStyles.bodyText.copyWith(
@@ -704,7 +705,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
             ],
           ),
         );
@@ -718,17 +719,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Column(
           children: [
             _buildMonthSelector(),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSizes.paddingV8),
             SizedBox(
               height: 40,
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                 scrollDirection: Axis.horizontal,
                 itemCount: 5,
-                separatorBuilder: (context, index) => const SizedBox(width: 8),
+                separatorBuilder: (context, index) => SizedBox(width: AppSizes.padding8),
                 itemBuilder: (context, index) => AppShimmer.rectangular(
                   width: 80,
-                  height: 32,
+                  height: AppSizes.paddingV32,
                   borderRadius: 20,
                 ),
               ),

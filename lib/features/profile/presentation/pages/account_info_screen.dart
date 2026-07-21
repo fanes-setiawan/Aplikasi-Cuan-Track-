@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -59,7 +60,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
             onTap: () => Navigator.pop(context),
             child: Container(
               margin: const EdgeInsets.only(left: AppDimens.lg),
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
@@ -75,7 +76,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
         centerTitle: true,
         title: Text(
           'Detail Informasi Akun',
-          style: AppStyles.heading2.copyWith(fontSize: 18),
+          style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
         ),
       ),
       body: SingleChildScrollView(
@@ -84,7 +85,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
               Center(
                 child: SizedBox(
                   width: 130,
@@ -120,7 +121,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                         bottom: 4,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: EdgeInsets.all(AppSizes.padding8),
                           decoration: BoxDecoration(
                             color: const Color(0xFF27AE60),
                             shape: BoxShape.circle,
@@ -145,14 +146,14 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 controller: _nameController,
                 prefixIcon: Icons.person_outline,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
                 label: 'USERNAME',
                 hintText: 'username_id',
                 controller: _usernameController,
                 prefixIcon: Icons.alternate_email,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
                 label: 'EMAIL',
                 hintText: 'user.email@example.com',
@@ -160,7 +161,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
                 label: 'NOMOR TELEPON',
                 hintText: '+62 812 3456 7890',
@@ -180,7 +181,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -174,10 +175,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                   'Rp',
                                   style: AppStyles.heading1.copyWith(
                                     color: AppColors.primary,
-                                    fontSize: 24,
+                                    fontSize: AppSizes.font24,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: AppSizes.padding8),
                                 Text(
                                   _formattedAmount,
                                   style: AppStyles.heading1.copyWith(
@@ -295,7 +296,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              const SizedBox(height: 16),
+                                              SizedBox(height: AppSizes.paddingV16),
                                               Container(
                                                 height: 5,
                                                 width: 40,
@@ -305,17 +306,17 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                       BorderRadius.circular(10),
                                                 ),
                                               ),
-                                              const SizedBox(height: 16),
+                                              SizedBox(height: AppSizes.paddingV16),
                                               Text(
                                                 'Pilih Metode Pembayaran',
                                                 style: AppStyles.heading2,
                                               ),
-                                              const SizedBox(height: 16),
+                                              SizedBox(height: AppSizes.paddingV16),
                                               ...state.paymentMethods.map(
                                                 (m) => ListTile(
                                                   leading: Container(
                                                     padding:
-                                                        const EdgeInsets.all(8),
+                                                        EdgeInsets.all(AppSizes.padding8),
                                                     decoration: BoxDecoration(
                                                       color: const Color(
                                                         0xFFEFF6FF,
@@ -353,7 +354,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                   },
                                                 ),
                                               ),
-                                              const SizedBox(height: 32),
+                                              SizedBox(height: AppSizes.paddingV32),
                                             ],
                                           ),
                                         ),
@@ -446,9 +447,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       elevation: 0,
                     ),
                     child: state is AddTransactionLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
+                        ? SizedBox(
+                            height: AppSizes.paddingV24,
+                            width: AppSizes.padding24,
                             child: CircularProgressIndicator(
                               color: Colors.white,
                             ),
@@ -476,7 +477,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       onTap: () => setState(() => _selectedCategory = category),
       child: Container(
         margin: const EdgeInsets.only(right: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFFE8F5E9) : Colors.white,
           borderRadius: BorderRadius.circular(AppDimens.round),
@@ -492,7 +493,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               size: 18,
               color: isSelected ? AppColors.primary : AppColors.textSecondary,
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppSizes.padding8),
             Text(
               category.name,
               style: AppStyles.bodyText.copyWith(
@@ -578,7 +579,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                     Text(
                       label,
                       style: AppStyles.caption.copyWith(
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textSecondary.withOpacity(0.6),
                       ),

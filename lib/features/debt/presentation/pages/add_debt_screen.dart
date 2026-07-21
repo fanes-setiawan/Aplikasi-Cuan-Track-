@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,7 +215,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                 'Jenis Transaksi',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               Row(
                 children: [
                   Expanded(
@@ -234,13 +235,13 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Text(
                 'Judul Transaksi (Opsional)',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -253,13 +254,13 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Text(
                 'Nama Orang',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
@@ -274,13 +275,13 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                 validator: (value) =>
                     value!.isEmpty ? 'Nama wajib diisi' : null,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Text(
                 'Nominal Rp',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _amountController,
                 readOnly: _isInstallment,
@@ -299,7 +300,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                 validator: (value) =>
                     value!.isEmpty ? 'Nominal wajib diisi' : null,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,7 +327,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               if (_isInstallment) ...[
                 Row(
@@ -341,7 +342,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: AppSizes.paddingV8),
                           TextFormField(
                             controller: _monthsController,
                             keyboardType: TextInputType.number,
@@ -378,7 +379,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: AppSizes.paddingV8),
                           TextFormField(
                             controller: _monthlyPaymentController,
                             keyboardType: TextInputType.number,
@@ -408,14 +409,14 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.paddingV16),
               ],
 
               Text(
                 'Keterangan (Opsional)',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               TextFormField(
                 controller: _descriptionController,
                 decoration: InputDecoration(
@@ -428,18 +429,18 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
 
               if (_isInstallment) ...[
                 Text(
                   'Tanggal Mulai Cicilan',
                   style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.paddingV8),
                 GestureDetector(
                   onTap: _pickStartDate,
                   child: Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.padding16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -465,18 +466,18 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.paddingV16),
               ],
 
               Text(
                 'Tenggat Waktu Pembayaran',
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               GestureDetector(
                 onTap: _pickDate,
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(AppSizes.padding16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -502,7 +503,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
 
               SizedBox(
                 width: double.infinity,
@@ -515,12 +516,12 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Simpan',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: AppSizes.font16,
                     ),
                   ),
                 ),
@@ -542,7 +543,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
         decoration: BoxDecoration(
           color: isSelected ? color.withOpacity(0.1) : Colors.white,
           border: Border.all(

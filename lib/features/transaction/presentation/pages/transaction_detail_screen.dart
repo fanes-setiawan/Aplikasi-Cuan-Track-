@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -23,10 +24,10 @@ class TransactionDetailScreen extends StatelessWidget {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSizes.radius16),
           ),
-          title: const Text('Hapus Transaksi', style: AppStyles.heading2),
-          content: const Text(
+          title: Text('Hapus Transaksi', style: AppStyles.heading2),
+          content: Text(
             'Apakah Anda yakin ingin menghapus transaksi ini? Data yang dihapus tidak dapat dikembalikan.',
             style: AppStyles.bodyText,
           ),
@@ -44,7 +45,7 @@ class TransactionDetailScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.error,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppSizes.radius8),
                 ),
               ),
               onPressed: () {
@@ -97,7 +98,7 @@ class TransactionDetailScreen extends StatelessWidget {
           ),
           title: Text(
             'Detail Transaksi',
-            style: AppStyles.heading2.copyWith(fontSize: 16),
+            style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16),
           ),
           centerTitle: true,
           actions: [
@@ -114,7 +115,7 @@ class TransactionDetailScreen extends StatelessWidget {
             children: [
               const SizedBox(height: AppDimens.lg),
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.padding16),
                 decoration: BoxDecoration(
                   color: isIncome
                       ? const Color(0xFFE8F5E9)
@@ -132,7 +133,7 @@ class TransactionDetailScreen extends StatelessWidget {
                 '$amountPrefix $formattedAmount',
                 style: AppStyles.heading1.copyWith(
                   color: amountColor,
-                  fontSize: 32,
+                  fontSize: AppSizes.font32,
                 ),
               ),
               const SizedBox(height: AppDimens.sm),
@@ -143,12 +144,12 @@ class TransactionDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
 
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(AppSizes.radius16),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withAlpha(10),
@@ -165,7 +166,7 @@ class TransactionDetailScreen extends StatelessWidget {
                       isIncome ? 'Pemasukan' : 'Pengeluaran',
                       Icons.swap_horiz_rounded,
                     ),
-                    const Divider(height: 24),
+                    Divider(height: AppSizes.paddingV24),
                     _buildDetailRow(
                       'Tanggal',
                       DateFormat(
@@ -174,7 +175,7 @@ class TransactionDetailScreen extends StatelessWidget {
                       ).format(transaction.date),
                       Icons.calendar_today_rounded,
                     ),
-                    const Divider(height: 24),
+                    Divider(height: AppSizes.paddingV24),
                     _buildDetailRow(
                       'Catatan',
                       transaction.notes?.isNotEmpty == true
@@ -205,12 +206,12 @@ class TransactionDetailScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSizes.radius12),
                 ),
               ),
-              child: const Text('Edit Transaksi', style: AppStyles.buttonText),
+              child: Text('Edit Transaksi', style: AppStyles.buttonText),
             ),
           ),
         ),
@@ -235,7 +236,7 @@ class TransactionDetailScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: AppSizes.paddingV4),
               Text(
                 value,
                 style: AppStyles.bodyText.copyWith(

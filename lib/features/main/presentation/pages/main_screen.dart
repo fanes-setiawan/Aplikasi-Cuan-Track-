@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/features/budget/presentation/pages/budget_screen.dart';
 import 'package:cuan_track/features/history/presentation/pages/history_screen.dart';
 import 'package:cuan_track/features/home/presentation/pages/home_screen.dart';
@@ -267,7 +268,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                         ),
                         BottomNavigationBarItem(
                           icon: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withOpacity(0.1),
                               shape: BoxShape.circle,
@@ -275,7 +276,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                             child: _buildIcon(AppAssets.iconStats, false),
                           ),
                           activeIcon: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
                               color: AppColors.primary.withOpacity(0.7),
                               shape: BoxShape.circle,
@@ -317,7 +318,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                   elevation: 4,
                   shape: const CircleBorder(),
                   child: Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: EdgeInsets.all(AppSizes.padding12),
                     child: SvgPicture.asset(
                       AppAssets.iconBot,
                       colorFilter: const ColorFilter.mode(
@@ -337,8 +338,8 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.only(bottom: 4),
       child: SvgPicture.asset(
         assetPath,
-        width: 24,
-        height: 24,
+        width: AppSizes.padding24,
+        height: AppSizes.paddingV24,
         colorFilter: ColorFilter.mode(
           isActive ? AppColors.primary : AppColors.textSecondary,
           BlendMode.srcIn,

@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -51,7 +52,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   child: Container(
                     margin: const EdgeInsets.only(left: 16),
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(AppSizes.padding8),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
@@ -68,7 +69,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                 'Analisis\nPerbandingan',
                 textAlign: TextAlign.center,
                 style: AppStyles.heading2.copyWith(
-                  fontSize: 16,
+                  fontSize: AppSizes.font16,
                   color: const Color(0xFF1B5E20),
                   height: 1.2,
                 ),
@@ -77,7 +78,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
               actions: [
                 Container(
                   margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -90,11 +91,11 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                         size: 16,
                         color: AppColors.textSecondary,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.padding8),
                       Text(
                         currentMonthStr,
                         style: AppStyles.bodyText.copyWith(
-                          fontSize: 12,
+                          fontSize: AppSizes.font12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
                         ),
@@ -106,7 +107,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
             ),
             body: AnimationLimiter(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: EdgeInsets.all(AppSizes.padding24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: AnimationConfiguration.toStaggeredList(
@@ -120,7 +121,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: EdgeInsets.all(AppSizes.padding16),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -137,24 +138,24 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                                       letterSpacing: 1.0,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  SizedBox(height: AppSizes.paddingV8),
                                   Text(
                                     AppHelpers.formatCurrencyIdr(
                                       state.currentMonthTotal,
                                     ),
                                     style: AppStyles.heading2.copyWith(
                                       color: const Color(0xFF1B5E20),
-                                      fontSize: 16,
+                                      fontSize: AppSizes.font16,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: AppSizes.padding16),
                           Expanded(
                             child: Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: EdgeInsets.all(AppSizes.padding16),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -171,14 +172,14 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                                       letterSpacing: 1.0,
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  SizedBox(height: AppSizes.paddingV8),
                                   Text(
                                     AppHelpers.formatCurrencyIdr(
                                       state.previousMonthTotal,
                                     ),
                                     style: AppStyles.heading2.copyWith(
                                       color: const Color(0xFF94A3B8),
-                                      fontSize: 16,
+                                      fontSize: AppSizes.font16,
                                     ),
                                   ),
                                 ],
@@ -187,25 +188,25 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
 
                       _buildTrendChart(state, prevMonth),
 
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
 
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(AppSizes.padding20),
                         decoration: BoxDecoration(
                           color: state.comparisonPercentage > 0
                               ? const Color(0xFFFDEDEC)
                               : const Color(0xFFE8F5E9),
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(AppSizes.radius24),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(AppSizes.padding8),
                               decoration: BoxDecoration(
                                 color: state.comparisonPercentage > 0
                                     ? const Color(0xFFE74C3C)
@@ -220,7 +221,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                                 size: 20,
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: AppSizes.padding16),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,10 +230,10 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                                     'Insight Perbandingan',
                                     style: AppStyles.heading2.copyWith(
                                       color: const Color(0xFF1B5E20),
-                                      fontSize: 14,
+                                      fontSize: AppSizes.font14,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: AppSizes.paddingV4),
                                   RichText(
                                     text: TextSpan(
                                       style: AppStyles.bodyText.copyWith(
@@ -272,10 +273,10 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                         'Transaksi Terbesar',
                         style: AppStyles.heading2.copyWith(
                           color: const Color(0xFF1B5E20),
-                          fontSize: 18,
+                          fontSize: AppSizes.font18,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       if (state.topTransactions.isEmpty)
                         const Center(child: Text("Belum ada data transaksi."))
                       else
@@ -330,10 +331,10 @@ class ComparativeAnalysisScreen extends StatelessWidget {
     final safeMax = maxVal == 0 ? 1.0 : maxVal;
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSizes.padding24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSizes.radius24),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -345,7 +346,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                 'Trend Mingguan',
                 style: AppStyles.heading2.copyWith(
                   color: AppColors.textPrimary,
-                  fontSize: 16,
+                  fontSize: AppSizes.font16,
                 ),
               ),
               Row(
@@ -354,7 +355,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                     DateFormat('MMM', 'id').format(state.currentMonth),
                     const Color(0xFF27AE60),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: AppSizes.padding8),
                   _buildLegendPill(
                     DateFormat('MMM', 'id').format(prevMonth),
                     const Color(0xFFCBD5E1),
@@ -363,7 +364,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           SizedBox(
             height: 180,
             child: Row(
@@ -382,16 +383,16 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
-                          width: 12,
+                          width: AppSizes.padding12,
                           height: 150 * ratioCurrent,
                           decoration: BoxDecoration(
                             color: const Color(0xFF27AE60),
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: AppSizes.padding4),
                         Container(
-                          width: 12,
+                          width: AppSizes.padding12,
                           height: 150 * ratioPrev,
                           decoration: BoxDecoration(
                             color: const Color(0xFFCBD5E1),
@@ -400,12 +401,12 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.paddingV12),
                     Text(
                       'W${index + 1}',
                       style: AppStyles.caption.copyWith(
                         color: AppColors.textSecondary,
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                       ),
                     ),
                   ],
@@ -420,22 +421,22 @@ class ComparativeAnalysisScreen extends StatelessWidget {
 
   Widget _buildLoading() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
+      padding: EdgeInsets.all(AppSizes.padding24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(child: _buildShimmerBox(100)),
-              const SizedBox(width: 16),
+              SizedBox(width: AppSizes.padding16),
               Expanded(child: _buildShimmerBox(100)),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           _buildShimmerBox(200),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           _buildShimmerBox(150),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           _buildShimmerBox(250),
         ],
       ),
@@ -461,16 +462,16 @@ class ComparativeAnalysisScreen extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 8,
-          height: 8,
+          width: AppSizes.padding8,
+          height: AppSizes.paddingV8,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 4),
+        SizedBox(width: AppSizes.padding4),
         Text(
           text,
           style: AppStyles.caption.copyWith(
             color: AppColors.textSecondary,
-            fontSize: 10,
+            fontSize: AppSizes.font10,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -487,22 +488,22 @@ class ComparativeAnalysisScreen extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSizes.radius24),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSizes.padding12),
             decoration: BoxDecoration(
               color: const Color(0xFFFCE4EC),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: const Color(0xFFE74C3C), size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -510,7 +511,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                 Text(
                   title,
                   style: AppStyles.heading2.copyWith(
-                    fontSize: 14,
+                    fontSize: AppSizes.font14,
                     color: AppColors.textPrimary,
                   ),
                 ),
@@ -526,7 +527,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
           Text(
             amount,
             style: AppStyles.heading2.copyWith(
-              fontSize: 14,
+              fontSize: AppSizes.font14,
               color: const Color(0xFFE74C3C),
             ),
           ),

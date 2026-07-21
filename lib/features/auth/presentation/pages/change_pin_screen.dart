@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -105,12 +106,12 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               size: 64,
               color: AppColors.primary,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSizes.paddingV24),
             Text(
               _isConfirming ? 'Konfirmasi PIN Baru' : 'Setel PIN Baru',
-              style: AppStyles.heading1.copyWith(fontSize: 24),
+              style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSizes.paddingV8),
             Text(
               _isConfirming
                   ? 'Masukkan kembali 4 digit PIN Anda'
@@ -124,9 +125,9 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               children: List.generate(_pinLength, (index) {
                 final isActive = index < currentPinDisplay.length;
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  width: 16,
-                  height: 16,
+                  margin: EdgeInsets.symmetric(horizontal: AppSizes.padding12),
+                  width: AppSizes.padding16,
+                  height: AppSizes.paddingV16,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: isActive ? AppColors.primary : AppColors.divider,
@@ -136,15 +137,15 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             ),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: AppSizes.paddingV24),
               child: Column(
                 children: [
                   _buildNumRow([1, 2, 3]),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   _buildNumRow([4, 5, 6]),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   _buildNumRow([7, 8, 9]),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

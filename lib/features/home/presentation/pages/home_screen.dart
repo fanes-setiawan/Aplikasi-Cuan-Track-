@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/features/analytics/presentation/pages/financial_health_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -182,8 +183,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AppShimmer.rectangular(width: 80, height: 12),
-                    const SizedBox(height: 4),
+                    AppShimmer.rectangular(
+                      width: 80,
+                      height: AppSizes.paddingV12,
+                    ),
+                    SizedBox(height: AppSizes.paddingV4),
                     AppShimmer.rectangular(width: 120, height: 18),
                   ],
                 ),
@@ -213,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: AppDimens.xl),
-            AppShimmer.rectangular(width: 150, height: 24),
+            AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
             const SizedBox(height: AppDimens.md),
             AppShimmer.rectangular(
               height: 150,
@@ -238,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: AppDimens.xl),
-            AppShimmer.rectangular(width: 150, height: 24),
+            AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
             const SizedBox(height: AppDimens.md),
             ...List.generate(
               3,
@@ -270,11 +274,13 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               _getGreeting(),
-              style: AppStyles.bodyTextSecondary.copyWith(fontSize: 12),
+              style: AppStyles.bodyTextSecondary.copyWith(
+                fontSize: AppSizes.font12,
+              ),
             ),
             Text(
               'Halo, $_userName!',
-              style: AppStyles.heading2.copyWith(fontSize: 18),
+              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
             ),
           ],
         ),
@@ -289,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           },
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(AppSizes.padding8),
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -375,9 +381,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       if (showTrend)
                         Container(
-                          padding: const EdgeInsets.symmetric(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 10,
-                            vertical: 4,
+                            vertical: AppSizes.paddingV4,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
@@ -392,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: Colors.white,
                                 size: 14,
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: AppSizes.padding4),
                               Text(
                                 '+ 2.5%',
                                 style: AppStyles.caption.copyWith(
@@ -440,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         VerticalDivider(
                           color: Colors.white.withOpacity(0.3),
                           thickness: 1,
-                          width: 32,
+                          width: AppSizes.padding32,
                           indent: 4,
                           endIndent: 4,
                         ),
@@ -470,25 +476,25 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Container(
-              width: 8,
-              height: 8,
+              width: AppSizes.padding8,
+              height: AppSizes.paddingV8,
               decoration: BoxDecoration(
                 color: bulletColor,
                 shape: BoxShape.circle,
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppSizes.padding8),
             Text(
               label,
               style: AppStyles.caption.copyWith(
                 color: Colors.white.withOpacity(0.8),
-                fontSize: 10,
+                fontSize: AppSizes.font10,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: AppSizes.paddingV4),
         Text(
           value,
           style: AppStyles.bodyText.copyWith(
@@ -572,7 +578,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: textColor, size: 20),
-            const SizedBox(width: 8),
+            SizedBox(width: AppSizes.padding8),
             Text(
               label,
               style: AppStyles.bodyText.copyWith(
@@ -620,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 color: const Color(0xFFE0F7FA),
                 borderRadius: BorderRadius.circular(AppDimens.radiusS),
@@ -640,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 letterSpacing: 1.0,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: AppSizes.paddingV4),
             BlocBuilder<SavingsBloc, SavingsState>(
               builder: (context, state) {
                 double totalSavings = 0;
@@ -667,12 +673,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Color(0xFF1B5E20),
                     size: 12,
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: AppSizes.padding4),
                   Text(
                     '+12% bln ini',
                     style: AppStyles.caption.copyWith(
                       color: const Color(0xFF1B5E20),
-                      fontSize: 10,
+                      fontSize: AppSizes.font10,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -703,7 +709,7 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF3E0),
                 borderRadius: BorderRadius.circular(AppDimens.radiusS),
@@ -723,7 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 letterSpacing: 1.0,
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: AppSizes.paddingV4),
             BlocBuilder<DebtBloc, DebtState>(
               builder: (context, state) {
                 double totalHutang = 0;
@@ -748,14 +754,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Hutang:',
                           style: AppStyles.caption.copyWith(
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             color: AppColors.textHint,
                           ),
                         ),
                         Text(
                           _formatCurrencyCompact(totalHutang),
                           style: AppStyles.caption.copyWith(
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
@@ -769,14 +775,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Piutang:',
                           style: AppStyles.caption.copyWith(
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             color: AppColors.textHint,
                           ),
                         ),
                         Text(
                           _formatCurrencyCompact(totalPiutang),
                           style: AppStyles.caption.copyWith(
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
@@ -863,7 +869,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               'Analisis Pengeluaran',
               style: AppStyles.heading2.copyWith(
-                fontSize: 18,
+                fontSize: AppSizes.font18,
                 color: const Color(0xFF1B5E20),
               ),
             ),
@@ -878,7 +884,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.padding12),
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -926,8 +932,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('TOTAL', style: AppStyles.caption.copyWith(fontSize: 10)),
-                Text('100%', style: AppStyles.heading2.copyWith(fontSize: 16)),
+                Text(
+                  'TOTAL',
+                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                ),
+                Text(
+                  '100%',
+                  style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16),
+                ),
               ],
             ),
           ),
@@ -951,18 +963,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV8),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSizes.radius8),
             ),
             child: Icon(iconData, size: 16, color: color),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.padding12),
           Expanded(
             child: Text(
               label,
@@ -970,7 +982,7 @@ class _HomeScreenState extends State<HomeScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSizes.padding8),
           Text(
             percent,
             style: AppStyles.bodyText.copyWith(
@@ -1099,8 +1111,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(subtitle, style: AppStyles.caption.copyWith(fontSize: 10)),
+                SizedBox(height: AppSizes.paddingV4),
+                Text(
+                  subtitle,
+                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10),
+                ),
               ],
             ),
           ),
@@ -1189,7 +1204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSizes.padding16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppDimens.radiusL),
@@ -1198,7 +1213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: EdgeInsets.all(AppSizes.padding12),
                       decoration: const BoxDecoration(
                         color: Color(0xFFE8F5E9),
                         shape: BoxShape.circle,
@@ -1209,7 +1224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: AppSizes.padding16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1222,7 +1237,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               letterSpacing: 1.0,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: AppSizes.paddingV4),
                           Row(
                             children: [
                               Text(
@@ -1232,7 +1247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: AppColors.textPrimary,
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: AppSizes.padding8),
                               Text(
                                 '($status)',
                                 style: AppStyles.caption.copyWith(

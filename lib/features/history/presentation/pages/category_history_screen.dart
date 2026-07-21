@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -188,12 +189,12 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                   'TOTAL ${widget.categoryName.toUpperCase()}',
                   style: AppStyles.caption.copyWith(
                     color: Colors.white.withOpacity(0.8),
-                    fontSize: 10,
+                    fontSize: AppSizes.font10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.paddingV4),
                 Text(
                   _formatCurrency(total),
                   style: AppStyles.heading2.copyWith(
@@ -211,7 +212,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 '$count',
                 style: AppStyles.heading1.copyWith(
                   color: Colors.white,
-                  fontSize: 32,
+                  fontSize: AppSizes.font32,
                 ),
               ),
               Text(
@@ -265,7 +266,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
   Widget _buildHeaderRow() {
     return Container(
       color: widget.categoryColor,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding12),
       child: Row(
         children: [
           _headerCell('No', flex: 1, center: true),
@@ -322,7 +323,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
       ),
       child: Container(
         color: isEven ? Colors.white : widget.categoryColor.withOpacity(0.04),
-        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 11, horizontal: AppSizes.padding12),
         child: Row(
           children: [
             Expanded(
@@ -351,7 +352,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               child: Text(
                 displayTitle,
                 style: AppStyles.bodyText.copyWith(
-                  fontSize: 12,
+                  fontSize: AppSizes.font12,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textPrimary,
                 ),
@@ -365,7 +366,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 '$amountSign${_formatCurrency(t.amount)}',
                 textAlign: TextAlign.right,
                 style: AppStyles.bodyText.copyWith(
-                  fontSize: 12,
+                  fontSize: AppSizes.font12,
                   fontWeight: FontWeight.bold,
                   color: amountColor,
                 ),
@@ -380,7 +381,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
   Widget _buildFooterRow(int count, double totalAmount) {
     return Container(
       color: widget.categoryColor.withOpacity(0.12),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding12),
       child: Row(
         children: [
           const Expanded(flex: 1, child: SizedBox()),
@@ -404,7 +405,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               textAlign: TextAlign.right,
               style: AppStyles.bodyText.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: AppSizes.font12,
                 color: widget.categoryColor,
               ),
             ),

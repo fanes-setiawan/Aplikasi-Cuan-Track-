@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -74,7 +75,7 @@ class _NotificationSettingsScreenState
               iconColor: const Color(0xFFF59E0B),
               iconBgColor: const Color(0xFFFEF3C7),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildNotificationItem(
               icon: Icons.assessment_outlined,
               title: 'Laporan Bulanan',
@@ -87,7 +88,7 @@ class _NotificationSettingsScreenState
               iconColor: const Color(0xFF3B82F6),
               iconBgColor: const Color(0xFFDBEAFE),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildNotificationItem(
               icon: Icons.local_offer_outlined,
               title: 'Promo & Penawaran',
@@ -100,7 +101,7 @@ class _NotificationSettingsScreenState
               iconColor: const Color(0xFFEC4899),
               iconBgColor: const Color(0xFFFCE7F3),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildNotificationItem(
               icon: Icons.lightbulb_outline,
               title: 'Tips Keuangan',
@@ -129,10 +130,10 @@ class _NotificationSettingsScreenState
     required Color iconBgColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizes.radius16),
       ),
       child: Row(
         children: [
@@ -140,11 +141,11 @@ class _NotificationSettingsScreenState
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: iconBgColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSizes.radius12),
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

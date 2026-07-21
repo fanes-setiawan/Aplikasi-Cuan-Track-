@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_state.dart';
@@ -143,22 +144,22 @@ class _AIChatScreenState extends State<AIChatScreen> {
       title: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(AppSizes.padding8),
             decoration: BoxDecoration(
               color: AppColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
               'assets/icons/ic_boot.svg',
-              width: 24,
-              height: 24,
+              width: AppSizes.padding24,
+              height: AppSizes.paddingV24,
               colorFilter: ColorFilter.mode(
                 AppColors.primary,
                 BlendMode.srcIn,
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: AppSizes.padding12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -166,25 +167,25 @@ class _AIChatScreenState extends State<AIChatScreen> {
                 'Asisten AI',
                 style: AppStyles.bodyText.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: AppSizes.font16,
                 ),
               ),
               Row(
                 children: [
                   Container(
-                    width: 8,
-                    height: 8,
+                    width: AppSizes.padding8,
+                    height: AppSizes.paddingV8,
                     decoration: const BoxDecoration(
                       color: Color(0xFF27AE60),
                       shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: AppSizes.padding4),
                   Text(
                     'Online',
                     style: AppStyles.caption.copyWith(
                       color: AppColors.textSecondary,
-                      fontSize: 12,
+                      fontSize: AppSizes.font12,
                     ),
                   ),
                 ],
@@ -202,7 +203,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: EdgeInsets.all(AppSizes.padding20),
             decoration: BoxDecoration(
               color: AppColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
@@ -217,9 +218,9 @@ class _AIChatScreenState extends State<AIChatScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           Text('Halo! Aku CuanAI', style: AppStyles.heading2),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
@@ -245,10 +246,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser) ...[_buildAIAvatar(), const SizedBox(width: 8)],
+          if (!isUser) ...[_buildAIAvatar(), SizedBox(width: AppSizes.padding8)],
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
               decoration: BoxDecoration(
                 color: isUser ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.only(
@@ -297,14 +298,14 @@ class _AIChatScreenState extends State<AIChatScreen> {
                         ),
                   ),
                   if (!isUser && _hasAction(message.text)) ...[
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.paddingV12),
                     _buildActionButton(message.text),
                   ],
                 ],
               ),
             ),
           ),
-          if (isUser) ...[const SizedBox(width: 8), _buildUserAvatar()],
+          if (isUser) ...[SizedBox(width: AppSizes.padding8), _buildUserAvatar()],
         ],
       ),
     );
@@ -317,9 +318,9 @@ class _AIChatScreenState extends State<AIChatScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _buildAIAvatar(),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSizes.padding8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -381,19 +382,19 @@ class _AIChatScreenState extends State<AIChatScreen> {
 
     return Container(
       height: 50,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV8),
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
         scrollDirection: Axis.horizontal,
         itemCount: actions.length,
-        separatorBuilder: (context, index) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => SizedBox(width: AppSizes.padding8),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
               context.read<AIChatBloc>().add(SendMessageEvent(actions[index]));
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -444,10 +445,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
                 },
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.padding12),
             Expanded(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF1F4F7),
                   borderRadius: BorderRadius.circular(25),
@@ -463,11 +464,11 @@ class _AIChatScreenState extends State<AIChatScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.padding12),
             GestureDetector(
               onTap: _sendMessage,
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(AppSizes.padding12),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
@@ -523,10 +524,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
 
     return Container(
       margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(AppSizes.padding12),
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSizes.radius12),
         border: Border.all(color: Colors.grey.withOpacity(0.1)),
       ),
       child: Column(
@@ -536,7 +537,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
             'Konfirmasi Transaksi:',
             style: AppStyles.caption.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV8),
           _buildInfoRow(
             Icons.payments_outlined,
             'Nominal',
@@ -549,7 +550,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
             isIncome ? 'Pemasukan' : 'Pengeluaran',
             color: isIncome ? AppColors.primary : Colors.orange,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Row(
             children: [
               Expanded(
@@ -571,7 +572,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(AppSizes.radius8),
                         ),
                       ),
                       child: isLoading
@@ -583,18 +584,18 @@ class _AIChatScreenState extends State<AIChatScreen> {
                                 color: Colors.white,
                               ),
                             )
-                          : const Text(
+                          : Text(
                               'Kirim ke Catatan',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: AppSizes.font12,
                               ),
                             ),
                     );
                   },
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.padding8),
               IconButton(
                 onPressed: () {
                   Navigator.push(

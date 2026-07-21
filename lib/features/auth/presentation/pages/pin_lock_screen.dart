@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_styles.dart';
 
@@ -61,7 +62,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
             children: [
               const Spacer(),
               Container(
-                padding: const EdgeInsets.all(24),
+                padding: EdgeInsets.all(AppSizes.padding24),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.1),
                   shape: BoxShape.circle,
@@ -72,14 +73,14 @@ class _PinLockScreenState extends State<PinLockScreen> {
                   size: 40,
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
               Text(
                 'MASUKKAN PIN\nKEAMANAN',
                 textAlign: TextAlign.center,
                 style: AppStyles.heading2.copyWith(
                   color: Colors.white,
                   letterSpacing: 4,
-                  fontSize: 20,
+                  fontSize: AppSizes.font20,
                   height: 1.5,
                 ),
               ),
@@ -90,14 +91,14 @@ class _PinLockScreenState extends State<PinLockScreen> {
                   final isActive = index < _pin.length;
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
+                    margin: EdgeInsets.symmetric(horizontal: AppSizes.padding12),
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
                       color: isActive
                           ? Colors.white.withOpacity(0.2)
                           : Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSizes.radius16),
                       border: Border.all(
                         color: isActive
                             ? Colors.white.withOpacity(0.5)
@@ -116,8 +117,8 @@ class _PinLockScreenState extends State<PinLockScreen> {
                     ),
                     child: Center(
                       child: Container(
-                        width: 12,
-                        height: 12,
+                        width: AppSizes.padding12,
+                        height: AppSizes.paddingV12,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isActive
@@ -135,11 +136,11 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 child: Column(
                   children: [
                     _buildNumRow([1, 2, 3]),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.paddingV8),
                     _buildNumRow([4, 5, 6]),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.paddingV8),
                     _buildNumRow([7, 8, 9]),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.paddingV8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -153,9 +154,9 @@ class _PinLockScreenState extends State<PinLockScreen> {
               ),
               const Spacer(),
               Padding(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 40,
-                  vertical: 24,
+                  vertical: AppSizes.paddingV24,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,9 +173,9 @@ class _PinLockScreenState extends State<PinLockScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.padding16,
+                        vertical: AppSizes.paddingV8,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.1),
@@ -190,12 +191,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
                             color: Color(0xFF34D399),
                             size: 14,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: AppSizes.padding8),
                           Text(
                             'SECURE NODE 042',
                             style: AppStyles.caption.copyWith(
                               color: Colors.white.withOpacity(0.7),
-                              fontSize: 10,
+                              fontSize: AppSizes.font10,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -243,7 +244,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                   _getLetters(number),
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
-                    fontSize: 10,
+                    fontSize: AppSizes.font10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),

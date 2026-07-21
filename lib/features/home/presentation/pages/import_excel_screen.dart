@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -29,7 +30,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Import Transaksi Excel', style: AppStyles.heading3),
+        title: Text('Import Transaksi Excel', style: AppStyles.heading3),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -52,8 +53,8 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(16),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.all(AppSizes.padding16),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
       decoration: BoxDecoration(
         color: AppColors.primary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
@@ -64,8 +65,8 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
           Row(
             children: [
               Icon(Icons.info_outline, color: AppColors.primary),
-              const SizedBox(width: 12),
-              const Expanded(
+              SizedBox(width: AppSizes.padding12),
+              Expanded(
                 child: Text(
                   'Gunakan template kami untuk memastikan format data sudah benar.',
                   style: AppStyles.caption,
@@ -77,7 +78,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           ElevatedButton.icon(
             onPressed: _pickFile,
             icon: const Icon(Icons.file_upload_outlined),
@@ -108,9 +109,9 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
             size: 64,
             color: AppColors.textSecondary.withOpacity(0.3),
           ),
-          const SizedBox(height: 16),
-          const Text('Belum ada file yang dipilih', style: AppStyles.bodyText),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV16),
+          Text('Belum ada file yang dipilih', style: AppStyles.bodyText),
+          SizedBox(height: AppSizes.paddingV8),
           Text(
             'Pilih file .xlsx untuk melihat preview',
             style: AppStyles.caption,
@@ -125,7 +126,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -145,7 +146,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
         ),
         Expanded(
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
             itemCount: _previewData.length,
             separatorBuilder: (context, index) => const Divider(),
             itemBuilder: (context, index) {
@@ -186,7 +187,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
 
   Widget _buildFooter() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -208,7 +209,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
               borderRadius: BorderRadius.circular(AppDimens.radiusM),
             ),
           ),
-          child: const Text('Import Sekarang', style: AppStyles.buttonText),
+          child: Text('Import Sekarang', style: AppStyles.buttonText),
         ),
       ),
     );

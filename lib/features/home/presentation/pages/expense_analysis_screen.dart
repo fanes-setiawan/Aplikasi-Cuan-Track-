@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -62,7 +63,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
               onTap: () => Navigator.pop(context),
               child: Container(
                 margin: const EdgeInsets.only(left: 16),
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.padding8),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -78,7 +79,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
           title: Text(
             'Analisis Pengeluaran',
             style: AppStyles.heading2.copyWith(
-              fontSize: 18,
+              fontSize: AppSizes.font18,
               color: const Color(0xFF1B5E20),
             ),
           ),
@@ -101,7 +102,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
               },
               child: Container(
                 margin: const EdgeInsets.only(right: 16),
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.padding8),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
@@ -125,7 +126,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
             } else if (state is AnalysisLoaded) {
               return AnimationLimiter(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: EdgeInsets.all(AppSizes.padding24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: AnimationConfiguration.toStaggeredList(
@@ -158,17 +159,17 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: AppSizes.paddingV4),
                                   Text(
                                     AppHelpers.formatCurrencyIdr(
                                       state.currentMonthTotal,
                                     ),
                                     style: AppStyles.heading1.copyWith(
-                                      fontSize: 24,
+                                      fontSize: AppSizes.font24,
                                       color: const Color(0xFF1B5E20),
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  SizedBox(height: AppSizes.paddingV4),
                                   Text(
                                     DateFormat(
                                       'MMMM yyyy',
@@ -184,7 +185,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: AppSizes.paddingV32),
 
                         if (state.topCategories.isNotEmpty)
                           Builder(
@@ -250,7 +251,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                               'Analisis Tren',
                               style: AppStyles.heading2.copyWith(
                                 color: const Color(0xFF1B5E20),
-                                fontSize: 18,
+                                fontSize: AppSizes.font18,
                               ),
                             ),
                             Row(
@@ -301,7 +302,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.paddingV16),
                         Row(
                           children: [
                             Expanded(
@@ -315,7 +316,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                 bgColor: Colors.white,
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: AppSizes.padding16),
                             Expanded(
                               child: _buildAnalysisGridCard(
                                 title: 'Bulan Lalu',
@@ -329,7 +330,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.paddingV16),
                         Row(
                           children: [
                             Expanded(
@@ -353,7 +354,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                         const SizedBox(height: 48),
 
                         Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: EdgeInsets.all(AppSizes.padding20),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE8F5E9),
                             borderRadius: BorderRadius.circular(20),
@@ -362,7 +363,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(8),
+                                padding: EdgeInsets.all(AppSizes.padding8),
                                 decoration: const BoxDecoration(
                                   color: Color(0xFF1B5E20),
                                   shape: BoxShape.circle,
@@ -373,7 +374,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                   size: 24,
                                 ),
                               ),
-                              const SizedBox(width: 16),
+                              SizedBox(width: AppSizes.padding16),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,15 +383,15 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                       'Insight Keuangan',
                                       style: AppStyles.heading2.copyWith(
                                         color: const Color(0xFF1B5E20),
-                                        fontSize: 14,
+                                        fontSize: AppSizes.font14,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    SizedBox(height: AppSizes.paddingV8),
                                     RichText(
                                       text: TextSpan(
                                         style: AppStyles.bodyText.copyWith(
                                           color: AppColors.textSecondary,
-                                          fontSize: 12,
+                                          fontSize: AppSizes.font12,
                                           height: 1.5,
                                         ),
                                         children: [
@@ -401,7 +402,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                                             text: state.insightHighlightText,
                                             style: AppStyles.bodyText.copyWith(
                                               color: const Color(0xFF27AE60),
-                                              fontSize: 12,
+                                              fontSize: AppSizes.font12,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -422,14 +423,14 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                             'Detail Transaksi (${state.topCategories.first.categoryName})',
                             style: AppStyles.heading2.copyWith(
                               color: const Color(0xFF1B5E20),
-                              fontSize: 16,
+                              fontSize: AppSizes.font16,
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: AppSizes.paddingV16),
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: BorderRadius.circular(AppSizes.radius24),
                             ),
                             child: Column(
                               children: state.topSubCategories
@@ -476,7 +477,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
 
   Widget _buildLoading() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSizes.padding24),
       child: Column(
         children: [
           Shimmer.fromColors(
@@ -491,7 +492,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           Shimmer.fromColors(
             baseColor: Colors.grey[300]!,
             highlightColor: Colors.grey[100]!,
@@ -504,7 +505,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           Row(
             children: [
               Expanded(
@@ -520,7 +521,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: AppSizes.padding16),
               Expanded(
                 child: Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,
@@ -543,7 +544,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
 
   Widget _buildLegendPill(String text, Color dotColor, bool isSelected) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
       decoration: BoxDecoration(
         color: isSelected ? const Color(0xFF1B5E20) : const Color(0xFFE8F5E9),
         borderRadius: BorderRadius.circular(20),
@@ -552,19 +553,19 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 8,
-            height: 8,
+            width: AppSizes.padding8,
+            height: AppSizes.paddingV8,
             decoration: BoxDecoration(
               color: isSelected ? Colors.white : dotColor,
               shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: AppSizes.padding8),
           Text(
             text,
             style: AppStyles.bodyText.copyWith(
               color: isSelected ? Colors.white : const Color(0xFF1B5E20),
-              fontSize: 12,
+              fontSize: AppSizes.font12,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -575,7 +576,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
 
   Widget _buildSubCategoryItem(String title, String amount, double progress) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(AppSizes.padding20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -589,10 +590,10 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Text(amount, style: AppStyles.heading2.copyWith(fontSize: 14)),
+              Text(amount, style: AppStyles.heading2.copyWith(fontSize: AppSizes.font14)),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Row(
             children: [
               Expanded(
@@ -614,7 +615,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: AppSizes.padding12),
               Text(
                 "${progress.toStringAsFixed(0)}%",
                 style: AppStyles.caption.copyWith(
@@ -637,7 +638,7 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
     required Color bgColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
@@ -661,11 +662,11 @@ class _ExpenseAnalysisScreenState extends State<ExpenseAnalysisScreen> {
               Icon(icon, color: iconColor, size: 20),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Text(
             amount,
             style: AppStyles.heading2.copyWith(
-              fontSize: 14,
+              fontSize: AppSizes.font14,
               color: AppColors.textPrimary,
             ),
           ),

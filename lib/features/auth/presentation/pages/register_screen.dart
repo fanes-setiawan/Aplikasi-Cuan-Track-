@@ -1,8 +1,7 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/widgets/custom_button.dart';
@@ -38,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -46,17 +45,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           padding: const EdgeInsets.only(left: AppDimens.md),
           child: IconButton(
             icon: Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF0f172a),
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.divider),
+                border: Border.all(color: const Color(0xFF1e293b)),
               ),
               child: const Center(
                 child: Icon(
                   Icons.arrow_back_ios_new,
                   size: 16,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -86,14 +85,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Mulai Perjalanan\nFinansialmu',
-                    style: AppStyles.heading1.copyWith(fontSize: 28),
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: -0.5,
+                      height: 1.2,
+                    ),
                   ),
                   const SizedBox(height: AppDimens.sm),
-                  Text(
+                  const Text(
                     'Buat akun untuk mulai mengelola keuanganmu dengan lebih baik hari ini.',
-                    style: AppStyles.bodyTextSecondary.copyWith(height: 1.5),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFFcbd5e1),
+                    ),
                   ),
                   const SizedBox(height: AppDimens.xl),
 
@@ -102,6 +110,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Masukkan nama lengkap',
                     prefixIcon: Icons.person_outline,
                     controller: _nameController,
+                    fillColor: const Color(0xFF0f172a),
+                    textColor: Colors.white,
+                    labelColor: Colors.white,
+                    hintColor: const Color(0xFF64748b),
+                    borderColor: const Color(0xFF1e293b),
                   ),
                   const SizedBox(height: AppDimens.md),
                   CustomTextField(
@@ -110,6 +123,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icons.email_outlined,
                     keyboardType: TextInputType.emailAddress,
                     controller: _emailController,
+                    fillColor: const Color(0xFF0f172a),
+                    textColor: Colors.white,
+                    labelColor: Colors.white,
+                    hintColor: const Color(0xFF64748b),
+                    borderColor: const Color(0xFF1e293b),
                   ),
                   const SizedBox(height: AppDimens.md),
                   CustomTextField(
@@ -118,6 +136,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icons.lock_outline,
                     isPassword: true,
                     controller: _passwordController,
+                    fillColor: const Color(0xFF0f172a),
+                    textColor: Colors.white,
+                    labelColor: Colors.white,
+                    hintColor: const Color(0xFF64748b),
+                    borderColor: const Color(0xFF1e293b),
                   ),
                   const SizedBox(height: AppDimens.md),
                   CustomTextField(
@@ -126,6 +149,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     prefixIcon: Icons.history_outlined,
                     isPassword: true,
                     controller: _confirmPasswordController,
+                    fillColor: const Color(0xFF0f172a),
+                    textColor: Colors.white,
+                    labelColor: Colors.white,
+                    hintColor: const Color(0xFF64748b),
+                    borderColor: const Color(0xFF1e293b),
                   ),
                   const SizedBox(height: AppDimens.xl),
 
@@ -133,6 +161,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ? const Center(child: CircularProgressIndicator())
                       : CustomButton(
                           text: 'Daftar',
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF10b981), Color(0xFF2dd4bf)],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          textColor: const Color(0xFF020617),
                           onPressed: () {
                             final email = _emailController.text.trim();
                             final password = _passwordController.text;
@@ -168,21 +202,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   Row(
                     children: [
-                      Expanded(child: Divider(color: AppColors.divider)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
+                      const Expanded(child: Divider(color: Color(0xFF1e293b))),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
                           horizontal: AppDimens.md,
                         ),
                         child: Text(
                           'ATAU DAFTAR DENGAN',
-                          style: AppStyles.caption.copyWith(
+                          style: TextStyle(
+                            color: Color(0xFF64748b),
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
                           ),
                         ),
                       ),
-                      Expanded(child: Divider(color: AppColors.divider)),
+                      const Expanded(child: Divider(color: Color(0xFF1e293b))),
                     ],
                   ),
                   const SizedBox(height: AppDimens.xl),
@@ -193,11 +228,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context.read<AuthBloc>().add(LoginWithGoogleEvent());
                     },
                     isOutlined: true,
-                    backgroundColor: AppColors.divider,
+                    backgroundColor: const Color(0xFF1e293b),
+                    textColor: Colors.white,
                     icon: SvgPicture.asset(
                       AppAssets.iconGoogle,
-                      width: 20,
-                      height: 20,
+                      width: AppSizes.padding20,
+                      height: AppSizes.paddingV20,
                     ),
                   ),
                   const SizedBox(height: AppDimens.xl),
@@ -205,19 +241,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         'Sudah punya akun? ',
-                        style: AppStyles.bodyTextSecondary,
+                        style: TextStyle(
+                          color: Color(0xFFcbd5e1),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Text(
+                        child: const Text(
                           'Masuk',
-                          style: AppStyles.bodyText.copyWith(
-                            color: AppColors.primary,
+                          style: TextStyle(
+                            color: Color(0xFF34d399),
                             fontWeight: FontWeight.bold,
+                            fontSize: 12,
                           ),
                         ),
                       ),

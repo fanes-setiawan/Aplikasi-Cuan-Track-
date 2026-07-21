@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,7 +106,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.add, color: Colors.white),
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSizes.padding8),
                             Text(
                               'Buat Anggaran Baru',
                               style: AppStyles.bodyText.copyWith(
@@ -120,9 +121,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: AppDimens.md,
-                      vertical: 8,
+                      vertical: AppSizes.paddingV8,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -137,10 +138,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                 letterSpacing: 1.1,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: AppSizes.paddingV4),
                             Text(
                               _formatCurrency(state.totalBudget),
-                              style: AppStyles.heading2.copyWith(fontSize: 24),
+                              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font24),
                             ),
                           ],
                         ),
@@ -154,11 +155,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
                                 letterSpacing: 1.1,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            SizedBox(height: AppSizes.paddingV4),
                             Text(
                               '$totalPercent%',
                               style: AppStyles.heading2.copyWith(
-                                fontSize: 24,
+                                fontSize: AppSizes.font24,
                                 color: totalPercent >= 90
                                     ? const Color(0xFFEF4444)
                                     : (totalPercent >= 80
@@ -241,23 +242,23 @@ class _BudgetScreenState extends State<BudgetScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.paddingV12),
               Container(
                 width: 40,
-                height: 4,
+                height: AppSizes.paddingV4,
                 decoration: BoxDecoration(
                   color: AppColors.divider,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: AppSizes.paddingV12),
               _buildMenuItem(
                 icon: Icons.sort,
                 title: 'Urutkan Anggaran',
@@ -281,7 +282,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 title: 'Tampilkan Anggaran Terarsip',
                 onTap: () => Navigator.pop(context),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: AppSizes.paddingV32),
             ],
           ),
         );
@@ -296,7 +297,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }) {
     return ListTile(
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.padding24, vertical: AppSizes.paddingV8),
       leading: Icon(icon, color: const Color(0xFF1B5E20), size: 28),
       title: Text(
         title,
@@ -322,7 +323,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     Color? highlightColor,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: AppSizes.paddingV8),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -340,14 +341,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(AppSizes.padding12),
                 decoration: BoxDecoration(
                   color: iconBgColor,
                   borderRadius: BorderRadius.circular(AppDimens.radiusM),
                 ),
                 child: Icon(icon, color: iconColor, size: 24),
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: AppSizes.padding16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -358,7 +359,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.paddingV4),
                     Text(
                       '$spent / $total',
                       style: AppStyles.caption.copyWith(
@@ -369,7 +370,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.padding8, vertical: AppSizes.paddingV4),
                 decoration: BoxDecoration(
                   color: highlightColor ?? const Color(0xFFF0FDF4),
                   borderRadius: BorderRadius.circular(6),
@@ -386,7 +387,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.padding8),
               PopupMenuButton<String>(
                 icon: const Icon(
                   Icons.more_vert,
@@ -424,7 +425,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           size: 20,
                           color: Color(0xFF2563EB),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: AppSizes.padding12),
                         Text(
                           'Edit',
                           style: AppStyles.bodyText.copyWith(
@@ -443,7 +444,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                           size: 20,
                           color: Color(0xFFEF4444),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: AppSizes.padding12),
                         Text(
                           'Delete',
                           style: AppStyles.bodyText.copyWith(
@@ -457,9 +458,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(AppSizes.radius8),
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
@@ -491,9 +492,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 'Apakah Anda yakin ingin menghapus anggaran ini?',
                 style: AppStyles.bodyText,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(AppSizes.padding12),
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -502,10 +503,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: EdgeInsets.all(AppSizes.padding8),
                       decoration: BoxDecoration(
                         color: _getBgColorForCategory(budget.categoryName),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(AppSizes.radius8),
                       ),
                       child: Icon(
                         _getIconForCategory(budget.categoryName),
@@ -513,7 +514,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         size: 20,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: AppSizes.padding12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -628,9 +629,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: AppDimens.md,
-                vertical: 8,
+                vertical: AppSizes.paddingV8,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -638,29 +639,29 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AppShimmer.rectangular(width: 100, height: 12),
-                      const SizedBox(height: 8),
-                      AppShimmer.rectangular(width: 150, height: 24),
+                      AppShimmer.rectangular(width: 100, height: AppSizes.paddingV12),
+                      SizedBox(height: AppSizes.paddingV8),
+                      AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
                     ],
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      AppShimmer.rectangular(width: 60, height: 12),
-                      const SizedBox(height: 8),
-                      AppShimmer.rectangular(width: 40, height: 24),
+                      AppShimmer.rectangular(width: 60, height: AppSizes.paddingV12),
+                      SizedBox(height: AppSizes.paddingV8),
+                      AppShimmer.rectangular(width: 40, height: AppSizes.paddingV24),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSizes.paddingV24),
             ...List.generate(
               3,
               (index) => Padding(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: AppDimens.md,
-                  vertical: 8,
+                  vertical: AppSizes.paddingV8,
                 ),
                 child: AppShimmer.rectangular(
                   height: 100,

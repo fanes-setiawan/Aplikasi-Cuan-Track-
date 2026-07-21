@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -59,14 +60,14 @@ class ProfileScreen extends StatelessWidget {
                 child: FadeInAnimation(child: widget),
               ),
               children: [
-                const SizedBox(height: 32),
+                SizedBox(height: AppSizes.paddingV32),
                 Center(
                   child: Column(
                     children: [
                       Stack(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(4),
+                            padding: EdgeInsets.all(AppSizes.padding4),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               border: Border.all(
@@ -93,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                             bottom: 4,
                             right: 4,
                             child: Container(
-                              padding: const EdgeInsets.all(8),
+                              padding: EdgeInsets.all(AppSizes.padding8),
                               decoration: const BoxDecoration(
                                 color: Color(0xFF27AE60),
                                 shape: BoxShape.circle,
@@ -107,16 +108,16 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             name,
-                            style: AppStyles.heading1.copyWith(fontSize: 24),
+                            style: AppStyles.heading1.copyWith(fontSize: AppSizes.font24),
                           ),
                           if (isPremium) ...[
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSizes.padding8),
                             const Icon(
                               Icons.workspace_premium,
                               color: Color(0xFFFFB300),
@@ -125,15 +126,15 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppSizes.paddingV4),
                       Text(email, style: AppStyles.bodyTextSecondary),
                     ],
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.paddingV24),
                 if (user != null)
                   _buildPremiumCard(context, isPremium, user.uid),
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.paddingV24),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
@@ -151,7 +152,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.payments_outlined,
                         title: 'Metode Pembayaran',
@@ -165,7 +166,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.category_outlined,
                         title: 'Kategori Kustom',
@@ -179,7 +180,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.file_upload_outlined,
                         title: 'Import Transaksi Excel',
@@ -192,7 +193,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.fingerprint,
                         title: 'Keamanan (Fingerprint/PIN)',
@@ -206,7 +207,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.notifications_none_outlined,
                         title: 'Notifikasi',
@@ -220,7 +221,7 @@ class ProfileScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       _buildProfileMenuItem(
                         icon: Icons.help_outline,
                         title: 'Bantuan',
@@ -247,7 +248,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 32),
+                SizedBox(height: AppSizes.paddingV32),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                   child: SizedBox(
@@ -270,7 +271,7 @@ class ProfileScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Icon(Icons.logout, color: Color(0xFFFF5252)),
-                          const SizedBox(width: 12),
+                          SizedBox(width: AppSizes.padding12),
                           Text(
                             'Keluar',
                             style: AppStyles.bodyText.copyWith(
@@ -284,7 +285,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.paddingV24),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
                   child: InkWell(
@@ -311,7 +312,7 @@ class ProfileScreen extends StatelessWidget {
                               size: 22,
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: AppSizes.padding16),
                           Expanded(
                             child: Text(
                               'Hapus Akun',
@@ -332,16 +333,16 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                SizedBox(height: AppSizes.paddingV24),
                 Text(
                   'VERSI ${packageInfo.version}',
                   style: AppStyles.caption.copyWith(
                     color: AppColors.textHint,
-                    fontSize: 10,
+                    fontSize: AppSizes.font10,
                     letterSpacing: 1.1,
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: AppSizes.paddingV32),
               ],
             ),
           ),
@@ -356,14 +357,14 @@ class ProfileScreen extends StatelessWidget {
     if (isPremium) {
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(AppSizes.padding20),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [Color(0xFF2C3E50), Color(0xFF1A1A1A)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppSizes.radius24),
           boxShadow: [
             BoxShadow(
               color: const Color(0xFFFFD700).withOpacity(0.15),
@@ -375,7 +376,7 @@ class ProfileScreen extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(AppSizes.padding12),
               decoration: const BoxDecoration(
                 color: Color(0xFFFFF7E6),
                 shape: BoxShape.circle,
@@ -386,7 +387,7 @@ class ProfileScreen extends StatelessWidget {
                 size: 28,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: AppSizes.padding16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,12 +409,12 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: AppSizes.paddingV4),
                   Text(
                     'Kamu telah membuka seluruh fitur eksklusif bebas iklan & prioritas AI.',
                     style: AppStyles.caption.copyWith(
                       color: Colors.white.withOpacity(0.8),
-                      fontSize: 12,
+                      fontSize: AppSizes.font12,
                       height: 1.3,
                     ),
                   ),
@@ -427,14 +428,14 @@ class ProfileScreen extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppDimens.md),
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(AppSizes.padding20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFFB300), Color(0xFFFF8F00)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSizes.radius24),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFFFB300).withOpacity(0.3),
@@ -449,7 +450,7 @@ class ProfileScreen extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: EdgeInsets.all(AppSizes.padding8),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   shape: BoxShape.circle,
@@ -460,7 +461,7 @@ class ProfileScreen extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: AppSizes.padding12),
               Text(
                 'Cuan Track Premium',
                 style: AppStyles.heading2.copyWith(
@@ -470,16 +471,16 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Text(
             'Kelola keuangan lebih cerdas dengan AI prioritas, tanpa iklan, dan analisis finansial tak terbatas!',
             style: AppStyles.caption.copyWith(
               color: Colors.white.withOpacity(0.9),
-              fontSize: 12,
+              fontSize: AppSizes.font12,
               height: 1.4,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           SizedBox(
             width: double.infinity,
             height: 44,
@@ -510,10 +511,10 @@ class ProfileScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSizes.radius24),
+          topRight: Radius.circular(AppSizes.radius24),
         ),
       ),
       builder: (context) {
@@ -540,7 +541,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.paddingV20),
                   Row(
                     children: [
                       const Icon(Icons.workspace_premium, color: Color(0xFFFFB300), size: 28),
@@ -551,22 +552,22 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   _buildBenefitItem(Icons.block, 'Bebas Iklan', 'Catat keuangan bersih tanpa jeda iklan.'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   _buildBenefitItem(Icons.bolt, 'CuanAI Prioritas', 'Analisis obrolan asisten AI 10x lebih responsif.'),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   _buildBenefitItem(Icons.analytics_outlined, 'Analisis Finansial Plus', 'Laporan kesehatan keuangan tak terbatas.'),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   
                   // Plan Option Card
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.padding16),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFF8E1),
                       border: Border.all(color: const Color(0xFFFFD54F), width: 1.5),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSizes.radius16),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -579,7 +580,7 @@ class ProfileScreen extends StatelessWidget {
                                 'Akses Premium Bulanan',
                                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: AppSizes.paddingV4),
                               Text(
                                 'Batalkan kapan saja.',
                                 style: AppStyles.caption.copyWith(color: AppColors.textSecondary),
@@ -587,15 +588,15 @@ class ProfileScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: AppSizes.padding12),
                         Text(
                           'Rp 29.000 / bln',
-                          style: AppStyles.heading2.copyWith(color: const Color(0xFFFF8F00), fontSize: 16),
+                          style: AppStyles.heading2.copyWith(color: const Color(0xFFFF8F00), fontSize: AppSizes.font16),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   
                   SizedBox(
                     width: double.infinity,
@@ -642,9 +643,9 @@ class ProfileScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
                       child: isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
+                          ? SizedBox(
+                              height: AppSizes.paddingV20,
+                              width: AppSizes.padding20,
                               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                             )
                           : const Text('Aktifkan Cuan Premium', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -664,14 +665,14 @@ class ProfileScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: const Color(0xFFFF8F00), size: 20),
-        const SizedBox(width: 12),
+        SizedBox(width: AppSizes.padding12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(title, style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
               const SizedBox(height: 2),
-              Text(desc, style: AppStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: 12)),
+              Text(desc, style: AppStyles.caption.copyWith(color: AppColors.textSecondary, fontSize: AppSizes.font12)),
             ],
           ),
         ),
@@ -689,10 +690,10 @@ class ProfileScreen extends StatelessWidget {
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF0F0),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSizes.radius8),
               ),
               child: const Icon(
                 Icons.warning_amber_rounded,
@@ -700,7 +701,7 @@ class ProfileScreen extends StatelessWidget {
                 size: 22,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: AppSizes.padding12),
             Text(
               'Hapus Akun',
               style: AppStyles.heading2.copyWith(
@@ -720,7 +721,7 @@ class ProfileScreen extends StatelessWidget {
                 color: AppColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             Text(
               'Semua data berikut akan dihapus secara permanen:',
               style: AppStyles.bodyText.copyWith(
@@ -728,7 +729,7 @@ class ProfileScreen extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSizes.paddingV8),
             ...[
               '• Semua transaksi',
               '• Anggaran (budget)',
@@ -810,7 +811,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Icon(icon, color: AppColors.primary, size: 22),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: AppSizes.padding16),
             Expanded(
               child: Text(
                 title,

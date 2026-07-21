@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -84,11 +85,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               child: Column(
                 children: [
                   _buildMonthSelector(),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   _buildChartSection(state),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
                   _buildLegendSection(state),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             );
@@ -103,7 +104,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(_selectedDate);
     return Container(
       margin: const EdgeInsets.all(AppDimens.md),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -146,7 +147,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       child: AppShimmer(
         child: Column(
           children: [
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.paddingV16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
               child: AppShimmer.rectangular(
@@ -154,7 +155,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 borderRadius: AppDimens.radiusL,
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSizes.paddingV24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
               child: Column(
@@ -162,7 +163,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   4,
                   (index) => Container(
                     margin: const EdgeInsets.only(bottom: 12),
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.padding16),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(AppDimens.radiusM),
@@ -173,7 +174,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         Row(
                           children: [
                             AppShimmer.circular(radius: 8),
-                            const SizedBox(width: 12),
+                            SizedBox(width: AppSizes.padding12),
                             AppShimmer.rectangular(width: 100, height: 14),
                           ],
                         ),
@@ -181,7 +182,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             AppShimmer.rectangular(width: 60, height: 14),
-                            const SizedBox(height: 4),
+                            SizedBox(height: AppSizes.paddingV4),
                             AppShimmer.rectangular(width: 30, height: 10),
                           ],
                         ),
@@ -318,22 +319,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  SizedBox(width: AppSizes.padding8),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.padding8,
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSizes.radius12),
                     ),
                     child: Text(
                       'Tap untuk detail',
                       style: AppStyles.caption.copyWith(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w600,
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                       ),
                     ),
                   ),
@@ -365,7 +366,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       },
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(16),
+                        padding: EdgeInsets.all(AppSizes.padding16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(
@@ -382,14 +383,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         child: Row(
                           children: [
                             Container(
-                              width: 16,
-                              height: 16,
+                              width: AppSizes.padding16,
+                              height: AppSizes.paddingV16,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: expense.color,
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            SizedBox(width: AppSizes.padding12),
                             Expanded(
                               child: Text(
                                 expense.categoryName,
@@ -437,7 +438,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSizes.padding8),
                             Icon(
                               Icons.chevron_right,
                               size: 18,

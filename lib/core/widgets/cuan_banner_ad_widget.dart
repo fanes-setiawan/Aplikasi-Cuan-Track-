@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../injection_container.dart';
@@ -89,7 +90,7 @@ class _CuanBannerAdWidgetState extends State<CuanBannerAdWidget> {
           alignment: Alignment.center,
           width: _bannerAd!.size.width.toDouble(),
           height: _bannerAd!.size.height.toDouble(),
-          margin: const EdgeInsets.symmetric(vertical: 8),
+          margin: EdgeInsets.symmetric(vertical: AppSizes.paddingV8),
           child: AdWidget(ad: _bannerAd!),
         );
       },

@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +18,7 @@ class AppHelpers {
         margin: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
         content: Center(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding20, vertical: AppSizes.paddingV12),
             decoration: BoxDecoration(
               color: const Color(0xFFEFEFEF).withOpacity(0.5),
               borderRadius: BorderRadius.circular(54),
@@ -25,17 +26,17 @@ class AppHelpers {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/logo/logo_app.png', height: 24, width: 24),
-                const SizedBox(width: 12),
+                Image.asset('assets/logo/logo_app.png', height: AppSizes.paddingV24, width: AppSizes.padding24),
+                SizedBox(width: AppSizes.padding12),
                 Flexible(
                   child: Text(
                     message,
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Color(0xFF666666),
-                      fontSize: 14,
+                      fontSize: AppSizes.font14,
                     ),
                   ),
                 ),

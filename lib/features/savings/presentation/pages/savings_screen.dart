@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,7 +75,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   color: AppColors.textSecondary,
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
               TextFormField(
                 controller: amountController,
                 keyboardType: TextInputType.number,
@@ -151,7 +152,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             child: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-                margin: const EdgeInsets.all(8),
+                margin: EdgeInsets.all(AppSizes.padding8),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -182,12 +183,12 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   Icon(Icons.category_outlined, color: AppColors.primary),
                   Text(
                     'Tujuan',
-                    style: TextStyle(fontSize: 10, color: AppColors.primary),
+                    style: TextStyle(fontSize: AppSizes.font10, color: AppColors.primary),
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: AppSizes.padding8),
           ],
         ),
         body: Stack(
@@ -360,7 +361,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                           'TOTAL TARGET',
                           style: AppStyles.caption.copyWith(
                             color: Colors.white.withOpacity(0.7),
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -380,7 +381,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                           'SISA TARGET',
                           style: AppStyles.caption.copyWith(
                             color: Colors.white.withOpacity(0.7),
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -457,7 +458,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     Row(
                       children: [
                         Icon(icon, size: 16, color: color),
-                        const SizedBox(width: 8),
+                        SizedBox(width: AppSizes.padding8),
                         Expanded(
                           child: Text(
                             entry.key,
@@ -470,7 +471,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: AppSizes.paddingV12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -487,7 +488,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: AppSizes.paddingV4),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(2),
                       child: LinearProgressIndicator(
@@ -497,12 +498,12 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: AppSizes.paddingV8),
                     Text(
                       'Terkumpul: ${AppHelpers.formatCurrencyIdr(entry.value['collected'])}',
                       style: AppStyles.caption.copyWith(
                         color: AppColors.textSecondary,
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                       ),
                     ),
                   ],
@@ -523,19 +524,19 @@ class _SavingsScreenState extends State<SavingsScreen> {
       ),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 40,
-                height: 4,
+                height: AppSizes.paddingV4,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: AppSizes.paddingV20),
               ListTile(
                 leading: const Icon(Icons.edit_outlined, color: Colors.blue),
                 title: const Text('Edit Target'),
@@ -660,16 +661,16 @@ class _SavingsScreenState extends State<SavingsScreen> {
                               ),
                             ),
                             if (goal.categoryName != null) ...[
-                              const SizedBox(width: 8),
+                              SizedBox(width: AppSizes.padding8),
                               Container(
-                                width: 4,
-                                height: 4,
+                                width: AppSizes.padding4,
+                                height: AppSizes.paddingV4,
                                 decoration: const BoxDecoration(
                                   color: AppColors.textHint,
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: AppSizes.padding8),
                               Text(
                                 goal.categoryName!,
                                 style: AppStyles.caption.copyWith(
@@ -722,7 +723,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       'TERKUMPUL',
                       style: AppStyles.caption.copyWith(
                         color: AppColors.textHint,
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                       ),
                     ),
                     Text(
@@ -740,7 +741,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       'KURANG',
                       style: AppStyles.caption.copyWith(
                         color: AppColors.textHint,
-                        fontSize: 10,
+                        fontSize: AppSizes.font10,
                       ),
                     ),
                     Text(
@@ -849,7 +850,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppShimmer.rectangular(width: 150, height: 24),
+                AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
                 AppShimmer.rectangular(width: 60, height: 14),
               ],
             ),
@@ -870,7 +871,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppShimmer.rectangular(width: 150, height: 24),
+                AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
                 AppShimmer.rectangular(width: 80, height: 14),
               ],
             ),

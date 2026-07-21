@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -83,7 +84,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                         iconColor: const Color(0xFF2563EB),
                       ),
                     ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppDimens.md,
@@ -127,7 +128,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Icon(Icons.add_circle, color: Colors.white),
-                            const SizedBox(width: 8),
+                            SizedBox(width: AppSizes.padding8),
                             Text(
                               'Tambah Metode Baru',
                               style: AppStyles.bodyText.copyWith(
@@ -140,7 +141,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             );
@@ -172,7 +173,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
     required Color iconColor,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: AppSizes.paddingV8),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -188,14 +189,14 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: EdgeInsets.all(AppSizes.padding12),
             decoration: BoxDecoration(
               color: iconBgColor,
               borderRadius: BorderRadius.circular(AppDimens.radiusM),
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,7 +207,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.paddingV4),
                 Text(
                   type,
                   style: AppStyles.caption.copyWith(
@@ -223,7 +224,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                 amount,
                 style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: AppSizes.paddingV8),
               const Icon(Icons.more_vert, color: AppColors.textHint, size: 16),
             ],
           ),

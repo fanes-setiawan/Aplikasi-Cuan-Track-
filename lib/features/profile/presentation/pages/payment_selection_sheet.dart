@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
@@ -101,24 +102,24 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.9,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Container(
             width: 40,
-            height: 4,
+            height: AppSizes.paddingV4,
             decoration: BoxDecoration(
               color: AppColors.divider,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
             child: Row(
               children: [
                 IconButton(
@@ -129,7 +130,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                   child: Center(
                     child: Text(
                       'Pilih Metode Pembayaran',
-                      style: AppStyles.heading2.copyWith(fontSize: 18),
+                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
                     ),
                   ),
                 ),
@@ -137,10 +138,10 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSizes.paddingV24),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -150,7 +151,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -165,12 +166,12 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                       _buildCategoryItem('Tunai', Icons.payments_outlined),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Container(
                     height: 52,
                     decoration: BoxDecoration(
                       color: const Color(0xFFF8FAFB),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSizes.radius16),
                       border: Border.all(color: AppColors.divider),
                     ),
                     child: TextField(
@@ -197,14 +198,14 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Penyedia Layanan',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   if (_filteredProviders.isEmpty)
                     Center(
                       child: Padding(
@@ -216,7 +217,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                               size: 48,
                               color: AppColors.textHint.withOpacity(0.5),
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: AppSizes.paddingV16),
                             Text(
                               'Penyedia tidak ditemukan',
                               style: AppStyles.bodyTextSecondary.copyWith(
@@ -233,7 +234,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _filteredProviders.length,
                       separatorBuilder: (context, index) =>
-                          const SizedBox(height: 12),
+                          SizedBox(height: AppSizes.paddingV12),
                       itemBuilder: (context, index) {
                         final provider = _filteredProviders[index];
                         return _buildProviderItem(
@@ -244,7 +245,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                         );
                       },
                     ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             ),
@@ -290,10 +291,10 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.28,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSizes.radius16),
           border: Border.all(
             color: isSelected ? const Color(0xFF27AE60) : AppColors.divider,
             width: isSelected ? 2 : 1,
@@ -317,7 +318,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                   : AppColors.textSecondary,
               size: 28,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: AppSizes.paddingV8),
             Text(
               title,
               style: AppStyles.caption.copyWith(
@@ -325,7 +326,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                     ? AppColors.textPrimary
                     : AppColors.textSecondary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 10,
+                fontSize: AppSizes.font10,
               ),
               textAlign: TextAlign.center,
             ),
@@ -345,12 +346,12 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       onTap: () {
         Navigator.pop(context, name);
       },
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSizes.radius16),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(AppSizes.padding12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSizes.radius16),
           border: Border.all(color: AppColors.divider.withOpacity(0.5)),
         ),
         child: Row(
@@ -359,11 +360,11 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: bgColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.radius12),
               ),
               child: Icon(icon, color: iconColor, size: 22),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: AppSizes.padding16),
             Expanded(
               child: Text(
                 name,

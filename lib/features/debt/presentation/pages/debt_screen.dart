@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -79,7 +80,7 @@ class _DebtScreenState extends State<DebtScreen>
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
               TextFormField(
                 controller: amountController,
                 keyboardType: TextInputType.number,
@@ -138,7 +139,10 @@ class _DebtScreenState extends State<DebtScreen>
       ),
       builder: (ctx) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+          padding: EdgeInsets.symmetric(
+            vertical: AppSizes.paddingV24,
+            horizontal: AppSizes.padding16,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -146,7 +150,7 @@ class _DebtScreenState extends State<DebtScreen>
                 'Opsi ${debt.type == 'hutang' ? 'Hutang' : 'Piutang'}',
                 style: AppStyles.heading2,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSizes.paddingV16),
               ListTile(
                 leading: const Icon(Icons.info_outline, color: Colors.blue),
                 title: Text('Lihat Detail', style: AppStyles.bodyText),
@@ -243,9 +247,9 @@ class _DebtScreenState extends State<DebtScreen>
                 if (debt.description.isNotEmpty)
                   _detailRow('Keterangan', debt.description),
                 if (debt.isInstallment && debt.totalMonths > 0) ...[
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   const Divider(),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.paddingV8),
                   Text(
                     'Status Pembayaran Bulanan',
                     style: AppStyles.bodyText.copyWith(
@@ -253,7 +257,7 @@ class _DebtScreenState extends State<DebtScreen>
                       color: AppColors.primary,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   SizedBox(
                     width: double.infinity,
                     child: Wrap(
@@ -264,19 +268,32 @@ class _DebtScreenState extends State<DebtScreen>
                         final startMonth = debt.dueDate.month; // 1-based
                         final targetMonthIndex = (startMonth - 1 + index) % 12;
                         final monthsList = [
-                          'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                          'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                          'Januari',
+                          'Februari',
+                          'Maret',
+                          'April',
+                          'Mei',
+                          'Juni',
+                          'Juli',
+                          'Agustus',
+                          'September',
+                          'Oktober',
+                          'November',
+                          'Desember',
                         ];
                         final monthLabel = monthsList[targetMonthIndex];
-                        final targetYear = debt.dueDate.year + (startMonth - 1 + index) ~/ 12;
+                        final targetYear =
+                            debt.dueDate.year + (startMonth - 1 + index) ~/ 12;
 
-                        final isPaidMonth = debt.paidInstallmentMonths.contains(index);
+                        final isPaidMonth = debt.paidInstallmentMonths.contains(
+                          index,
+                        );
 
                         return Container(
                           width: 80,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 4,
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppSizes.paddingV8,
+                            horizontal: AppSizes.padding4,
                           ),
                           decoration: BoxDecoration(
                             color: isPaidMonth
@@ -287,7 +304,9 @@ class _DebtScreenState extends State<DebtScreen>
                                   ? Colors.green.withOpacity(0.3)
                                   : Colors.grey.withOpacity(0.2),
                             ),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radius8,
+                            ),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -299,7 +318,7 @@ class _DebtScreenState extends State<DebtScreen>
                                 color: isPaidMonth ? Colors.green : Colors.grey,
                                 size: 16,
                               ),
-                              const SizedBox(height: 4),
+                              SizedBox(height: AppSizes.paddingV4),
                               Text(
                                 monthLabel,
                                 style: TextStyle(
@@ -428,7 +447,7 @@ class _DebtScreenState extends State<DebtScreen>
             child: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
-                margin: const EdgeInsets.all(8),
+                margin: EdgeInsets.all(AppSizes.padding8),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -542,7 +561,9 @@ class _DebtScreenState extends State<DebtScreen>
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppSizes.paddingV16,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppDimens.radiusM,
@@ -588,18 +609,18 @@ class _DebtScreenState extends State<DebtScreen>
           Row(
             children: [
               Icon(icon, color: accentColor, size: 16),
-              const SizedBox(width: 4),
+              SizedBox(width: AppSizes.padding4),
               Text(
                 title,
                 style: AppStyles.caption.copyWith(
                   color: accentColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: AppSizes.font10,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV8),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
@@ -611,7 +632,7 @@ class _DebtScreenState extends State<DebtScreen>
               ),
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: AppSizes.paddingV4),
           Text(
             subtitle,
             style: AppStyles.caption.copyWith(
@@ -648,8 +669,12 @@ class _DebtScreenState extends State<DebtScreen>
         final dateStr = DateFormat('dd MMM yyyy').format(debt.dueDate);
         final isOverdue = !debt.isPaid && debt.dueDate.isBefore(DateTime.now());
         final isHutang = debt.type == 'hutang';
-        final accentColor = isHutang ? const Color(0xFFEF4444) : const Color(0xFF10B981);
-        final lightAccentColor = isHutang ? const Color(0xFFFFF1F1) : const Color(0xFFF1FFF8);
+        final accentColor = isHutang
+            ? const Color(0xFFEF4444)
+            : const Color(0xFF10B981);
+        final lightAccentColor = isHutang
+            ? const Color(0xFFFFF1F1)
+            : const Color(0xFFF1FFF8);
 
         IconData itemIcon = Icons.person_outline;
         if (debt.description.toLowerCase().contains('toko') ||
@@ -682,7 +707,7 @@ class _DebtScreenState extends State<DebtScreen>
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(AppSizes.radius16),
               border: Border.all(
                 color: isOverdue
                     ? const Color(0xFFEF4444).withOpacity(0.2)
@@ -698,7 +723,7 @@ class _DebtScreenState extends State<DebtScreen>
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: EdgeInsets.all(AppSizes.padding12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -707,28 +732,24 @@ class _DebtScreenState extends State<DebtScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(AppSizes.padding8),
                         decoration: BoxDecoration(
                           color: lightAccentColor,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          itemIcon,
-                          color: accentColor,
-                          size: 16,
-                        ),
+                        child: Icon(itemIcon, color: accentColor, size: 16),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.padding8,
                           vertical: 3,
                         ),
                         decoration: BoxDecoration(
                           color: debt.isPaid
                               ? const Color(0xFFE8F5E9)
                               : (isOverdue
-                                  ? const Color(0xFFFFF1F1)
-                                  : const Color(0xFFF1F5F9)),
+                                    ? const Color(0xFFFFF1F1)
+                                    : const Color(0xFFF1F5F9)),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -739,8 +760,8 @@ class _DebtScreenState extends State<DebtScreen>
                             color: debt.isPaid
                                 ? Colors.green
                                 : (isOverdue
-                                    ? const Color(0xFFEF4444)
-                                    : AppColors.textHint),
+                                      ? const Color(0xFFEF4444)
+                                      : AppColors.textHint),
                             fontWeight: FontWeight.bold,
                             fontSize: 8,
                           ),
@@ -767,13 +788,13 @@ class _DebtScreenState extends State<DebtScreen>
                           debt.personName,
                           style: AppStyles.caption.copyWith(
                             color: AppColors.textSecondary,
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppSizes.paddingV4),
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -801,14 +822,14 @@ class _DebtScreenState extends State<DebtScreen>
                               color: AppColors.primary,
                               size: 10,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: AppSizes.padding4),
                             Expanded(
                               child: Text(
                                 '${debt.paidMonths}/${debt.totalMonths} Bln',
                                 style: TextStyle(
                                   color: AppColors.primary,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 10,
+                                  fontSize: AppSizes.font10,
                                 ),
                               ),
                             ),
@@ -830,7 +851,7 @@ class _DebtScreenState extends State<DebtScreen>
                           'Non-Cicilan',
                           style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 10,
+                            fontSize: AppSizes.font10,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -843,7 +864,7 @@ class _DebtScreenState extends State<DebtScreen>
                           ),
                         ),
                       ],
-                      const SizedBox(height: 4),
+                      SizedBox(height: AppSizes.paddingV4),
                       Row(
                         children: [
                           Icon(
@@ -853,7 +874,7 @@ class _DebtScreenState extends State<DebtScreen>
                                 : AppColors.textHint,
                             size: 9,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: AppSizes.padding4),
                           Expanded(
                             child: Text(
                               isOverdue ? 'Lewat: $dateStr' : 'Tempo: $dateStr',

@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -41,7 +42,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                   onTap: () => Navigator.pop(context),
                   child: Container(
                     margin: const EdgeInsets.only(left: 16),
-                    padding: const EdgeInsets.all(8),
+                    padding: EdgeInsets.all(AppSizes.padding8),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
@@ -58,7 +59,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                 'Analisis Tren\nMingguan',
                 textAlign: TextAlign.center,
                 style: AppStyles.heading2.copyWith(
-                  fontSize: 16,
+                  fontSize: AppSizes.font16,
                   color: const Color(0xFF1B5E20),
                   height: 1.2,
                 ),
@@ -67,7 +68,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
               actions: [
                 Container(
                   margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -80,11 +81,11 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                         size: 16,
                         color: AppColors.textSecondary,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: AppSizes.padding8),
                       Text(
                         DateFormat('MMM yyyy', 'id').format(state.currentMonth),
                         style: AppStyles.bodyText.copyWith(
-                          fontSize: 12,
+                          fontSize: AppSizes.font12,
                           fontWeight: FontWeight.bold,
                           color: AppColors.textPrimary,
                         ),
@@ -96,7 +97,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
             ),
             body: AnimationLimiter(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24.0),
+                padding: EdgeInsets.all(AppSizes.padding24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: AnimationConfiguration.toStaggeredList(
@@ -107,10 +108,10 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                     ),
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(AppSizes.padding20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(AppSizes.radius24),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
@@ -145,9 +146,9 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                                   ],
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
+                                  padding: EdgeInsets.symmetric(
                                     horizontal: 10,
-                                    vertical: 4,
+                                    vertical: AppSizes.paddingV4,
                                   ),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFE8F5E9),
@@ -160,7 +161,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                                         size: 14,
                                         color: Color(0xFF2E7D32),
                                       ),
-                                      const SizedBox(width: 4),
+                                      SizedBox(width: AppSizes.padding4),
                                       Text(
                                         '12%',
                                         style: AppStyles.caption.copyWith(
@@ -173,7 +174,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 32),
+                            SizedBox(height: AppSizes.paddingV32),
                             SizedBox(
                               height: 180,
                               child: Row(
@@ -200,17 +201,17 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                                             MainAxisAlignment.end,
                                         children: [
                                           Container(
-                                            width: 32,
+                                            width: AppSizes.padding32,
                                             height: height.toDouble(),
                                             decoration: BoxDecoration(
                                               color: isHighest
                                                   ? const Color(0xFF27AE60)
                                                   : const Color(0xFFE8F5E9),
                                               borderRadius:
-                                                  BorderRadius.circular(8),
+                                                  BorderRadius.circular(AppSizes.radius8),
                                             ),
                                           ),
-                                          const SizedBox(height: 8),
+                                          SizedBox(height: AppSizes.paddingV8),
                                           Text(
                                             'W${idx + 1}',
                                             style: AppStyles.caption.copyWith(
@@ -231,7 +232,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
 
                       Row(
                         children: [
@@ -246,7 +247,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                               const Color(0xFFFDEDEC),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: AppSizes.padding16),
                           Expanded(
                             child: _buildTrendStatCard(
                               'Minggu Terendah',
@@ -260,16 +261,16 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
 
                       Text(
                         'Rincian Mingguan',
                         style: AppStyles.heading2.copyWith(
                           color: const Color(0xFF1B5E20),
-                          fontSize: 18,
+                          fontSize: AppSizes.font18,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       ...state.currentMonthWeeklyTotals.asMap().entries.map((
                         entry,
                       ) {
@@ -298,24 +299,24 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
 
   Widget _buildLoading() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24.0),
+      padding: EdgeInsets.all(AppSizes.padding24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildShimmerBox(250),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSizes.paddingV24),
           _buildShimmerBox(100),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           _buildShimmerBox(20),
-          const SizedBox(height: 16),
+          SizedBox(height: AppSizes.paddingV16),
           Row(
             children: [
               _buildShimmerBox(140, width: 140),
-              const SizedBox(width: 16),
+              SizedBox(width: AppSizes.padding16),
               _buildShimmerBox(140, width: 140),
             ],
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: AppSizes.paddingV32),
           _buildShimmerBox(150),
         ],
       ),
@@ -331,7 +332,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
         width: width ?? double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSizes.radius16),
         ),
       ),
     );
@@ -345,7 +346,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
     Color bgColor,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
@@ -358,19 +359,19 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
             label,
             style: AppStyles.caption.copyWith(
               color: AppColors.textSecondary,
-              fontSize: 10,
+              fontSize: AppSizes.font10,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: AppSizes.paddingV4),
           Text(
             value,
-            style: AppStyles.heading2.copyWith(color: color, fontSize: 14),
+            style: AppStyles.heading2.copyWith(color: color, fontSize: AppSizes.font14),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV8),
           Text(
             amount,
             style: AppStyles.bodyText.copyWith(
-              fontSize: 12,
+              fontSize: AppSizes.font12,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),
@@ -388,7 +389,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -415,7 +416,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
               size: 20,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -423,7 +424,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                 Text(
                   title,
                   style: AppStyles.heading2.copyWith(
-                    fontSize: 14,
+                    fontSize: AppSizes.font14,
                     color: AppColors.textPrimary,
                   ),
                 ),
@@ -442,7 +443,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
               Text(
                 amount,
                 style: AppStyles.heading2.copyWith(
-                  fontSize: 14,
+                  fontSize: AppSizes.font14,
                   color: isHighest
                       ? const Color(0xFF1B5E20)
                       : AppColors.textPrimary,
@@ -454,7 +455,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                   style: AppStyles.caption.copyWith(
                     color: const Color(0xFF27AE60),
                     fontWeight: FontWeight.bold,
-                    fontSize: 10,
+                    fontSize: AppSizes.font10,
                   ),
                 ),
             ],

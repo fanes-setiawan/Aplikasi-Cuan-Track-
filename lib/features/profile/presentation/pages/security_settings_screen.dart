@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -95,7 +96,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildSecurityActionItem(
               icon: Icons.pin_outlined,
               title: 'Ubah PIN',
@@ -111,7 +112,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildSecurityToggleItem(
               icon: Icons.fingerprint,
               title: 'Sidik Jari / Face ID',
@@ -140,7 +141,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: AppSizes.paddingV12),
             _buildSecurityDropdownItem(
               icon: Icons.timer_outlined,
               title: 'Otomatis Kunci',
@@ -148,12 +149,12 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               iconColor: const Color(0xFF27AE60),
               iconBgColor: const Color(0xFFF0FDF4),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSizes.paddingV32),
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSizes.padding16),
               decoration: BoxDecoration(
                 color: const Color(0xFFF0FDF4),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizes.radius16),
                 border: Border.all(color: const Color(0xFFD1FAE5)),
               ),
               child: Row(
@@ -164,7 +165,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                     color: Color(0xFF27AE60),
                     size: 20,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: AppSizes.padding12),
                   Expanded(
                     child: Text(
                       'Kami menggunakan enkripsi tingkat bank untuk memastikan data keuangan Anda tetap aman dan pribadi.',
@@ -193,10 +194,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     required Color iconBgColor,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizes.radius16),
       ),
       child: Row(
         children: [
@@ -204,11 +205,11 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: iconBgColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSizes.radius12),
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,12 +245,12 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSizes.radius16),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(AppSizes.padding16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppSizes.radius16),
         ),
         child: Row(
           children: [
@@ -257,11 +258,11 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: iconBgColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppSizes.radius12),
               ),
               child: Icon(icon, color: iconColor, size: 24),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: AppSizes.padding16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,10 +299,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       'Tidak Ada',
     ];
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizes.radius16),
       ),
       child: Row(
         children: [
@@ -309,11 +310,11 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: iconBgColor,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppSizes.radius12),
             ),
             child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,10 +343,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               }).toList();
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding12, vertical: AppSizes.paddingV8),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFB),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppSizes.radius8),
               ),
               child: Row(
                 children: [
@@ -356,7 +357,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: AppSizes.padding4),
                   const Icon(
                     Icons.keyboard_arrow_down,
                     color: Color(0xFF27AE60),

@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,7 +99,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       Text(
                         'LIMIT ANGGARAN',
                         style: AppStyles.caption.copyWith(
@@ -106,7 +107,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           letterSpacing: 1.1,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: AppSizes.paddingV16),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -114,10 +115,10 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                             'Rp',
                             style: AppStyles.heading1.copyWith(
                               color: AppColors.primary,
-                              fontSize: 24,
+                              fontSize: AppSizes.font24,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: AppSizes.padding12),
                           Expanded(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -142,7 +143,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                         ],
                       ),
                       const Divider(thickness: 1),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
                       Text(
                         'PILIH KATEGORI',
                         style: AppStyles.caption.copyWith(
@@ -150,14 +151,14 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           letterSpacing: 1.1,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       BlocBuilder<CategoryBloc, CategoryState>(
                         builder: (context, state) {
                           if (state is CategoryLoading ||
                               state is CategoryInitial) {
-                            return const Center(
+                            return Center(
                               child: Padding(
-                                padding: EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(AppSizes.padding8),
                                 child: CircularProgressIndicator(),
                               ),
                             );
@@ -169,8 +170,8 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                               _selectedCategory ??= expenseCategories.first;
                             } else {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: AppSizes.paddingV8,
                                 ),
                                 child: Text(
                                   "Belum ada kategori pengeluaran",
@@ -180,9 +181,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                             }
 
                             return Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.padding16,
+                                vertical: AppSizes.paddingV4,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFF8FAFB),
@@ -210,7 +211,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                             color: AppColors.primary,
                                             size: 20,
                                           ),
-                                          const SizedBox(width: 12),
+                                          SizedBox(width: AppSizes.padding12),
                                           Text(
                                             cat.name,
                                             style: AppStyles.bodyText,
@@ -233,7 +234,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           return const SizedBox.shrink();
                         },
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
                       Text(
                         'PERIODE',
                         style: AppStyles.caption.copyWith(
@@ -241,7 +242,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           letterSpacing: 1.1,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: AppSizes.paddingV12),
                       Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
@@ -258,9 +259,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: EdgeInsets.all(AppSizes.padding20),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF8FAFB),
                           borderRadius: BorderRadius.circular(
@@ -273,14 +274,14 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: const Color(0xFFD1FAE5),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(AppSizes.radius12),
                               ),
                               child: Icon(
                                 Icons.notifications_active_outlined,
                                 color: AppColors.primary,
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            SizedBox(width: AppSizes.padding16),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,7 +295,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                   Text(
                                     'Notifikasi saat mencapai 80% limit',
                                     style: AppStyles.caption.copyWith(
-                                      fontSize: 10,
+                                      fontSize: AppSizes.font10,
                                     ),
                                   ),
                                 ],
@@ -313,7 +314,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: AppSizes.paddingV32),
                     ],
                   ),
                 ),
@@ -341,9 +342,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                   elevation: 0,
                 ),
                 child: state is AddBudgetLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
+                    ? SizedBox(
+                        width: AppSizes.padding24,
+                        height: AppSizes.paddingV24,
                         child: CircularProgressIndicator(color: Colors.white),
                       )
                     : Text(
@@ -371,7 +372,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
           });
         },
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
           decoration: BoxDecoration(
             color: isSelected ? Colors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(AppDimens.radiusM),

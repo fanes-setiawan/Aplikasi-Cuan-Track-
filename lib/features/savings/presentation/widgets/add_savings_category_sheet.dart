@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,24 +86,24 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.85,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Container(
             width: 40,
-            height: 4,
+            height: AppSizes.paddingV4,
             decoration: BoxDecoration(
               color: AppColors.divider,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16),
             child: Row(
               children: [
                 IconButton(
@@ -115,7 +116,7 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       widget.category != null
                           ? 'Edit Tujuan'
                           : 'Tambah Tujuan Nabung',
-                      style: AppStyles.heading2.copyWith(fontSize: 18),
+                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
                     ),
                   ),
                 ),
@@ -123,10 +124,10 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: AppSizes.paddingV24),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -136,24 +137,24 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: AppSizes.paddingV12),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       hintText: 'Misal: Beli Laptop Baru',
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(AppSizes.radius16),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Pilih Ikon',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -174,7 +175,7 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                             color: isSelected
                                 ? AppColors.primary
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(AppSizes.radius16),
                             border: Border.all(
                               color: isSelected
                                   ? Colors.transparent
@@ -191,14 +192,14 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       );
                     },
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                   Text(
                     'Pilih Warna',
                     style: AppStyles.caption.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   Wrap(
                     spacing: 12,
                     runSpacing: 12,
@@ -261,7 +262,7 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                     },
                   ),
                   if (widget.category != null) ...[
-                    const SizedBox(height: 16),
+                    SizedBox(height: AppSizes.paddingV16),
                     SizedBox(
                       width: double.infinity,
                       child: TextButton(
@@ -284,7 +285,7 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 32),
+                  SizedBox(height: AppSizes.paddingV32),
                 ],
               ),
             ),

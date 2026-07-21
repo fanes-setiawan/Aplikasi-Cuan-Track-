@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../injection_container.dart';
@@ -92,7 +93,7 @@ class MaintenanceScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: AppSizes.paddingV16),
                 // Dynamic description
                 Text(
                   isUpdateRequired
@@ -129,7 +130,7 @@ class MaintenanceScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: AppSizes.paddingV32),
               ],
             ),
           ),

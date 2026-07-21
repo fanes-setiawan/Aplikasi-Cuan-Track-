@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,10 +59,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(AppSizes.padding16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizes.radius16),
                 border: Border.all(color: AppColors.divider),
               ),
               child: Row(
@@ -70,7 +71,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEFF6FF),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppSizes.radius12),
                     ),
                     child: const Icon(
                       Icons.account_balance,
@@ -78,7 +79,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                       size: 24,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: AppSizes.padding16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,25 +107,25 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: AppSizes.paddingV32),
             Text(
               'Informasi Akun',
               style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
               label: 'Nama Akun',
               hintText: 'Contoh: Tabungan Utama, GoPay Pribadi',
               controller: _nameController,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
               label: 'Nomor Rekening / ID (Opsional)',
               hintText: 'Nomor rekening atau ID akun Anda',
               controller: _numberController,
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
               label: 'Saldo Awal',
               hintText: '0',
@@ -141,12 +142,12 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: AppSizes.paddingV24),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSizes.radius16),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

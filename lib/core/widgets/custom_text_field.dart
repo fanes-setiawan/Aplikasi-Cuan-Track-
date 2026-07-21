@@ -12,6 +12,11 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final Widget? prefix;
+  final Color? fillColor;
+  final Color? textColor;
+  final Color? labelColor;
+  final Color? hintColor;
+  final Color? borderColor;
 
   const CustomTextField({
     super.key,
@@ -23,6 +28,11 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.keyboardType = TextInputType.text,
     this.prefix,
+    this.fillColor,
+    this.textColor,
+    this.labelColor,
+    this.hintColor,
+    this.borderColor,
   });
 
   @override
@@ -42,6 +52,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           style: AppStyles.bodyText.copyWith(
             fontWeight: FontWeight.w600,
             fontSize: 13,
+            color: widget.labelColor,
           ),
         ),
         const SizedBox(height: AppDimens.sm),
@@ -50,11 +61,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           obscureText: widget.isPassword ? _obscureText : false,
           validator: widget.validator,
           keyboardType: widget.keyboardType,
-          style: AppStyles.bodyText,
+          style: AppStyles.bodyText.copyWith(color: widget.textColor),
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: AppStyles.bodyTextSecondary.copyWith(
-              color: AppColors.textHint,
+              color: widget.hintColor ?? AppColors.textHint,
             ),
             prefixIcon: widget.prefixIcon != null
                 ? Icon(
@@ -81,7 +92,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   )
                 : null,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: widget.fillColor ?? Colors.white,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: AppDimens.md,
               vertical: AppDimens.md,
@@ -92,7 +103,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppDimens.radiusM),
-              borderSide: BorderSide(color: AppColors.divider, width: 1.5),
+              borderSide: BorderSide(color: widget.borderColor ?? AppColors.divider, width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppDimens.radiusM),

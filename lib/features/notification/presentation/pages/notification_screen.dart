@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -106,9 +107,9 @@ class NotificationScreen extends StatelessWidget {
   Widget _buildSectionHeader(String title) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         horizontal: AppDimens.md,
-        vertical: 12,
+        vertical: AppSizes.paddingV12,
       ),
       decoration: BoxDecoration(color: AppColors.background.withOpacity(0.5)),
       child: Text(
@@ -166,24 +167,24 @@ class NotificationScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(time, style: AppStyles.caption.copyWith(fontSize: 10)),
+                    Text(time, style: AppStyles.caption.copyWith(fontSize: AppSizes.font10)),
                   ],
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: AppSizes.paddingV4),
                 Row(
                   children: [
                     Expanded(
                       child: Text(
                         description,
                         style: AppStyles.bodyTextSecondary.copyWith(
-                          fontSize: 12,
+                          fontSize: AppSizes.font12,
                         ),
                       ),
                     ),
                     if (isUnread)
                       Container(
-                        width: 8,
-                        height: 8,
+                        width: AppSizes.padding8,
+                        height: AppSizes.paddingV8,
                         decoration: BoxDecoration(
                           color: AppColors.primary,
                           shape: BoxShape.circle,

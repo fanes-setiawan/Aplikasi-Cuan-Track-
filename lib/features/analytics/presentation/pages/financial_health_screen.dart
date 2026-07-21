@@ -1,3 +1,4 @@
+import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_ai/firebase_ai.dart';
@@ -53,7 +54,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
           child: GestureDetector(
             onTap: () => Navigator.pop(context),
             child: Container(
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
@@ -69,7 +70,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
         title: Text(
           'Kesehatan Keuangan',
           style: AppStyles.heading2.copyWith(
-            fontSize: 18,
+            fontSize: AppSizes.font18,
             color: const Color(0xFF1B5E20),
           ),
         ),
@@ -77,7 +78,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(AppSizes.padding8),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
@@ -92,7 +93,10 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               onPressed: () {
-                AppHelpers.showSnackBar(context, remoteConfig.fhShareToastMessage);
+                AppHelpers.showSnackBar(
+                  context,
+                  remoteConfig.fhShareToastMessage,
+                );
               },
             ),
           ),
@@ -150,7 +154,9 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                   // 4. Hitung Skor per Metrik (Skala 0 - 100)
                   double savingScore = savingRatio >= targetSaving
                       ? 100
-                      : (savingRatio / (targetSaving > 0 ? targetSaving : 0.01)) * 100;
+                      : (savingRatio /
+                                (targetSaving > 0 ? targetSaving : 0.01)) *
+                            100;
 
                   double debtScore = 0;
                   if (debtRatio <= targetDebt) {
@@ -160,12 +166,17 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                   } else {
                     double denominator = 1.0 - targetDebt;
                     if (denominator <= 0) denominator = 0.01;
-                    debtScore = (1.0 - (debtRatio - targetDebt) / denominator) * 100;
+                    debtScore =
+                        (1.0 - (debtRatio - targetDebt) / denominator) * 100;
                   }
 
                   double emergencyScore = emergencyFundRatio >= targetEmergency
                       ? 100
-                      : (emergencyFundRatio / (targetEmergency > 0 ? targetEmergency : 0.01)) * 100;
+                      : (emergencyFundRatio /
+                                (targetEmergency > 0
+                                    ? targetEmergency
+                                    : 0.01)) *
+                            100;
 
                   // 5. Skor Kesehatan Keuangan Total
                   double overallScore =
@@ -191,32 +202,35 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                   }
 
                   return SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0,
-                      vertical: 16.0,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.padding24,
+                      vertical: AppSizes.paddingV16,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Card Gauge Chart
                         _buildGaugeCard(overallScore),
-                        const SizedBox(height: 24),
+                        SizedBox(height: AppSizes.paddingV24),
 
                         // Section Analisis Metrik
                         Text(
                           'Analisis Metrik Keuangan',
                           style: AppStyles.heading3.copyWith(
                             color: const Color(0xFF1B5E20),
-                            fontSize: 16,
+                            fontSize: AppSizes.font16,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.paddingV16),
 
                         _buildMetricItem(
                           title: 'Saving Ratio',
                           value: '${(savingRatio * 100).toStringAsFixed(0)}%',
-                          target: 'Target: >${(targetSaving * 100).toStringAsFixed(0)}%',
-                          progress: savingRatio / (targetSaving > 0 ? targetSaving : 0.01),
+                          target:
+                              'Target: >${(targetSaving * 100).toStringAsFixed(0)}%',
+                          progress:
+                              savingRatio /
+                              (targetSaving > 0 ? targetSaving : 0.01),
                           score: savingScore,
                           desc: savingScore >= 100
                               ? 'Sangat bagus! Rasio tabungan Anda memenuhi standar ideal.'
@@ -227,13 +241,16 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                                     ? const Color(0xFFFDD835)
                                     : const Color(0xFFE53935)),
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.paddingV16),
 
                         _buildMetricItem(
                           title: 'Debt-to-Income Ratio',
                           value: '${(debtRatio * 100).toStringAsFixed(0)}%',
-                          target: 'Target: <${(targetDebt * 100).toStringAsFixed(0)}%',
-                          progress: debtRatio > 0 ? (targetDebt / debtRatio) : 1.0,
+                          target:
+                              'Target: <${(targetDebt * 100).toStringAsFixed(0)}%',
+                          progress: debtRatio > 0
+                              ? (targetDebt / debtRatio)
+                              : 1.0,
                           score: debtScore,
                           desc: debtScore >= 100
                               ? 'Sangat aman! Beban cicilan hutang Anda terkendali dengan baik.'
@@ -247,14 +264,17 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                           ratioPercent: debtRatio,
                           ratioLimit: targetDebt,
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: AppSizes.paddingV16),
 
                         _buildMetricItem(
                           title: 'Dana Darurat (Emergency Fund)',
                           value:
                               '${emergencyFundRatio.toStringAsFixed(1)} Bulan',
-                          target: 'Target: ${targetEmergency.toStringAsFixed(0)}-${(targetEmergency * 2).toStringAsFixed(0)} Bulan',
-                          progress: emergencyFundRatio / (targetEmergency > 0 ? targetEmergency : 0.01),
+                          target:
+                              'Target: ${targetEmergency.toStringAsFixed(0)}-${(targetEmergency * 2).toStringAsFixed(0)} Bulan',
+                          progress:
+                              emergencyFundRatio /
+                              (targetEmergency > 0 ? targetEmergency : 0.01),
                           score: emergencyScore,
                           desc: emergencyScore >= 100
                               ? 'Sangat sehat! Dana darurat mencukupi untuk ${targetEmergency.toStringAsFixed(0)} bulan pengeluaran atau lebih.'
@@ -265,11 +285,11 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                                     ? const Color(0xFFFDD835)
                                     : const Color(0xFFE53935)),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: AppSizes.paddingV24),
 
                         // Section Rekomendasi AI
                         _buildAIRecommendationCard(),
-                        const SizedBox(height: 32),
+                        SizedBox(height: AppSizes.paddingV32),
 
                         // Tombol Simulasi
                         if (remoteConfig.fhEnableSimulation) ...[
@@ -290,7 +310,9 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radius16,
+                                  ),
                                 ),
                               ),
                               child: Row(
@@ -302,14 +324,14 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                                         : Icons.tune,
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: AppSizes.padding8),
                                   Text(
                                     _isSimulating
                                         ? 'Reset Simulasi'
                                         : 'Mulai Simulasi Perbaikan',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                      fontSize: AppSizes.font14,
                                     ),
                                   ),
                                 ],
@@ -348,10 +370,10 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppSizes.padding24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(AppSizes.radius24),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
@@ -374,7 +396,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                     width: 250,
                     child: CustomPaint(painter: GaugePainter(score: val)),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
                   Text(
                     '${val.toStringAsFixed(0)} / 100',
                     style: AppStyles.heading1.copyWith(
@@ -386,9 +408,12 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
               );
             },
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: AppSizes.paddingV8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.padding16,
+              vertical: 6,
+            ),
             decoration: BoxDecoration(
               color: statusBgColor,
               borderRadius: BorderRadius.circular(20),
@@ -401,11 +426,11 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                     ? Colors.orange[800]
                     : statusColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
+                fontSize: AppSizes.font12,
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Text(
             _isSimulating
                 ? 'Mode Simulasi Aktif. Tarik slider untuk melihat perubahan skor secara langsung.'
@@ -445,7 +470,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(AppSizes.padding20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -467,22 +492,22 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: AppSizes.padding8),
               Text(
                 value,
                 style: AppStyles.heading2.copyWith(
-                  fontSize: 14,
+                  fontSize: AppSizes.font14,
                   color: activeColor,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: AppSizes.paddingV4),
           Text(
             target,
             style: AppStyles.caption.copyWith(color: AppColors.textHint),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Row(
             children: [
               Expanded(
@@ -506,7 +531,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: AppSizes.paddingV12),
           Text(
             desc,
             style: AppStyles.caption.copyWith(
@@ -521,7 +546,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
 
   Widget _buildAIRecommendationCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(AppSizes.padding20),
       decoration: BoxDecoration(
         color: const Color(0xFFE8F5E9),
         borderRadius: BorderRadius.circular(20),
@@ -531,14 +556,14 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(AppSizes.padding8),
             decoration: const BoxDecoration(
               color: Color(0xFF1B5E20),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.lightbulb, color: Colors.white, size: 20),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: AppSizes.padding16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -547,16 +572,18 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                   'Rekomendasi CuanAI',
                   style: AppStyles.heading2.copyWith(
                     color: const Color(0xFF1B5E20),
-                    fontSize: 14,
+                    fontSize: AppSizes.font14,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: AppSizes.paddingV8),
                 _aiLoading
-                    ? const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: AppSizes.paddingV8,
+                        ),
                         child: SizedBox(
-                          height: 16,
-                          width: 16,
+                          height: AppSizes.paddingV16,
+                          width: AppSizes.padding16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: Color(0xFF1B5E20),
@@ -567,7 +594,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                         _aiRecommendation,
                         style: AppStyles.bodyText.copyWith(
                           color: AppColors.textSecondary,
-                          fontSize: 12,
+                          fontSize: AppSizes.font12,
                           height: 1.5,
                         ),
                       ),
@@ -599,10 +626,10 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+          topLeft: Radius.circular(AppSizes.radius24),
+          topRight: Radius.circular(AppSizes.radius24),
         ),
       ),
       builder: (context) {
@@ -629,21 +656,21 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: AppSizes.paddingV20),
                   Text(
                     'Simulasi Perbaikan Finansial',
                     style: AppStyles.heading2.copyWith(
                       color: const Color(0xFF1B5E20),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: AppSizes.paddingV8),
                   Text(
                     'Geser slider untuk melihat bagaimana penyesuaian nominal keuangan mempengaruhi skor kesehatan Anda.',
                     style: AppStyles.caption.copyWith(
                       color: AppColors.textSecondary,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
 
                   // Slider 1: Pendapatan
                   _buildSliderItem(
@@ -657,7 +684,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       setState(() => _simulatedIncome = val);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
 
                   // Slider 2: Pengeluaran
                   _buildSliderItem(
@@ -671,7 +698,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       setState(() => _simulatedExpense = val);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
 
                   // Slider 3: Tabungan
                   _buildSliderItem(
@@ -685,7 +712,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       setState(() => _simulatedSavings = val);
                     },
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: AppSizes.paddingV16),
 
                   // Slider 4: Hutang
                   _buildSliderItem(
@@ -699,7 +726,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                       setState(() => _simulatedDebt = val);
                     },
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: AppSizes.paddingV24),
 
                   // Tombol Selesai & Reset
                   Row(
@@ -725,7 +752,9 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.grey),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radius16,
+                              ),
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
@@ -738,7 +767,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: AppSizes.padding16),
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => Navigator.pop(context),
@@ -746,7 +775,9 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
                             backgroundColor: const Color(0xFF1B5E20),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radius16,
+                              ),
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 14),
                           ),
@@ -805,9 +836,9 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
             thumbColor: const Color(0xFF1B5E20),
             overlayColor: const Color(0xFF1B5E20).withOpacity(0.2),
             valueIndicatorColor: const Color(0xFF1B5E20),
-            valueIndicatorTextStyle: const TextStyle(
+            valueIndicatorTextStyle: TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: AppSizes.font12,
             ),
           ),
           child: Slider(
@@ -845,11 +876,23 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
           .replaceAll('{savings}', savings.toStringAsFixed(0))
           .replaceAll('{debt}', debt.toStringAsFixed(0))
           .replaceAll('{savingRatio}', (savingRatio * 100).toStringAsFixed(0))
-          .replaceAll('{targetSaving}', (remoteConfig.fhTargetSavingRatio * 100).toStringAsFixed(0))
+          .replaceAll(
+            '{targetSaving}',
+            (remoteConfig.fhTargetSavingRatio * 100).toStringAsFixed(0),
+          )
           .replaceAll('{debtRatio}', (debtRatio * 100).toStringAsFixed(0))
-          .replaceAll('{targetDebt}', (remoteConfig.fhTargetDebtRatio * 100).toStringAsFixed(0))
-          .replaceAll('{emergencyFundRatio}', emergencyFundRatio.toStringAsFixed(1))
-          .replaceAll('{targetEmergency}', remoteConfig.fhTargetEmergencyMonths.toStringAsFixed(0));
+          .replaceAll(
+            '{targetDebt}',
+            (remoteConfig.fhTargetDebtRatio * 100).toStringAsFixed(0),
+          )
+          .replaceAll(
+            '{emergencyFundRatio}',
+            emergencyFundRatio.toStringAsFixed(1),
+          )
+          .replaceAll(
+            '{targetEmergency}',
+            remoteConfig.fhTargetEmergencyMonths.toStringAsFixed(0),
+          );
       final response = await model.generateContent([Content.text(prompt)]);
       setState(() {
         _aiRecommendation = response.text ?? 'Gagal membuat rekomendasi AI.';

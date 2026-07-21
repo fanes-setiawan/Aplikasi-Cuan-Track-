@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cuan_track/core/theme/app_colors.dart';
@@ -75,15 +76,22 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<DebtBloc>(create: (_) => di.sl<DebtBloc>()),
       ],
-      child: MaterialApp(
-        title: 'Cuan Track',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-          useMaterial3: true,
-          fontFamily: 'Roboto',
-        ),
-        home: const SplashScreen(),
+      child: ScreenUtilInit(
+        designSize: const Size(412, 917),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp(
+            title: 'Cuan Track',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+              useMaterial3: true,
+              fontFamily: 'Roboto',
+            ),
+            home: const SplashScreen(),
+          );
+        },
       ),
     );
   }

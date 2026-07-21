@@ -10,6 +10,7 @@ class CustomButton extends StatelessWidget {
   final Widget? icon;
   final Color? backgroundColor;
   final Color? textColor;
+  final Gradient? gradient;
 
   const CustomButton({
     super.key,
@@ -19,6 +20,7 @@ class CustomButton extends StatelessWidget {
     this.icon,
     this.backgroundColor,
     this.textColor,
+    this.gradient,
   });
 
   @override
@@ -37,17 +39,43 @@ class CustomButton extends StatelessWidget {
               ),
               child: _buildContent(),
             )
-          : ElevatedButton(
-              onPressed: onPressed,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: backgroundColor ?? AppColors.primary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                ),
-              ),
-              child: _buildContent(),
-            ),
+          : (gradient != null
+              ? DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: gradient,
+                    borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (backgroundColor ?? const Color(0xFF10b981)).withValues(alpha: 0.25),
+                        blurRadius: 15,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ElevatedButton(
+                    onPressed: onPressed,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                      ),
+                    ),
+                    child: _buildContent(),
+                  ),
+                )
+              : ElevatedButton(
+                  onPressed: onPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: backgroundColor ?? AppColors.primary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppDimens.radiusM),
+                    ),
+                  ),
+                  child: _buildContent(),
+                )),
     );
   }
 
