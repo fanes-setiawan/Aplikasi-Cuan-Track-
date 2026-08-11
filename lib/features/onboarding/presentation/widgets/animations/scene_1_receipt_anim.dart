@@ -45,10 +45,10 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
               height: 180,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF10b981).withOpacity(0.15),
+                color: const Color(0xFF10b981).withValues(alpha: 0.15),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF10b981).withOpacity(0.3),
+                    color: const Color(0xFF10b981).withValues(alpha: 0.3),
                     blurRadius: 60,
                     spreadRadius: 20,
                   ),
@@ -107,7 +107,7 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
                       width: 220,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1e293b).withOpacity(0.9),
+                        color: const Color(0xFF1e293b).withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
                           color: const Color(0xFF34d399),
@@ -115,7 +115,7 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: 0.2),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -154,12 +154,12 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
                                 decoration: BoxDecoration(
                                   color: const Color(
                                     0xFF0f172a,
-                                  ).withOpacity(0.9),
+                                  ).withValues(alpha: 0.9),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
                                     color: const Color(
                                       0xFF10b981,
-                                    ).withOpacity(0.3),
+                                    ).withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Column(
@@ -253,7 +253,7 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
                                       BoxShadow(
                                         color: const Color(
                                           0xFF34d399,
-                                        ).withOpacity(0.8),
+                                        ).withValues(alpha: 0.8),
                                         blurRadius: 8,
                                         spreadRadius: 2,
                                       ),
@@ -315,12 +315,12 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF1e293b).withOpacity(0.95),
+        color: const Color(0xFF1e293b).withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: borderColor, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -412,7 +412,7 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
         border: Border.all(color: borderColor, width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

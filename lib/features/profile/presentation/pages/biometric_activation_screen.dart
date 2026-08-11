@@ -65,7 +65,7 @@ class BiometricActivationScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -114,7 +114,7 @@ class BiometricActivationScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          const Color(0xFF27AE60).withOpacity(0.1),
+                          const Color(0xFF27AE60).withValues(alpha: 0.1),
                           Colors.transparent,
                         ],
                       ),
@@ -181,10 +181,14 @@ class BiometricActivationScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF27AE60),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSizes.radius16),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radius16,
+                          ),
                         ),
                         elevation: 4,
-                        shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
+                        shadowColor: const Color(
+                          0xFF27AE60,
+                        ).withValues(alpha: 0.3),
                       ),
                       child: Text(
                         'Mulai Pemindaian',

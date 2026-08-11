@@ -76,7 +76,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                           : 'Pengeluaran',
                       iconBgColor: Color(
                         int.parse(cat.colorHex),
-                      ).withOpacity(0.1),
+                      ).withValues(alpha: 0.1),
                       iconColor: Color(int.parse(cat.colorHex)),
                       context: context,
                     ),
@@ -106,7 +106,9 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                             ),
                           ),
                           elevation: 4,
-                          shadowColor: const Color(0xFF27AE60).withOpacity(0.3),
+                          shadowColor: const Color(
+                            0xFF27AE60,
+                          ).withValues(alpha: 0.3),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -157,14 +159,17 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
     required BuildContext context,
   }) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: AppDimens.md, vertical: AppSizes.paddingV8),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppDimens.md,
+        vertical: AppSizes.paddingV8,
+      ),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

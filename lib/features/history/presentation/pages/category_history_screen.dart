@@ -165,7 +165,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         gradient: LinearGradient(
           colors: [
             widget.categoryColor,
-            widget.categoryColor.withOpacity(0.75),
+            widget.categoryColor.withValues(alpha: 0.75),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -173,7 +173,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: widget.categoryColor.withOpacity(0.35),
+            color: widget.categoryColor.withValues(alpha: 0.35),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -188,7 +188,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 Text(
                   'TOTAL ${widget.categoryName.toUpperCase()}',
                   style: AppStyles.caption.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: AppSizes.font10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.1,
@@ -218,7 +218,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               Text(
                 'transaksi',
                 style: AppStyles.caption.copyWith(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -236,13 +236,13 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
         border: Border.all(
-          color: widget.categoryColor.withOpacity(0.3),
+          color: widget.categoryColor.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -266,7 +266,10 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
   Widget _buildHeaderRow() {
     return Container(
       color: widget.categoryColor,
-      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding12),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.paddingV12,
+        horizontal: AppSizes.padding12,
+      ),
       child: Row(
         children: [
           _headerCell('No', flex: 1, center: true),
@@ -322,8 +325,13 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
         ),
       ),
       child: Container(
-        color: isEven ? Colors.white : widget.categoryColor.withOpacity(0.04),
-        padding: EdgeInsets.symmetric(vertical: 11, horizontal: AppSizes.padding12),
+        color: isEven
+            ? Colors.white
+            : widget.categoryColor.withValues(alpha: 0.04),
+        padding: EdgeInsets.symmetric(
+          vertical: 11,
+          horizontal: AppSizes.padding12,
+        ),
         child: Row(
           children: [
             Expanded(
@@ -380,8 +388,11 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
 
   Widget _buildFooterRow(int count, double totalAmount) {
     return Container(
-      color: widget.categoryColor.withOpacity(0.12),
-      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding12),
+      color: widget.categoryColor.withValues(alpha: 0.12),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.paddingV12,
+        horizontal: AppSizes.padding12,
+      ),
       child: Row(
         children: [
           const Expanded(flex: 1, child: SizedBox()),

@@ -41,8 +41,6 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
     'Desember',
   ];
 
-
-
   void _showToggleStatusDialog(
     BuildContext context,
     DebtEntity debt,
@@ -130,8 +128,6 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DebtBloc, DebtState>(
@@ -216,7 +212,7 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                     borderRadius: BorderRadius.circular(AppDimens.radiusL),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
+                        color: Colors.black.withValues(alpha: 0.03),
                         blurRadius: 15,
                         offset: const Offset(0, 4),
                       ),
@@ -331,7 +327,9 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                   children: [
                     Text(
                       'Rincian Bulanan',
-                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+                      style: AppStyles.heading2.copyWith(
+                        fontSize: AppSizes.font18,
+                      ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -368,10 +366,14 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                     final startMonth = debt.effectiveStartDate.month; // 1-based
                     final targetMonthIndex = (startMonth - 1 + index) % 12;
                     final monthLabel = _months[targetMonthIndex];
-                    final targetYear = debt.effectiveStartDate.year + (startMonth - 1 + index) ~/ 12;
+                    final targetYear =
+                        debt.effectiveStartDate.year +
+                        (startMonth - 1 + index) ~/ 12;
                     final yearLabel = targetYear.toString();
 
-                    final isPaidMonth = debt.paidInstallmentMonths.contains(index);
+                    final isPaidMonth = debt.paidInstallmentMonths.contains(
+                      index,
+                    );
 
                     // Find the first unpaid index from 0 to totalMonths - 1
                     int firstUnpaidIndex = -1;
@@ -394,7 +396,14 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                         'LUNAS',
                         const Color(0xFF2E7D32),
                         const Color(0xFFE8F5E9),
-                        onTap: () => _showToggleStatusDialog(context, debt, index, monthLabel, yearLabel, true),
+                        onTap: () => _showToggleStatusDialog(
+                          context,
+                          debt,
+                          index,
+                          monthLabel,
+                          yearLabel,
+                          true,
+                        ),
                       );
                     } else if (index == firstUnpaidIndex) {
                       // Current Due Month (BAYAR)
@@ -412,7 +421,14 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                           color: const Color(0xFF0D47A1),
                           width: 1.5,
                         ),
-                        onTap: () => _showToggleStatusDialog(context, debt, index, monthLabel, yearLabel, false),
+                        onTap: () => _showToggleStatusDialog(
+                          context,
+                          debt,
+                          index,
+                          monthLabel,
+                          yearLabel,
+                          false,
+                        ),
                       );
                     } else {
                       // Future Month (NANTI)
@@ -426,7 +442,14 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
                         'NANTI',
                         Colors.grey[700]!,
                         const Color(0xFFE0E0E0),
-                        onTap: () => _showToggleStatusDialog(context, debt, index, monthLabel, yearLabel, false),
+                        onTap: () => _showToggleStatusDialog(
+                          context,
+                          debt,
+                          index,
+                          monthLabel,
+                          yearLabel,
+                          false,
+                        ),
                       );
                     }
                   },
@@ -455,14 +478,18 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV8, horizontal: AppSizes.padding4),
+        padding: EdgeInsets.symmetric(
+          vertical: AppSizes.paddingV8,
+          horizontal: AppSizes.padding4,
+        ),
         decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(AppSizes.radius12),
-          border: border ?? Border.all(color: Colors.grey.withOpacity(0.1)),
+          border:
+              border ?? Border.all(color: Colors.grey.withValues(alpha: 0.1)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -497,7 +524,7 @@ class _InstallmentDetailScreenState extends State<InstallmentDetailScreen> {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: badgeBgColor.withOpacity(0.15),
+                color: badgeBgColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: accentColor, size: 16),

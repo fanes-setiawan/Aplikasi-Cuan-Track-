@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -183,7 +185,10 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   Icon(Icons.category_outlined, color: AppColors.primary),
                   Text(
                     'Tujuan',
-                    style: TextStyle(fontSize: AppSizes.font10, color: AppColors.primary),
+                    style: TextStyle(
+                      fontSize: AppSizes.font10,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ],
               ),
@@ -306,7 +311,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -320,7 +325,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
             child: Icon(
               Icons.savings,
               size: 150,
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
             ),
           ),
           Padding(
@@ -334,7 +339,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                     Text(
                       'Total Tabungan',
                       style: AppStyles.caption.copyWith(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                     const Icon(Icons.credit_card, color: Colors.white70),
@@ -349,7 +354,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                   ),
                 ),
                 const SizedBox(height: AppDimens.md),
-                Divider(color: Colors.white.withOpacity(0.2)),
+                Divider(color: Colors.white.withValues(alpha: 0.2)),
                 const SizedBox(height: AppDimens.md),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -360,7 +365,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         Text(
                           'TOTAL TARGET',
                           style: AppStyles.caption.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontSize: AppSizes.font10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -380,7 +385,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                         Text(
                           'SISA TARGET',
                           style: AppStyles.caption.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontSize: AppSizes.font10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -450,7 +455,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                  border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+                  border: Border.all(
+                    color: AppColors.divider.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -494,7 +501,9 @@ class _SavingsScreenState extends State<SavingsScreen> {
                       child: LinearProgressIndicator(
                         value: progress,
                         minHeight: 4,
-                        backgroundColor: AppColors.divider.withOpacity(0.3),
+                        backgroundColor: AppColors.divider.withValues(
+                          alpha: 0.3,
+                        ),
                         color: AppColors.primary,
                       ),
                     ),
@@ -600,7 +609,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
     final Color iconColor = goal.categoryColorHex != null
         ? Color(int.parse(goal.categoryColorHex))
         : AppColors.primary;
-    final Color iconBgColor = iconColor.withOpacity(0.1);
+    final Color iconBgColor = iconColor.withValues(alpha: 0.1);
 
     final monthNames = [
       'Jan',
@@ -674,7 +683,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
                               Text(
                                 goal.categoryName!,
                                 style: AppStyles.caption.copyWith(
-                                  color: iconColor.withOpacity(0.8),
+                                  color: iconColor.withValues(alpha: 0.8),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -708,7 +717,7 @@ class _SavingsScreenState extends State<SavingsScreen> {
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 8,
-                backgroundColor: AppColors.divider.withOpacity(0.5),
+                backgroundColor: AppColors.divider.withValues(alpha: 0.5),
                 color: AppColors.primary,
               ),
             ),

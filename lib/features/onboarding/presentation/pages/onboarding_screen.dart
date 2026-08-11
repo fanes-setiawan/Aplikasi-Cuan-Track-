@@ -142,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (index >= _pages.length - 1) {
       return const SizedBox(height: 56);
     }
-    
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppSizes.padding24,
@@ -154,12 +154,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           GestureDetector(
             onTap: _finishOnboarding,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFF1e293b).withOpacity(0.5),
+                color: const Color(0xFF1e293b).withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: const Color(0xFF334155)),
               ),
@@ -261,7 +258,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF10b981).withOpacity(0.25),
+                    color: const Color(0xFF10b981).withValues(alpha: 0.25),
                     blurRadius: 15,
                     offset: const Offset(0, 4),
                   ),

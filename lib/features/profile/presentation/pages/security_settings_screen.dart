@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -227,7 +229,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: Colors.white,
+            activeThumbColor: Colors.white,
             activeTrackColor: const Color(0xFF27AE60),
           ),
         ],
@@ -343,7 +345,10 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               }).toList();
             },
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding12, vertical: AppSizes.paddingV8),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.padding12,
+                vertical: AppSizes.paddingV8,
+              ),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFB),
                 borderRadius: BorderRadius.circular(AppSizes.radius8),

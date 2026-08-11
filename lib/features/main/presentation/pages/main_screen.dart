@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/features/budget/presentation/pages/budget_screen.dart';
 import 'package:cuan_track/features/history/presentation/pages/history_screen.dart';
@@ -6,7 +8,6 @@ import 'package:cuan_track/features/analytics/presentation/pages/analytics_scree
 import 'package:cuan_track/features/profile/presentation/pages/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_dimens.dart';
 import 'package:flutter/services.dart';
@@ -60,12 +61,12 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print('DEBUG: AppLifecycleState changed to: $state');
+    debugPrint('DEBUG: AppLifecycleState changed to: $state');
     if (state == AppLifecycleState.paused) {
       _backgroundTime = DateTime.now();
-      print('DEBUG: App paused at: $_backgroundTime');
+      debugPrint('DEBUG: App paused at: $_backgroundTime');
     } else if (state == AppLifecycleState.resumed) {
-      print('DEBUG: App resumed. Calling _handleAppResume...');
+      debugPrint('DEBUG: App resumed. Calling _handleAppResume...');
       _handleAppResume();
     }
   }
@@ -83,17 +84,17 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
     if (_backgroundTime != null) {
       final elapsed = DateTime.now().difference(_backgroundTime!);
       final lockDuration = _parseDuration(durationStr);
-      print('DEBUG: Elapsed time since background: ${elapsed.inSeconds}s');
-      print('DEBUG: Lock duration required: ${lockDuration.inSeconds}s');
+      debugPrint('DEBUG: Elapsed time since background: ${elapsed.inSeconds}s');
+      debugPrint('DEBUG: Lock duration required: ${lockDuration.inSeconds}s');
 
       if (elapsed >= lockDuration) {
-        print('DEBUG: Locking app...');
+        debugPrint('DEBUG: Locking app...');
         setState(() => _isAppLocked = true);
       } else {
-        print('DEBUG: Not enough time elapsed to lock.');
+        debugPrint('DEBUG: Not enough time elapsed to lock.');
       }
     } else {
-      print('DEBUG: _backgroundTime is null, skipping lock check.');
+      debugPrint('DEBUG: _backgroundTime is null, skipping lock check.');
     }
   }
 
@@ -235,16 +236,13 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha: 0.3),
                         blurRadius: 20,
                         offset: const Offset(0, -10),
                       ),
                     ],
                     border: Border(
-                      top: BorderSide(
-                        color: const Color(0xFF1E293B),
-                        width: 1,
-                      ),
+                      top: BorderSide(color: const Color(0xFF1E293B), width: 1),
                     ),
                   ),
                   child: ClipRRect(
@@ -280,7 +278,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           icon: Container(
                             padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withOpacity(0.1),
+                              color: const Color(
+                                0xFF10B981,
+                              ).withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
                             child: _buildIcon(AppAssets.iconStats, false),
@@ -288,7 +288,9 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
                           activeIcon: Container(
                             padding: EdgeInsets.all(AppSizes.padding12),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withOpacity(0.2),
+                              color: const Color(
+                                0xFF10B981,
+                              ).withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
                             child: _buildIcon(AppAssets.iconStats, true),

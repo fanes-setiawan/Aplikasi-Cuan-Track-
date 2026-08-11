@@ -167,47 +167,47 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                         },
                         child: Center(
                           child: Column(
-                          children: [
-                            Text(
-                              'NOMINAL',
-                              style: AppStyles.caption.copyWith(
-                                letterSpacing: 1.5,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF94A3B8),
+                            children: [
+                              Text(
+                                'NOMINAL',
+                                style: AppStyles.caption.copyWith(
+                                  letterSpacing: 1.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xFF94A3B8),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: AppDimens.sm),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  'Rp',
-                                  style: AppStyles.heading1.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: AppSizes.font24,
+                              const SizedBox(height: AppDimens.sm),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    'Rp',
+                                    style: AppStyles.heading1.copyWith(
+                                      color: AppColors.primary,
+                                      fontSize: AppSizes.font24,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(width: AppSizes.padding8),
-                                Text(
-                                  _formattedAmount,
-                                  style: AppStyles.heading1.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: 48,
+                                  SizedBox(width: AppSizes.padding8),
+                                  Text(
+                                    _formattedAmount,
+                                    style: AppStyles.heading1.copyWith(
+                                      color: AppColors.primary,
+                                      fontSize: 48,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  width: 3,
-                                  height: 40,
-                                  margin: const EdgeInsets.only(left: 4),
-                                  color: AppColors.primary,
-                                ),
-                              ],
-                            ),
-                          ],
+                                  Container(
+                                    width: 3,
+                                    height: 40,
+                                    margin: const EdgeInsets.only(left: 4),
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
                       ),
                       const SizedBox(height: AppDimens.xl + 10),
 
@@ -309,27 +309,39 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              SizedBox(height: AppSizes.paddingV16),
+                                              SizedBox(
+                                                height: AppSizes.paddingV16,
+                                              ),
                                               Container(
                                                 height: 5,
                                                 width: 40,
                                                 decoration: BoxDecoration(
-                                                  color: const Color(0xFF1E293B),
+                                                  color: const Color(
+                                                    0xFF1E293B,
+                                                  ),
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                 ),
                                               ),
-                                              SizedBox(height: AppSizes.paddingV16),
+                                              SizedBox(
+                                                height: AppSizes.paddingV16,
+                                              ),
                                               Text(
                                                 'Pilih Metode Pembayaran',
-                                                style: AppStyles.heading2.copyWith(color: Colors.white),
+                                                style: AppStyles.heading2
+                                                    .copyWith(
+                                                      color: Colors.white,
+                                                    ),
                                               ),
-                                              SizedBox(height: AppSizes.paddingV16),
+                                              SizedBox(
+                                                height: AppSizes.paddingV16,
+                                              ),
                                               ...state.paymentMethods.map(
                                                 (m) => ListTile(
                                                   leading: Container(
-                                                    padding:
-                                                        EdgeInsets.all(AppSizes.padding8),
+                                                    padding: EdgeInsets.all(
+                                                      AppSizes.padding8,
+                                                    ),
                                                     decoration: BoxDecoration(
                                                       color: const Color(
                                                         0xFF1E293B,
@@ -361,14 +373,21 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                                                   ),
                                                   subtitle: Text(
                                                     m.type,
-                                                    style: AppStyles.caption.copyWith(color: const Color(0xFF94A3B8)),
+                                                    style: AppStyles.caption
+                                                        .copyWith(
+                                                          color: const Color(
+                                                            0xFF94A3B8,
+                                                          ),
+                                                        ),
                                                   ),
                                                   onTap: () {
                                                     Navigator.pop(context, m);
                                                   },
                                                 ),
                                               ),
-                                              SizedBox(height: AppSizes.paddingV32),
+                                              SizedBox(
+                                                height: AppSizes.paddingV32,
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -418,9 +437,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                           borderRadius: BorderRadius.circular(
                             AppDimens.radiusM,
                           ),
-                          border: Border.all(
-                            color: const Color(0xFF1E293B),
-                          ),
+                          border: Border.all(color: const Color(0xFF1E293B)),
                         ),
                         child: TextField(
                           controller: _noteController,
@@ -435,7 +452,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                               color: const Color(0xFF94A3B8),
                             ),
                           ),
-                          style: AppStyles.bodyText.copyWith(color: Colors.white),
+                          style: AppStyles.bodyText.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -489,12 +508,19 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       onTap: () => setState(() => _selectedCategory = category),
       child: Container(
         margin: const EdgeInsets.only(right: 12),
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.padding16,
+          vertical: 10,
+        ),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF10B981).withOpacity(0.1) : const Color(0xFF0F172A),
+          color: isSelected
+              ? const Color(0xFF10B981).withValues(alpha: 0.1)
+              : const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.round),
           border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : const Color(0xFF1E293B),
+            color: isSelected
+                ? const Color(0xFF10B981)
+                : const Color(0xFF1E293B),
             width: 1.5,
           ),
         ),
@@ -503,13 +529,17 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             Icon(
               _getIconForName(category.iconName),
               size: 18,
-              color: isSelected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
+              color: isSelected
+                  ? const Color(0xFF10B981)
+                  : const Color(0xFF94A3B8),
             ),
             SizedBox(width: AppSizes.padding8),
             Text(
               category.name,
               style: AppStyles.bodyText.copyWith(
-                color: isSelected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
+                color: isSelected
+                    ? const Color(0xFF10B981)
+                    : const Color(0xFF94A3B8),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -552,7 +582,10 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF1E293B), style: BorderStyle.none),
+          border: Border.all(
+            color: const Color(0xFF1E293B),
+            style: BorderStyle.none,
+          ),
         ),
         child: Icon(
           Icons.add_circle_outline,
@@ -599,9 +632,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   Text(
                     value,
                     style: AppStyles.bodyText.copyWith(
-                      color: isNote
-                          ? const Color(0xFF94A3B8)
-                          : Colors.white,
+                      color: isNote ? const Color(0xFF94A3B8) : Colors.white,
                     ),
                   ),
                 ],
@@ -625,7 +656,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       isScrollControlled: true,
       backgroundColor: const Color(0xFF0F172A),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius24)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radius24),
+        ),
       ),
       builder: (context) {
         return StatefulBuilder(
@@ -640,7 +673,12 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const SizedBox(width: 48),
-                        Text('Masukkan Nominal', style: AppStyles.heading3.copyWith(color: Colors.white)),
+                        Text(
+                          'Masukkan Nominal',
+                          style: AppStyles.heading3.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
                         IconButton(
                           icon: const Icon(
                             Icons.check,
@@ -673,7 +711,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   }
 
   Widget _buildKeyboardRow(List<String> keys, StateSetter setModalState) {
-    return Row(children: keys.map((key) => _buildKey(key, setModalState)).toList());
+    return Row(
+      children: keys.map((key) => _buildKey(key, setModalState)).toList(),
+    );
   }
 
   Widget _buildKey(String key, StateSetter setModalState) {
@@ -688,10 +728,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xFF1E293B),
-              width: 0.5,
-            ),
+            border: Border.all(color: const Color(0xFF1E293B), width: 0.5),
           ),
           child: Center(
             child: key == 'DEL'
@@ -723,7 +760,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
     } else {
       if (_rawAmount == "0") {
         if (key != '000' && key != '0') {
-           _rawAmount = key;
+          _rawAmount = key;
         }
       } else {
         if (_rawAmount.length < 12) {

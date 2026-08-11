@@ -22,18 +22,18 @@ class Scene3RocketAnim extends StatelessWidget {
               height: 180,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFf59e0b).withOpacity(0.15),
+                color: const Color(0xFFf59e0b).withValues(alpha: 0.15),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFf59e0b).withOpacity(0.3),
+                    color: const Color(0xFFf59e0b).withValues(alpha: 0.3),
                     blurRadius: 60,
                     spreadRadius: 20,
-                  )
+                  ),
                 ],
               ),
             ),
           ),
-          
+
           // Main Float Group
           AnimatedFloatWidget(
             durationSeconds: 3.5,
@@ -46,7 +46,7 @@ class Scene3RocketAnim extends StatelessWidget {
                   width: 260,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1e293b).withOpacity(0.9),
+                    color: const Color(0xFF1e293b).withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: const Color(0xFFfbbf24),
@@ -54,10 +54,10 @@ class Scene3RocketAnim extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withValues(alpha: 0.25),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
-                      )
+                      ),
                     ],
                   ),
                   child: Column(
@@ -80,23 +80,35 @@ class Scene3RocketAnim extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFFfbbf24), Color(0xFFfde047), Color(0xFFf59e0b)],
+                                    colors: [
+                                      Color(0xFFfbbf24),
+                                      Color(0xFFfde047),
+                                      Color(0xFFf59e0b),
+                                    ],
                                     begin: Alignment.topRight,
                                     end: Alignment.bottomLeft,
                                   ),
-                                  border: Border.all(color: const Color(0xFFfde047), width: 2),
+                                  border: Border.all(
+                                    color: const Color(0xFFfde047),
+                                    width: 2,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFFf59e0b).withOpacity(0.3),
+                                      color: const Color(
+                                        0xFFf59e0b,
+                                      ).withValues(alpha: 0.3),
                                       blurRadius: 15,
-                                    )
+                                    ),
                                   ],
                                 ),
                                 alignment: Alignment.center,
-                                child: const Text('🏆', style: TextStyle(fontSize: 36)),
+                                child: const Text(
+                                  '🏆',
+                                  style: TextStyle(fontSize: 36),
+                                ),
                               ),
                             ),
-                            
+
                             // Flying Piggy Rocket
                             Positioned(
                               top: -10,
@@ -105,30 +117,50 @@ class Scene3RocketAnim extends StatelessWidget {
                                 durationSeconds: 3.0,
                                 yOffset: -15,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF0f172a).withOpacity(0.9),
+                                    color: const Color(
+                                      0xFF0f172a,
+                                    ).withValues(alpha: 0.9),
                                     borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(color: const Color(0xFFf472b6), width: 2),
+                                    border: Border.all(
+                                      color: const Color(0xFFf472b6),
+                                      width: 2,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.2,
+                                        ),
                                         blurRadius: 8,
                                         offset: const Offset(0, 4),
-                                      )
+                                      ),
                                     ],
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: const [
-                                      Text('🚀 ', style: TextStyle(fontSize: 12)),
-                                      Text('Piggy Rocket', style: TextStyle(color: Color(0xFFf9a8d4), fontSize: 10, fontWeight: FontWeight.w900)),
+                                      Text(
+                                        '🚀 ',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Text(
+                                        'Piggy Rocket',
+                                        style: TextStyle(
+                                          color: Color(0xFFf9a8d4),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                            
+
                             // Stars
                             Positioned(
                               bottom: 10,
@@ -136,7 +168,10 @@ class Scene3RocketAnim extends StatelessWidget {
                               child: AnimatedPulseGlowWidget(
                                 durationSeconds: 1.5,
                                 maxScale: 1.2,
-                                child: const Text('⭐', style: TextStyle(fontSize: 20)),
+                                child: const Text(
+                                  '⭐',
+                                  style: TextStyle(fontSize: 20),
+                                ),
                               ),
                             ),
                             Positioned(
@@ -145,39 +180,63 @@ class Scene3RocketAnim extends StatelessWidget {
                               child: AnimatedPulseGlowWidget(
                                 durationSeconds: 0.8,
                                 maxScale: 1.5,
-                                child: const Text('✨', style: TextStyle(fontSize: 18)),
+                                child: const Text(
+                                  '✨',
+                                  style: TextStyle(fontSize: 18),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Goal Banner
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0f172a).withOpacity(0.9),
+                          color: const Color(0xFF0f172a).withValues(alpha: 0.9),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: const Color(0xFFf59e0b).withOpacity(0.3),
+                            color: const Color(
+                              0xFFf59e0b,
+                            ).withValues(alpha: 0.3),
                           ),
                         ),
                         child: Column(
                           children: [
-                            const Text('Impian Finansial Terwujud', style: TextStyle(color: Color(0xFFfcd34d), fontSize: 12, fontWeight: FontWeight.w900)),
+                            const Text(
+                              'Impian Finansial Terwujud',
+                              style: TextStyle(
+                                color: Color(0xFFfcd34d),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
                             const SizedBox(height: 4),
-                            const Text('Rencana Matang & Terukur', style: TextStyle(color: Color(0xFFcbd5e1), fontSize: 10)),
+                            const Text(
+                              'Rencana Matang & Terukur',
+                              style: TextStyle(
+                                color: Color(0xFFcbd5e1),
+                                fontSize: 10,
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(vertical: 6),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF10b981).withOpacity(0.1),
+                                color: const Color(
+                                  0xFF10b981,
+                                ).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: const Color(0xFF10b981).withOpacity(0.3)),
+                                border: Border.all(
+                                  color: const Color(
+                                    0xFF10b981,
+                                  ).withValues(alpha: 0.3),
+                                ),
                               ),
                               alignment: Alignment.center,
                               child: FittedBox(
@@ -185,8 +244,24 @@ class Scene3RocketAnim extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: const [
-                                    Text('Tabungan: ', style: TextStyle(color: Color(0xFF34d399), fontSize: 12, fontWeight: FontWeight.w900, fontFamily: 'monospace')),
-                                    Text('Rp 10.000.000+', style: TextStyle(color: Color(0xFF34d399), fontSize: 12, fontWeight: FontWeight.w900, fontFamily: 'monospace')),
+                                    Text(
+                                      'Tabungan: ',
+                                      style: TextStyle(
+                                        color: Color(0xFF34d399),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w900,
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
+                                    Text(
+                                      'Rp 10.000.000+',
+                                      style: TextStyle(
+                                        color: Color(0xFF34d399),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w900,
+                                        fontFamily: 'monospace',
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

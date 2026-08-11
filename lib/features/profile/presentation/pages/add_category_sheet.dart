@@ -1,3 +1,5 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,7 +61,9 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radius32),
+        ),
       ),
       child: Column(
         children: [
@@ -85,7 +89,9 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                   child: Center(
                     child: Text(
                       'Tambah Kategori',
-                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+                      style: AppStyles.heading2.copyWith(
+                        fontSize: AppSizes.font18,
+                      ),
                     ),
                   ),
                 ),
@@ -114,12 +120,16 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                           onTap: () =>
                               setState(() => _selectedType = 'expense'),
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppSizes.paddingV12,
+                            ),
                             decoration: BoxDecoration(
                               color: _selectedType == 'expense'
                                   ? const Color(0xFF27AE60)
                                   : Colors.white,
-                              borderRadius: BorderRadius.circular(AppSizes.radius16),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radius16,
+                              ),
                               border: Border.all(
                                 color: _selectedType == 'expense'
                                     ? Colors.transparent
@@ -144,12 +154,16 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         child: GestureDetector(
                           onTap: () => setState(() => _selectedType = 'income'),
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppSizes.paddingV12,
+                            ),
                             decoration: BoxDecoration(
                               color: _selectedType == 'income'
                                   ? const Color(0xFF27AE60)
                                   : Colors.white,
-                              borderRadius: BorderRadius.circular(AppSizes.radius16),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radius16,
+                              ),
                               border: Border.all(
                                 color: _selectedType == 'income'
                                     ? Colors.transparent
@@ -230,18 +244,20 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                             color: isSelected
                                 ? const Color(0xFF27AE60)
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(AppSizes.radius16),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radius16,
+                            ),
                             border: Border.all(
                               color: isSelected
                                   ? Colors.transparent
-                                  : AppColors.divider.withOpacity(0.5),
+                                  : AppColors.divider.withValues(alpha: 0.5),
                             ),
                             boxShadow: isSelected
                                 ? [
                                     BoxShadow(
                                       color: const Color(
                                         0xFF27AE60,
-                                      ).withOpacity(0.3),
+                                      ).withValues(alpha: 0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 4),
                                     ),
@@ -282,7 +298,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                             shape: BoxShape.circle,
                             border: isSelected
                                 ? Border.all(
-                                    color: color.withOpacity(0.3),
+                                    color: color.withValues(alpha: 0.3),
                                     width: AppSizes.padding4,
                                     strokeAlign: BorderSide.strokeAlignOutside,
                                   )
@@ -323,9 +339,9 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                       }
 
                       String iconName = 'category_outlined';
-                      if (_selectedIcon == Icons.shopping_bag)
+                      if (_selectedIcon == Icons.shopping_bag) {
                         iconName = 'expense_shopping';
-                      else if (_selectedIcon == Icons.directions_car)
+                      } else if (_selectedIcon == Icons.directions_car)
                         iconName = 'expense_transport';
                       else if (_selectedIcon == Icons.home)
                         iconName = 'expense_home';
@@ -345,7 +361,7 @@ class _AddCategorySheetState extends State<AddCategorySheet> {
                         iconName = 'expense_education';
 
                       String colorHex =
-                          '0xFF${_selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+                          '0xFF${_selectedColor.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
 
                       final newCategory = CategoryEntity(
                         id: '',

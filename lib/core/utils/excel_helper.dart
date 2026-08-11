@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
@@ -87,7 +90,7 @@ class ExcelHelper {
             'notes': row[6]?.value?.toString(),
           });
         } catch (e) {
-          print('Error parsing row $i: $e');
+          debugPrint('Error parsing row $i: $e');
         }
       }
     }
@@ -103,7 +106,7 @@ class ExcelHelper {
         return DateFormat('yyyy-MM-dd').parse(value);
       }
     } catch (e) {
-      print('Date parsing error: $e');
+      debugPrint('Date parsing error: $e');
     }
     return DateTime.now();
   }

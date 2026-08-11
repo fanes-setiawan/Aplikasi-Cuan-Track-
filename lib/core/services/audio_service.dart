@@ -22,16 +22,16 @@ class AudioService {
       await _clickPlayer.setSource(AssetSource('sounds/click.wav'));
       await _notifPlayer.setSource(AssetSource('sounds/notification.wav'));
       await _incomePlayer.setSource(AssetSource('sounds/income.mp3'));
-      
+
       _successPlayer.setVolume(1.0);
       _errorPlayer.setVolume(1.0);
       _clickPlayer.setVolume(0.5);
       _notifPlayer.setVolume(0.5);
       _incomePlayer.setVolume(1.0);
-      
+
       _isInitialized = true;
     } catch (e) {
-      print('Audio init error: $e');
+      debugPrint('Audio init error: $e');
     }
   }
 
@@ -43,7 +43,7 @@ class AudioService {
       }
       await _successPlayer.resume();
     } catch (e) {
-      print('Play success error: $e');
+      debugPrint('Play success error: $e');
     }
   }
 
@@ -55,7 +55,7 @@ class AudioService {
       }
       await _errorPlayer.resume();
     } catch (e) {
-      print('Play error error: $e');
+      debugPrint('Play error error: $e');
     }
   }
 
@@ -67,7 +67,7 @@ class AudioService {
       }
       await _clickPlayer.resume();
     } catch (e) {
-      print('Play click error: $e');
+      debugPrint('Play click error: $e');
     }
   }
 
@@ -79,7 +79,7 @@ class AudioService {
       }
       await _notifPlayer.resume();
     } catch (e) {
-      print('Play notif error: $e');
+      debugPrint('Play notif error: $e');
     }
   }
 
@@ -91,7 +91,7 @@ class AudioService {
       }
       await _incomePlayer.resume();
     } catch (e) {
-      print('Play income error: $e');
+      debugPrint('Play income error: $e');
     }
   }
 }

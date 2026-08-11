@@ -54,11 +54,14 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
   Widget _buildHeader() {
     return Container(
       padding: EdgeInsets.all(AppSizes.padding16),
-      margin: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
+      margin: EdgeInsets.symmetric(
+        horizontal: AppSizes.padding16,
+        vertical: AppSizes.paddingV8,
+      ),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
       ),
       child: Column(
         children: [
@@ -107,7 +110,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
           Icon(
             Icons.move_to_inbox_outlined,
             size: 64,
-            color: AppColors.textSecondary.withOpacity(0.3),
+            color: AppColors.textSecondary.withValues(alpha: 0.3),
           ),
           SizedBox(height: AppSizes.paddingV16),
           Text('Belum ada file yang dipilih', style: AppStyles.bodyText),
@@ -126,7 +129,10 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSizes.padding16,
+            vertical: AppSizes.paddingV8,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -192,7 +198,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,7 +146,8 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
   Future<void> _pickDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
+      initialDate:
+          _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
       firstDate: DateTime.now().subtract(const Duration(days: 365 * 5)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
       builder: (context, child) {
@@ -434,7 +437,9 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
               if (_isInstallment) ...[
                 Text(
                   'Tanggal Mulai Cicilan',
-                  style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                  style: AppStyles.bodyText.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: AppSizes.paddingV8),
                 GestureDetector(
@@ -458,10 +463,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                                 : AppColors.textHint,
                           ),
                         ),
-                        Icon(
-                          Icons.calendar_today,
-                          color: AppColors.primary,
-                        ),
+                        Icon(Icons.calendar_today, color: AppColors.primary),
                       ],
                     ),
                   ),
@@ -495,10 +497,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
                               : AppColors.textHint,
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
-                        color: AppColors.primary,
-                      ),
+                      Icon(Icons.calendar_today, color: AppColors.primary),
                     ],
                   ),
                 ),
@@ -545,7 +544,7 @@ class _AddDebtScreenState extends State<AddDebtScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.white,
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.white,
           border: Border.all(
             color: isSelected ? color : AppColors.divider,
             width: isSelected ? 2 : 1,

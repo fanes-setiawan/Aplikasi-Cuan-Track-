@@ -76,7 +76,10 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
           ),
         ),
         centerTitle: true,
-        title: Text('Tambah Anggaran', style: AppStyles.heading2.copyWith(color: Colors.white)),
+        title: Text(
+          'Tambah Anggaran',
+          style: AppStyles.heading2.copyWith(color: Colors.white),
+        ),
       ),
       body: BlocConsumer<AddBudgetBloc, AddBudgetState>(
         listener: (context, state) {
@@ -195,17 +198,19 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                 borderRadius: BorderRadius.circular(
                                   AppDimens.radiusM,
                                 ),
-                                border: Border.all(color: const Color(0xFF1E293B)),
+                                border: Border.all(
+                                  color: const Color(0xFF1E293B),
+                                ),
                               ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<CategoryEntity>(
-                                    value: _selectedCategory,
-                                    dropdownColor: const Color(0xFF0F172A),
-                                    isExpanded: true,
-                                    icon: const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Color(0xFF94A3B8),
-                                    ),
+                                  value: _selectedCategory,
+                                  dropdownColor: const Color(0xFF0F172A),
+                                  isExpanded: true,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Color(0xFF94A3B8),
+                                  ),
                                   items: expenseCategories.map((
                                     CategoryEntity cat,
                                   ) {
@@ -219,10 +224,12 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                             size: 20,
                                           ),
                                           SizedBox(width: AppSizes.padding12),
-                                            Text(
-                                              cat.name,
-                                              style: AppStyles.bodyText.copyWith(color: Colors.white),
+                                          Text(
+                                            cat.name,
+                                            style: AppStyles.bodyText.copyWith(
+                                              color: Colors.white,
                                             ),
+                                          ),
                                         ],
                                       ),
                                     );
@@ -283,8 +290,12 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF10B981).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(AppSizes.radius12),
+                                color: const Color(
+                                  0xFF10B981,
+                                ).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radius12,
+                                ),
                               ),
                               child: const Icon(
                                 Icons.notifications_active_outlined,
@@ -296,20 +307,20 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                    Text(
-                                      'Ingatkan Saya',
-                                      style: AppStyles.bodyText.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                                  Text(
+                                    'Ingatkan Saya',
+                                    style: AppStyles.bodyText.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
-                                    Text(
-                                      'Notifikasi saat mencapai 80% limit',
-                                      style: AppStyles.caption.copyWith(
-                                        fontSize: AppSizes.font10,
-                                        color: const Color(0xFF94A3B8),
-                                      ),
+                                  ),
+                                  Text(
+                                    'Notifikasi saat mencapai 80% limit',
+                                    style: AppStyles.caption.copyWith(
+                                      fontSize: AppSizes.font10,
+                                      color: const Color(0xFF94A3B8),
                                     ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -320,7 +331,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
                                   _remindMe = val;
                                 });
                               },
-                              activeColor: Colors.white,
+                              activeThumbColor: Colors.white,
                               activeTrackColor: AppColors.primary,
                             ),
                           ],
@@ -386,7 +397,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF10B981).withOpacity(0.1) : Colors.transparent,
+            color: isSelected
+                ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(AppDimens.radiusM),
             border: Border.all(
               color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
@@ -396,7 +409,9 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
             child: Text(
               title,
               style: AppStyles.bodyText.copyWith(
-                color: isSelected ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
+                color: isSelected
+                    ? const Color(0xFF10B981)
+                    : const Color(0xFF94A3B8),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -455,10 +470,7 @@ class _AddBudgetScreenState extends State<AddBudgetScreen> {
         child: Container(
           height: 60,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color(0xFF1E293B),
-              width: 0.5,
-            ),
+            border: Border.all(color: const Color(0xFF1E293B), width: 0.5),
           ),
           child: Center(
             child: key == 'DEL'

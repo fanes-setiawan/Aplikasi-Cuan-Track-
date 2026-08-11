@@ -200,7 +200,9 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                           color: state.comparisonPercentage > 0
                               ? const Color(0xFFFDEDEC)
                               : const Color(0xFFE8F5E9),
-                          borderRadius: BorderRadius.circular(AppSizes.radius24),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radius24,
+                          ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +305,7 @@ class ComparativeAnalysisScreen extends StatelessWidget {
                               icon: _getIconForCategory(t.categoryName ?? ''),
                             ),
                           );
-                        }).toList(),
+                        }),
                       const SizedBox(height: 100),
                     ],
                   ),

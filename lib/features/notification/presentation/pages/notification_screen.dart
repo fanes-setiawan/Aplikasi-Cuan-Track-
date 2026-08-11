@@ -111,7 +111,9 @@ class NotificationScreen extends StatelessWidget {
         horizontal: AppDimens.md,
         vertical: AppSizes.paddingV12,
       ),
-      decoration: BoxDecoration(color: AppColors.background.withOpacity(0.5)),
+      decoration: BoxDecoration(
+        color: AppColors.background.withValues(alpha: 0.5),
+      ),
       child: Text(
         title,
         style: AppStyles.caption.copyWith(
@@ -136,10 +138,10 @@ class NotificationScreen extends StatelessWidget {
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: isUnread
-            ? const Color(0xFFE8F5E9).withOpacity(0.5)
+            ? const Color(0xFFE8F5E9).withValues(alpha: 0.5)
             : Colors.white,
         border: Border(
-          bottom: BorderSide(color: AppColors.divider.withOpacity(0.5)),
+          bottom: BorderSide(color: AppColors.divider.withValues(alpha: 0.5)),
         ),
       ),
       child: Row(
@@ -167,7 +169,12 @@ class NotificationScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(time, style: AppStyles.caption.copyWith(fontSize: AppSizes.font10)),
+                    Text(
+                      time,
+                      style: AppStyles.caption.copyWith(
+                        fontSize: AppSizes.font10,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: AppSizes.paddingV4),

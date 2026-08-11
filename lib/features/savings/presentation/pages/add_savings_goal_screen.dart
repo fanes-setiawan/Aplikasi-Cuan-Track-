@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -236,10 +238,7 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                               : AppColors.textHint,
                         ),
                       ),
-                      Icon(
-                        Icons.calendar_today,
-                        color: AppColors.primary,
-                      ),
+                      Icon(Icons.calendar_today, color: AppColors.primary),
                     ],
                   ),
                 ),
@@ -265,7 +264,10 @@ class _AddSavingsGoalScreenState extends State<AddSavingsGoalScreen> {
                       );
                     },
                     icon: const Icon(Icons.add_circle_outline, size: 16),
-                    label: Text('Kelola', style: TextStyle(fontSize: AppSizes.font12)),
+                    label: Text(
+                      'Kelola',
+                      style: TextStyle(fontSize: AppSizes.font12),
+                    ),
                   ),
                 ],
               ),

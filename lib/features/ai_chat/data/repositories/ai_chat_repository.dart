@@ -12,13 +12,13 @@ class AIChatRepository {
   AIChatRepository({
     FirebaseFirestore? firestore,
     RemoteConfigService? remoteConfig,
-  })  : _firestore = firestore ?? FirebaseFirestore.instance,
-        _remoteConfig = remoteConfig ?? sl<RemoteConfigService>();
+  }) : _firestore = firestore ?? FirebaseFirestore.instance,
+       _remoteConfig = remoteConfig ?? sl<RemoteConfigService>();
 
   Future<void> _initModel() async {
     if (_model != null) return;
 
-    final ai = await FirebaseAI.googleAI();
+    final ai = FirebaseAI.googleAI();
     _model = ai.generativeModel(model: _remoteConfig.chatAiModel);
   }
 
@@ -72,8 +72,9 @@ class AIChatRepository {
           .where('date', isGreaterThanOrEqualTo: startOfMonth)
           .get();
 
-      if (snapshot.docs.isEmpty)
+      if (snapshot.docs.isEmpty) {
         return "User belum memiliki transaksi di bulan ini.";
+      }
 
       double totalIncome = 0;
       double totalExpense = 0;

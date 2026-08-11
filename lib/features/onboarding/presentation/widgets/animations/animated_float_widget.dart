@@ -7,12 +7,12 @@ class AnimatedFloatWidget extends StatefulWidget {
   final double delaySeconds;
 
   const AnimatedFloatWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.durationSeconds = 3.0,
     this.yOffset = -10.0,
     this.delaySeconds = 0.0,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedFloatWidget> createState() => _AnimatedFloatWidgetState();
@@ -28,12 +28,12 @@ class _AnimatedFloatWidgetState extends State<AnimatedFloatWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration:
-          Duration(milliseconds: (widget.durationSeconds * 1000).toInt()),
+      duration: Duration(milliseconds: (widget.durationSeconds * 1000).toInt()),
     );
-    _animation = Tween<double>(begin: 0, end: widget.yOffset).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: widget.yOffset,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     if (widget.delaySeconds > 0) {
       Future.delayed(

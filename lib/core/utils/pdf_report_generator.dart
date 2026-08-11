@@ -1,4 +1,5 @@
 import 'package:cuan_track/core/utils/app_sizes.dart';
+import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -16,7 +17,7 @@ class PdfReportGenerator {
       emojiFont = await PdfGoogleFonts.notoColorEmoji();
       symbolFont = await PdfGoogleFonts.notoSansJPRegular();
     } catch (e) {
-      print('Failed to load fallback fonts: $e');
+      debugPrint('Failed to load fallback fonts: $e');
     }
 
     return pw.ThemeData.withFont(
@@ -88,7 +89,10 @@ class PdfReportGenerator {
             pw.SizedBox(height: 10),
             pw.Text(
               'Periode: ${monthStr.toUpperCase()}',
-              style: pw.TextStyle(fontSize: AppSizes.font14, color: PdfColors.grey700),
+              style: pw.TextStyle(
+                fontSize: AppSizes.font14,
+                color: PdfColors.grey700,
+              ),
             ),
             pw.SizedBox(height: AppSizes.paddingV20),
 
@@ -96,7 +100,9 @@ class PdfReportGenerator {
               padding: pw.EdgeInsets.all(AppSizes.padding16),
               decoration: pw.BoxDecoration(
                 border: pw.Border.all(color: PdfColors.grey300),
-                borderRadius: pw.BorderRadius.all(pw.Radius.circular(AppSizes.radius8)),
+                borderRadius: pw.BorderRadius.all(
+                  pw.Radius.circular(AppSizes.radius8),
+                ),
               ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -154,7 +160,10 @@ class PdfReportGenerator {
 
             pw.Text(
               'Rincian Transaksi',
-              style: pw.TextStyle(fontSize: AppSizes.font18, fontWeight: pw.FontWeight.bold),
+              style: pw.TextStyle(
+                fontSize: AppSizes.font18,
+                fontWeight: pw.FontWeight.bold,
+              ),
             ),
             pw.SizedBox(height: 10),
 
@@ -262,7 +271,7 @@ class PdfReportGenerator {
       final logoBytes = await rootBundle.load('assets/logo/logo_app.png');
       logoImage = pw.MemoryImage(logoBytes.buffer.asUint8List());
     } catch (e) {
-      print('Failed to load logo watermark: $e');
+      debugPrint('Failed to load logo watermark: $e');
     }
 
     final idrFormat = NumberFormat.currency(
@@ -515,7 +524,9 @@ class PdfReportGenerator {
               decoration: pw.BoxDecoration(
                 color: PdfColors.grey50,
                 border: pw.Border.all(color: PdfColors.grey200),
-                borderRadius: pw.BorderRadius.all(pw.Radius.circular(AppSizes.radius8)),
+                borderRadius: pw.BorderRadius.all(
+                  pw.Radius.circular(AppSizes.radius8),
+                ),
               ),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,

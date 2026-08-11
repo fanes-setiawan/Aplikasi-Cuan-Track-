@@ -68,8 +68,9 @@ class AdService {
   }
 
   void _loadInterstitialAd() {
-    if (_isPremium || _isInterstitialAdLoading || _interstitialAd != null)
+    if (_isPremium || _isInterstitialAdLoading || _interstitialAd != null) {
       return;
+    }
 
     _isInterstitialAdLoading = true;
     InterstitialAd.load(

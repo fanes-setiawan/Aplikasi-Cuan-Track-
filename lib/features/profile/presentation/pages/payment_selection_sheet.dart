@@ -104,7 +104,9 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
       height: MediaQuery.of(context).size.height * 0.9,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radius32),
+        ),
       ),
       child: Column(
         children: [
@@ -130,7 +132,9 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                   child: Center(
                     child: Text(
                       'Pilih Metode Pembayaran',
-                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+                      style: AppStyles.heading2.copyWith(
+                        fontSize: AppSizes.font18,
+                      ),
                     ),
                   ),
                 ),
@@ -215,7 +219,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
                             Icon(
                               Icons.search_off,
                               size: 48,
-                              color: AppColors.textHint.withOpacity(0.5),
+                              color: AppColors.textHint.withValues(alpha: 0.5),
                             ),
                             SizedBox(height: AppSizes.paddingV16),
                             Text(
@@ -302,7 +306,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF27AE60).withOpacity(0.1),
+                    color: const Color(0xFF27AE60).withValues(alpha: 0.1),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -352,7 +356,7 @@ class _PaymentSelectionSheetState extends State<PaymentSelectionSheet> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppSizes.radius16),
-          border: Border.all(color: AppColors.divider.withOpacity(0.5)),
+          border: Border.all(color: AppColors.divider.withValues(alpha: 0.5)),
         ),
         child: Row(
           children: [

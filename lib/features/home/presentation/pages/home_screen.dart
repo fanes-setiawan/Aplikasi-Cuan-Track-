@@ -9,7 +9,6 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/scene_1_receipt_anim.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
@@ -269,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: Colors.orange.withOpacity(0.2),
+          backgroundColor: Colors.orange.withValues(alpha: 0.2),
           child: const Icon(Icons.receipt_long, color: Colors.orange),
         ),
         const SizedBox(width: AppDimens.md),
@@ -285,7 +284,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Text(
               'Halo, $_userName!',
-              style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18, color: Colors.white),
+              style: AppStyles.heading2.copyWith(
+                fontSize: AppSizes.font18,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
@@ -334,147 +336,148 @@ class _HomeScreenState extends State<HomeScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-        borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        child: Stack(
-          children: [
-            Positioned(
-              top: -50,
-              right: -50,
-              child: Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+          child: Stack(
+            children: [
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.1),
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: -20,
-              left: -20,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+              Positioned(
+                bottom: -20,
+                left: -20,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.05),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(AppDimens.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'TOTAL SALDO',
-                        style: AppStyles.caption.copyWith(
-                          color: Colors.white.withOpacity(0.8),
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      if (showTrend)
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: AppSizes.paddingV4,
+              Padding(
+                padding: const EdgeInsets.all(AppDimens.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'TOTAL SALDO',
+                          style: AppStyles.caption.copyWith(
+                            color: Colors.white.withValues(alpha: 0.8),
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(
-                              AppDimens.round,
+                        ),
+                        if (showTrend)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: AppSizes.paddingV4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                AppDimens.round,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.trending_up,
+                                  color: Colors.white,
+                                  size: 14,
+                                ),
+                                SizedBox(width: AppSizes.padding4),
+                                Text(
+                                  '+ 2.5%',
+                                  style: AppStyles.caption.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.trending_up,
-                                color: Colors.white,
-                                size: 14,
-                              ),
-                              SizedBox(width: AppSizes.padding4),
-                              Text(
-                                '+ 2.5%',
-                                style: AppStyles.caption.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: AppDimens.sm),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        _formatCurrency(totalBalance),
-                        style: AppStyles.heading1.copyWith(
-                          color: Colors.white,
-                          fontSize: 36,
-                          letterSpacing: -1,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppDimens.lg),
-                  Container(
-                    height: 1,
-                    width: double.infinity,
-                    color: Colors.white.withOpacity(0.15),
-                  ),
-                  const SizedBox(height: AppDimens.lg),
-                  IntrinsicHeight(
-                    child: Row(
+                      ],
+                    ),
+                    const SizedBox(height: AppDimens.sm),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Expanded(
-                          child: _buildBalanceStat(
-                            'PEMASUKAN',
-                            _formatCurrency(income),
-                            const Color(0xFFA7FFEB),
-                          ),
-                        ),
-                        VerticalDivider(
-                          color: Colors.white.withOpacity(0.3),
-                          thickness: 1,
-                          width: AppSizes.padding32,
-                          indent: 4,
-                          endIndent: 4,
-                        ),
-                        Expanded(
-                          child: _buildBalanceStat(
-                            'PENGELUARAN',
-                            _formatCurrency(expense),
-                            const Color(0xFFFFE0B2),
+                        Text(
+                          _formatCurrency(totalBalance),
+                          style: AppStyles.heading1.copyWith(
+                            color: Colors.white,
+                            fontSize: 36,
+                            letterSpacing: -1,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: AppDimens.lg),
+                    Container(
+                      height: 1,
+                      width: double.infinity,
+                      color: Colors.white.withValues(alpha: 0.15),
+                    ),
+                    const SizedBox(height: AppDimens.lg),
+                    IntrinsicHeight(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildBalanceStat(
+                              'PEMASUKAN',
+                              _formatCurrency(income),
+                              const Color(0xFFA7FFEB),
+                            ),
+                          ),
+                          VerticalDivider(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            thickness: 1,
+                            width: AppSizes.padding32,
+                            indent: 4,
+                            endIndent: 4,
+                          ),
+                          Expanded(
+                            child: _buildBalanceStat(
+                              'PENGELUARAN',
+                              _formatCurrency(expense),
+                              const Color(0xFFFFE0B2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 
   Widget _buildBalanceStat(String label, String value, Color bulletColor) {
@@ -495,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Text(
               label,
               style: AppStyles.caption.copyWith(
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontSize: AppSizes.font10,
                 fontWeight: FontWeight.bold,
               ),
@@ -578,7 +581,7 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
         border: isOutlined
             ? Border.all(
-                color: borderColor ?? AppColors.primary.withOpacity(0.2),
+                color: borderColor ?? AppColors.primary.withValues(alpha: 0.2),
                 width: 1.5,
               )
             : null,
@@ -944,11 +947,17 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'TOTAL',
-                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
+                  style: AppStyles.caption.copyWith(
+                    fontSize: AppSizes.font10,
+                    color: const Color(0xFF94A3B8),
+                  ),
                 ),
                 Text(
                   '100%',
-                  style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16, color: Colors.white),
+                  style: AppStyles.heading2.copyWith(
+                    fontSize: AppSizes.font16,
+                    color: Colors.white,
+                  ),
                 ),
               ],
             ),
@@ -979,7 +988,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(AppSizes.radius8),
             ),
             child: Icon(iconData, size: 16, color: color),
@@ -1011,7 +1020,10 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Transaksi Terakhir', style: AppStyles.heading2.copyWith(color: Colors.white)),
+            Text(
+              'Transaksi Terakhir',
+              style: AppStyles.heading2.copyWith(color: Colors.white),
+            ),
             GestureDetector(
               onTap: () {
                 MainScreen.switchTab(1);
@@ -1125,7 +1137,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: AppSizes.paddingV4),
                 Text(
                   subtitle,
-                  style: AppStyles.caption.copyWith(fontSize: AppSizes.font10, color: const Color(0xFF94A3B8)),
+                  style: AppStyles.caption.copyWith(
+                    fontSize: AppSizes.font10,
+                    color: const Color(0xFF94A3B8),
+                  ),
                 ),
               ],
             ),

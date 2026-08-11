@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,15 +20,22 @@ class AppHelpers {
         margin: const EdgeInsets.only(bottom: 24, left: 24, right: 24),
         content: Center(
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding20, vertical: AppSizes.paddingV12),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.padding20,
+              vertical: AppSizes.paddingV12,
+            ),
             decoration: BoxDecoration(
-              color: const Color(0xFFEFEFEF).withOpacity(0.5),
+              color: const Color(0xFFEFEFEF).withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(54),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Image.asset('assets/logo/logo_app.png', height: AppSizes.paddingV24, width: AppSizes.padding24),
+                Image.asset(
+                  'assets/logo/logo_app.png',
+                  height: AppSizes.paddingV24,
+                  width: AppSizes.padding24,
+                ),
                 SizedBox(width: AppSizes.padding12),
                 Flexible(
                   child: Text(
@@ -119,8 +128,9 @@ class AppHelpers {
     if (iconName.contains('food')) return Icons.fastfood_outlined;
     if (iconName.contains('transport')) return Icons.directions_car_outlined;
     if (iconName.contains('shopping')) return Icons.shopping_bag_outlined;
-    if (iconName.contains('entertainment'))
+    if (iconName.contains('entertainment')) {
       return Icons.sports_esports_outlined;
+    }
     if (iconName.contains('home')) return Icons.home_outlined;
     if (iconName.contains('heart')) return Icons.favorite_border_outlined;
     if (iconName.contains('cafe')) return Icons.local_cafe_outlined;

@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/app_shimmer.dart';
@@ -63,7 +62,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         backgroundColor: const Color(0xFF020617),
         elevation: 0,
         centerTitle: true,
-        title: Text('Statistik Pengeluaran', style: AppStyles.heading2.copyWith(color: Colors.white)),
+        title: Text(
+          'Statistik Pengeluaran',
+          style: AppStyles.heading2.copyWith(color: Colors.white),
+        ),
       ),
       body: BlocBuilder<AnalyticsBloc, AnalyticsState>(
         builder: (context, state) {
@@ -104,14 +106,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(_selectedDate);
     return Container(
       margin: const EdgeInsets.all(AppDimens.md),
-      padding: EdgeInsets.symmetric(vertical: AppSizes.paddingV12, horizontal: AppSizes.padding16),
+      padding: EdgeInsets.symmetric(
+        vertical: AppSizes.paddingV12,
+        horizontal: AppSizes.padding16,
+      ),
       decoration: BoxDecoration(
         color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusM),
         border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -122,21 +127,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         children: [
           GestureDetector(
             onTap: () => _changeMonth(-1),
-            child: const Icon(
-              Icons.chevron_left,
-              color: Color(0xFF94A3B8),
-            ),
+            child: const Icon(Icons.chevron_left, color: Color(0xFF94A3B8)),
           ),
           Text(
             monthStr,
-            style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+            style: AppStyles.bodyText.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           GestureDetector(
             onTap: () => _changeMonth(1),
-            child: const Icon(
-              Icons.chevron_right,
-              color: Color(0xFF94A3B8),
-            ),
+            child: const Icon(Icons.chevron_right, color: Color(0xFF94A3B8)),
           ),
         ],
       ),
@@ -218,7 +220,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         border: Border.all(color: const Color(0xFF1E293B)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -275,7 +277,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             children: [
               Text(
                 'Total',
-                style: AppStyles.caption.copyWith(color: const Color(0xFF94A3B8)),
+                style: AppStyles.caption.copyWith(
+                  color: const Color(0xFF94A3B8),
+                ),
               ),
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0, end: state.totalExpense),
@@ -329,7 +333,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppSizes.radius12),
                     ),
                     child: Text(
@@ -378,7 +382,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           border: Border.all(color: const Color(0xFF1E293B)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),

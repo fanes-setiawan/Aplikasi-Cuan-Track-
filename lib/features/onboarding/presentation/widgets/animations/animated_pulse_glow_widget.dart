@@ -9,14 +9,14 @@ class AnimatedPulseGlowWidget extends StatefulWidget {
   final double maxScale;
 
   const AnimatedPulseGlowWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.durationSeconds = 2.0,
     this.minOpacity = 0.4,
     this.maxOpacity = 0.8,
     this.minScale = 1.0,
     this.maxScale = 1.05,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedPulseGlowWidget> createState() =>
@@ -34,15 +34,16 @@ class _AnimatedPulseGlowWidgetState extends State<AnimatedPulseGlowWidget>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration:
-          Duration(milliseconds: (widget.durationSeconds * 1000).toInt()),
+      duration: Duration(milliseconds: (widget.durationSeconds * 1000).toInt()),
     );
     _scaleAnimation = Tween<double>(
-            begin: widget.minScale, end: widget.maxScale)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      begin: widget.minScale,
+      end: widget.maxScale,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _opacityAnimation = Tween<double>(
-            begin: widget.minOpacity, end: widget.maxOpacity)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      begin: widget.minOpacity,
+      end: widget.maxOpacity,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -60,10 +61,7 @@ class _AnimatedPulseGlowWidgetState extends State<AnimatedPulseGlowWidget>
       builder: (context, child) {
         return Opacity(
           opacity: _opacityAnimation.value,
-          child: Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          ),
+          child: Transform.scale(scale: _scaleAnimation.value, child: child),
         );
       },
       child: widget.child,

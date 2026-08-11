@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_bloc.dart';
 import 'package:cuan_track/features/category/presentation/bloc/category_event.dart';
@@ -146,17 +148,14 @@ class _AIChatScreenState extends State<AIChatScreen> {
           Container(
             padding: EdgeInsets.all(AppSizes.padding8),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
               'assets/icons/ic_boot.svg',
               width: AppSizes.padding24,
               height: AppSizes.paddingV24,
-              colorFilter: ColorFilter.mode(
-                AppColors.primary,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
           ),
           SizedBox(width: AppSizes.padding12),
@@ -205,17 +204,14 @@ class _AIChatScreenState extends State<AIChatScreen> {
           Container(
             padding: EdgeInsets.all(AppSizes.padding20),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: SvgPicture.asset(
               'assets/icons/ic_boot.svg',
               width: 60,
               height: 60,
-              colorFilter: ColorFilter.mode(
-                AppColors.primary,
-                BlendMode.srcIn,
-              ),
+              colorFilter: ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
             ),
           ),
           SizedBox(height: AppSizes.paddingV16),
@@ -246,10 +242,16 @@ class _AIChatScreenState extends State<AIChatScreen> {
             : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!isUser) ...[_buildAIAvatar(), SizedBox(width: AppSizes.padding8)],
+          if (!isUser) ...[
+            _buildAIAvatar(),
+            SizedBox(width: AppSizes.padding8),
+          ],
           Flexible(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.padding16,
+                vertical: AppSizes.paddingV12,
+              ),
               decoration: BoxDecoration(
                 color: isUser ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.only(
@@ -260,7 +262,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 5,
                     offset: const Offset(0, 2),
                   ),
@@ -305,7 +307,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
               ),
             ),
           ),
-          if (isUser) ...[SizedBox(width: AppSizes.padding8), _buildUserAvatar()],
+          if (isUser) ...[
+            SizedBox(width: AppSizes.padding8),
+            _buildUserAvatar(),
+          ],
         ],
       ),
     );
@@ -320,7 +325,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
           _buildAIAvatar(),
           SizedBox(width: AppSizes.padding8),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV12),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.padding16,
+              vertical: AppSizes.paddingV12,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: const BorderRadius.only(
@@ -330,16 +338,13 @@ class _AIChatScreenState extends State<AIChatScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 5,
                   offset: const Offset(0, 2),
                 ),
               ],
             ),
-            child: SpinKitThreeBounce(
-              color: AppColors.primary,
-              size: 20.0,
-            ),
+            child: SpinKitThreeBounce(color: AppColors.primary, size: 20.0),
           ),
         ],
       ),
@@ -350,7 +355,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: SvgPicture.asset(
@@ -366,7 +371,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: const Icon(Icons.person_outline, size: 18, color: Colors.orange),
@@ -387,7 +392,8 @@ class _AIChatScreenState extends State<AIChatScreen> {
         padding: const EdgeInsets.symmetric(horizontal: AppDimens.md),
         scrollDirection: Axis.horizontal,
         itemCount: actions.length,
-        separatorBuilder: (context, index) => SizedBox(width: AppSizes.padding8),
+        separatorBuilder: (context, index) =>
+            SizedBox(width: AppSizes.padding8),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
@@ -399,7 +405,9 @@ class _AIChatScreenState extends State<AIChatScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                ),
               ),
               child: Text(
                 actions[index],
@@ -430,7 +438,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: AppColors.textSecondary.withOpacity(0.1),
+                color: AppColors.textSecondary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -526,9 +534,9 @@ class _AIChatScreenState extends State<AIChatScreen> {
       margin: const EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(AppSizes.padding12),
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.05),
+        color: Colors.grey.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(AppSizes.radius12),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

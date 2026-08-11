@@ -241,6 +241,6 @@ class FirestoreTransactionRepositoryImpl implements TransactionRepository {
         .collection('transactions')
         .where('userId', isEqualTo: userId)
         .snapshots()
-        .map((_) => null);
+        .map((_) {});
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -301,8 +303,8 @@ class _DebtScreenState extends State<DebtScreen>
                                 : const Color(0xFFF1F5F9),
                             border: Border.all(
                               color: isPaidMonth
-                                  ? Colors.green.withOpacity(0.3)
-                                  : Colors.grey.withOpacity(0.2),
+                                  ? Colors.green.withValues(alpha: 0.3)
+                                  : Colors.grey.withValues(alpha: 0.2),
                             ),
                             borderRadius: BorderRadius.circular(
                               AppSizes.radius8,
@@ -601,7 +603,7 @@ class _DebtScreenState extends State<DebtScreen>
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        border: Border.all(color: accentColor.withOpacity(0.1)),
+        border: Border.all(color: accentColor.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -636,7 +638,7 @@ class _DebtScreenState extends State<DebtScreen>
           Text(
             subtitle,
             style: AppStyles.caption.copyWith(
-              color: accentColor.withOpacity(0.6),
+              color: accentColor.withValues(alpha: 0.6),
               fontSize: 9,
             ),
           ),
@@ -710,13 +712,13 @@ class _DebtScreenState extends State<DebtScreen>
               borderRadius: BorderRadius.circular(AppSizes.radius16),
               border: Border.all(
                 color: isOverdue
-                    ? const Color(0xFFEF4444).withOpacity(0.2)
-                    : Colors.grey.withOpacity(0.1),
+                    ? const Color(0xFFEF4444).withValues(alpha: 0.2)
+                    : Colors.grey.withValues(alpha: 0.1),
                 width: isOverdue ? 1.5 : 1.0,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
+                  color: Colors.black.withValues(alpha: 0.02),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

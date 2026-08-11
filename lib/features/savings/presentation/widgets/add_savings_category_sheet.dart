@@ -88,7 +88,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
       height: MediaQuery.of(context).size.height * 0.85,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSizes.radius32)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSizes.radius32),
+        ),
       ),
       child: Column(
         children: [
@@ -116,7 +118,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       widget.category != null
                           ? 'Edit Tujuan'
                           : 'Tambah Tujuan Nabung',
-                      style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+                      style: AppStyles.heading2.copyWith(
+                        fontSize: AppSizes.font18,
+                      ),
                     ),
                   ),
                 ),
@@ -175,7 +179,9 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                             color: isSelected
                                 ? AppColors.primary
                                 : Colors.white,
-                            borderRadius: BorderRadius.circular(AppSizes.radius16),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radius16,
+                            ),
                             border: Border.all(
                               color: isSelected
                                   ? Colors.transparent
@@ -238,7 +244,7 @@ class _AddSavingsCategorySheetState extends State<AddSavingsCategorySheet> {
                       if (user == null || _nameController.text.isEmpty) return;
 
                       final colorHex =
-                          '0xFF${_selectedColor.value.toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
+                          '0xFF${_selectedColor.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}';
 
                       final category = SavingsCategoryEntity(
                         id: widget.category?.id ?? '',

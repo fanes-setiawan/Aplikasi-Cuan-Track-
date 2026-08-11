@@ -376,7 +376,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
         borderRadius: BorderRadius.circular(AppSizes.radius24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -417,7 +417,10 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
             decoration: BoxDecoration(
               color: statusBgColor,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
+              border: Border.all(
+                color: statusColor.withValues(alpha: 0.3),
+                width: 1,
+              ),
             ),
             child: Text(
               status,
@@ -834,7 +837,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
             activeTrackColor: const Color(0xFF4CAF50),
             inactiveTrackColor: Colors.grey[200],
             thumbColor: const Color(0xFF1B5E20),
-            overlayColor: const Color(0xFF1B5E20).withOpacity(0.2),
+            overlayColor: const Color(0xFF1B5E20).withValues(alpha: 0.2),
             valueIndicatorColor: const Color(0xFF1B5E20),
             valueIndicatorTextStyle: TextStyle(
               color: Colors.white,
@@ -868,7 +871,7 @@ class _FinancialHealthScreenState extends State<FinancialHealthScreen> {
     });
     try {
       final remoteConfig = sl<RemoteConfigService>();
-      final ai = await FirebaseAI.googleAI();
+      final ai = FirebaseAI.googleAI();
       final model = ai.generativeModel(model: remoteConfig.fhAiModel);
       final prompt = remoteConfig.fhAiPromptTemplate
           .replaceAll('{income}', income.toStringAsFixed(0))

@@ -111,10 +111,12 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                         padding: EdgeInsets.all(AppSizes.padding20),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppSizes.radius24),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radius24,
+                          ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -208,7 +210,9 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                                                   ? const Color(0xFF27AE60)
                                                   : const Color(0xFFE8F5E9),
                                               borderRadius:
-                                                  BorderRadius.circular(AppSizes.radius8),
+                                                  BorderRadius.circular(
+                                                    AppSizes.radius8,
+                                                  ),
                                             ),
                                           ),
                                           SizedBox(height: AppSizes.paddingV8),
@@ -282,7 +286,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
                           AppHelpers.formatCurrencyIdr(amount),
                           idx == state.highestSpendingWeekIndex,
                         );
-                      }).toList(),
+                      }),
                       const SizedBox(height: 100),
                     ],
                   ),
@@ -350,7 +354,7 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.1)),
+        border: Border.all(color: color.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -365,7 +369,10 @@ class WeeklyTrendAnalysisScreen extends StatelessWidget {
           SizedBox(height: AppSizes.paddingV4),
           Text(
             value,
-            style: AppStyles.heading2.copyWith(color: color, fontSize: AppSizes.font14),
+            style: AppStyles.heading2.copyWith(
+              color: color,
+              fontSize: AppSizes.font14,
+            ),
           ),
           SizedBox(height: AppSizes.paddingV8),
           Text(

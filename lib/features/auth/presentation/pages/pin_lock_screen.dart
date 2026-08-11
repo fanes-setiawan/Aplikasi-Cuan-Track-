@@ -48,7 +48,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF020617),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: SafeArea(
@@ -58,7 +58,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
               Container(
                 padding: EdgeInsets.all(AppSizes.padding24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -85,24 +85,28 @@ class _PinLockScreenState extends State<PinLockScreen> {
                   final isActive = index < _pin.length;
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    margin: EdgeInsets.symmetric(horizontal: AppSizes.padding12),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: AppSizes.padding12,
+                    ),
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
                       color: isActive
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.white.withOpacity(0.1),
+                          ? Colors.white.withValues(alpha: 0.2)
+                          : Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppSizes.radius16),
                       border: Border.all(
                         color: isActive
-                            ? Colors.white.withOpacity(0.5)
-                            : Colors.white.withOpacity(0.2),
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.white.withValues(alpha: 0.2),
                         width: 1,
                       ),
                       boxShadow: isActive
                           ? [
                               BoxShadow(
-                                color: const Color(0xFF34D399).withOpacity(0.5),
+                                color: const Color(
+                                  0xFF34D399,
+                                ).withValues(alpha: 0.5),
                                 blurRadius: 15,
                                 spreadRadius: -2,
                               ),
@@ -117,7 +121,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                           shape: BoxShape.circle,
                           color: isActive
                               ? const Color(0xFF34D399)
-                              : Colors.white.withOpacity(0.2),
+                              : Colors.white.withValues(alpha: 0.2),
                         ),
                       ),
                     ),
@@ -160,7 +164,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                       child: Text(
                         'LUPA PIN?',
                         style: AppStyles.caption.copyWith(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1,
                         ),
@@ -172,10 +176,10 @@ class _PinLockScreenState extends State<PinLockScreen> {
                         vertical: AppSizes.paddingV8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withValues(alpha: 0.1),
                         ),
                       ),
                       child: Row(
@@ -189,7 +193,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                           Text(
                             'SECURE NODE 042',
                             style: AppStyles.caption.copyWith(
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                               fontSize: AppSizes.font10,
                               fontWeight: FontWeight.bold,
                             ),
@@ -218,7 +222,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
     return InkWell(
       onTap: () => _onNumberPressed(number),
       borderRadius: BorderRadius.circular(50),
-      child: Container(
+      child: SizedBox(
         width: 75,
         height: 75,
         child: Center(
@@ -237,7 +241,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 Text(
                   _getLetters(number),
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     fontSize: AppSizes.font10,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -255,13 +259,13 @@ class _PinLockScreenState extends State<PinLockScreen> {
     return InkWell(
       onTap: widget.onBiometricPressed,
       borderRadius: BorderRadius.circular(50),
-      child: Container(
+      child: SizedBox(
         width: 75,
         height: 75,
         child: Center(
           child: Icon(
             Icons.fingerprint,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             size: 32,
           ),
         ),
@@ -273,13 +277,13 @@ class _PinLockScreenState extends State<PinLockScreen> {
     return InkWell(
       onTap: _onDeletePressed,
       borderRadius: BorderRadius.circular(50),
-      child: Container(
+      child: SizedBox(
         width: 75,
         height: 75,
         child: Center(
           child: Icon(
             Icons.backspace_outlined,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             size: 24,
           ),
         ),

@@ -144,7 +144,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             ),
             SizedBox(height: AppSizes.paddingV24),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.padding16, vertical: AppSizes.paddingV8),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.padding16,
+                vertical: AppSizes.paddingV8,
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppSizes.radius16),
@@ -174,7 +177,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                         _isDefault = val;
                       });
                     },
-                    activeColor: Colors.white,
+                    activeThumbColor: Colors.white,
                     activeTrackColor: AppColors.primary,
                   ),
                 ],
