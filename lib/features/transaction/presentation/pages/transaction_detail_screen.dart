@@ -88,17 +88,17 @@ class TransactionDetailScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: const Color(0xFF020617),
         appBar: AppBar(
-          backgroundColor: AppColors.background,
+          backgroundColor: const Color(0xFF020617),
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.close, color: AppColors.textPrimary),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             'Detail Transaksi',
-            style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16),
+            style: AppStyles.heading2.copyWith(fontSize: AppSizes.font16, color: Colors.white),
           ),
           centerTitle: true,
           actions: [
@@ -117,9 +117,7 @@ class TransactionDetailScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppSizes.padding16),
                 decoration: BoxDecoration(
-                  color: isIncome
-                      ? const Color(0xFFE8F5E9)
-                      : const Color(0xFFFDEDEC),
+                  color: const Color(0xFF0F172A),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -140,7 +138,7 @@ class TransactionDetailScreen extends StatelessWidget {
               Text(
                 transaction.categoryName ?? 'Lainnya',
                 style: AppStyles.bodyText.copyWith(
-                  color: AppColors.textSecondary,
+                  color: const Color(0xFF94A3B8),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -148,7 +146,7 @@ class TransactionDetailScreen extends StatelessWidget {
 
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: const Color(0xFF0F172A),
                   borderRadius: BorderRadius.circular(AppSizes.radius16),
                   boxShadow: [
                     BoxShadow(
@@ -166,7 +164,7 @@ class TransactionDetailScreen extends StatelessWidget {
                       isIncome ? 'Pemasukan' : 'Pengeluaran',
                       Icons.swap_horiz_rounded,
                     ),
-                    Divider(height: AppSizes.paddingV24),
+                    Divider(height: AppSizes.paddingV24, color: const Color(0xFF1E293B)),
                     _buildDetailRow(
                       'Tanggal',
                       DateFormat(
@@ -175,7 +173,7 @@ class TransactionDetailScreen extends StatelessWidget {
                       ).format(transaction.date),
                       Icons.calendar_today_rounded,
                     ),
-                    Divider(height: AppSizes.paddingV24),
+                    Divider(height: AppSizes.paddingV24, color: const Color(0xFF1E293B)),
                     _buildDetailRow(
                       'Catatan',
                       transaction.notes?.isNotEmpty == true
@@ -223,7 +221,7 @@ class TransactionDetailScreen extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppColors.textSecondary, size: 20),
+        Icon(icon, color: const Color(0xFF94A3B8), size: 20),
         const SizedBox(width: AppDimens.sm),
         Expanded(
           child: Column(
@@ -232,7 +230,7 @@ class TransactionDetailScreen extends StatelessWidget {
               Text(
                 title,
                 style: AppStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
+                  color: const Color(0xFF94A3B8),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -241,7 +239,7 @@ class TransactionDetailScreen extends StatelessWidget {
                 value,
                 style: AppStyles.bodyText.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
               ),
             ],

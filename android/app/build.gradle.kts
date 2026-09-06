@@ -17,6 +17,13 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+val envFile = rootProject.file("../.env")
+val envProperties = Properties()
+if (envFile.exists()) {
+    envProperties.load(FileInputStream(envFile))
+}
+val gmapsApiKey = envProperties.getProperty("GMAPS_API_KEY") ?: ""
+
 android {
     namespace = "com.fanes.cuan_track"
     compileSdk = flutter.compileSdkVersion
@@ -41,6 +48,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["gmapsApiKey"] = gmapsApiKey
     }
 
     signingConfigs {

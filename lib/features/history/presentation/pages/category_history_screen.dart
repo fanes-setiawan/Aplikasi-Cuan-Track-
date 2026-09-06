@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/app_shimmer.dart';
@@ -81,26 +80,29 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
     final monthStr = DateFormat('MMMM yyyy', 'id_ID').format(widget.month);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
           children: [
-            Text(widget.categoryName, style: AppStyles.heading2),
+            Text(
+              widget.categoryName,
+              style: AppStyles.heading2.copyWith(color: Colors.white),
+            ),
             Text(
               monthStr,
               style: AppStyles.caption.copyWith(
-                color: AppColors.textSecondary,
+                color: Colors.grey[400],
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -114,7 +116,12 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
           }
 
           if (state is HistoryError) {
-            return Center(child: Text(state.message));
+            return Center(
+              child: Text(
+                state.message,
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
           }
 
           if (state is HistoryLoaded) {
@@ -232,7 +239,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
   Widget _buildTable(List<TransactionEntity> transactions, double totalAmount) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
         boxShadow: [
           BoxShadow(
@@ -326,8 +333,8 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
       ),
       child: Container(
         color: isEven
-            ? Colors.white
-            : widget.categoryColor.withValues(alpha: 0.04),
+            ? const Color(0xFF0F172A)
+            : widget.categoryColor.withValues(alpha: 0.1),
         padding: EdgeInsets.symmetric(
           vertical: 11,
           horizontal: AppSizes.padding12,
@@ -340,7 +347,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 '${index + 1}',
                 textAlign: TextAlign.center,
                 style: AppStyles.caption.copyWith(
-                  color: AppColors.textHint,
+                  color: Colors.grey[500],
                   fontSize: 11,
                 ),
               ),
@@ -350,7 +357,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               child: Text(
                 dateStr,
                 style: AppStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
+                  color: Colors.grey[400],
                   fontSize: 11,
                 ),
               ),
@@ -362,7 +369,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
                 style: AppStyles.bodyText.copyWith(
                   fontSize: AppSizes.font12,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -404,7 +411,7 @@ class _CategoryHistoryViewState extends State<_CategoryHistoryView> {
               style: AppStyles.caption.copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 11,
-                color: AppColors.textPrimary,
+                color: Colors.white,
                 letterSpacing: 0.3,
               ),
             ),

@@ -32,7 +32,7 @@ class _Scene1ReceiptAnimState extends State<Scene1ReceiptAnim>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 320,
+      height: 240,
       width: double.infinity,
       child: Stack(
         alignment: Alignment.center,

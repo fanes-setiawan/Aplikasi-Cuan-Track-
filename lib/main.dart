@@ -18,6 +18,7 @@ import 'features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'features/savings/presentation/bloc/savings_bloc.dart';
 import 'features/savings/presentation/bloc/savings_category_bloc.dart';
 import 'features/debt/presentation/bloc/debt_bloc.dart';
+import 'core/bloc/privacy_cubit.dart';
 import 'injection_container.dart' as di;
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,6 +26,7 @@ import 'core/services/notification_service.dart';
 import 'core/services/audio_service.dart';
 import 'core/services/ad_service.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -39,6 +41,7 @@ void main() async {
 
   await NotificationService().init();
   await AudioService().init();
+  await dotenv.load(fileName: ".env");
 
   await initializeDateFormatting('id_ID', null);
   await di.init();
@@ -76,6 +79,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.sl<SavingsCategoryBloc>(),
         ),
         BlocProvider<DebtBloc>(create: (_) => di.sl<DebtBloc>()),
+        BlocProvider<PrivacyCubit>(create: (_) => PrivacyCubit()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(412, 917),

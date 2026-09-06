@@ -44,6 +44,10 @@ dependencies:
   google_mobile_ads: ^7.0.0
   flutter_screenutil: ^5.9.3
   audioplayers: ^6.7.1
+  flutter_dotenv: ^6.0.1
+  google_maps_flutter: ^2.14.2
+  permission_handler: 11.3.1
+  flutter_animate: ^4.5.2
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +60,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env
     - assets/images/
     - assets/icons/
     - assets/logo/

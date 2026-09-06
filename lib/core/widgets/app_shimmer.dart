@@ -12,8 +12,8 @@ class AppShimmer extends StatelessWidget {
     if (!enabled) return child;
 
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: const Color(0xFF0F172A),
+      highlightColor: const Color(0xFF1E293B),
       period: const Duration(milliseconds: 1500),
       child: child,
     );
@@ -28,7 +28,7 @@ class AppShimmer extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
@@ -39,7 +39,7 @@ class AppShimmer extends StatelessWidget {
       width: radius * 2,
       height: radius * 2,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFF0F172A),
         shape: BoxShape.circle,
       ),
     );

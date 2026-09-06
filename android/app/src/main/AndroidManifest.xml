@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="Cuan Track"
         android:name="${applicationName}"
@@ -41,6 +45,10 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-6679810659415180~7831562593"/>
+            
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCggPGW35XYhI8AR4OdQiMFW9K3COnMCGk" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

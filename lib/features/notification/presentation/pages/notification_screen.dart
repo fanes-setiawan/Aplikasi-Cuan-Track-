@@ -11,19 +11,19 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Notifikasi', style: AppStyles.heading2),
+        title: Text('Notifikasi', style: AppStyles.heading2.copyWith(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () {},
@@ -112,14 +112,14 @@ class NotificationScreen extends StatelessWidget {
         vertical: AppSizes.paddingV12,
       ),
       decoration: BoxDecoration(
-        color: AppColors.background.withValues(alpha: 0.5),
+        color: const Color(0xFF0F172A),
       ),
       child: Text(
         title,
         style: AppStyles.caption.copyWith(
           letterSpacing: 1.2,
           fontWeight: FontWeight.bold,
-          color: AppColors.textSecondary,
+          color: const Color(0xFF94A3B8),
         ),
       ),
     );
@@ -138,10 +138,10 @@ class NotificationScreen extends StatelessWidget {
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
         color: isUnread
-            ? const Color(0xFFE8F5E9).withValues(alpha: 0.5)
-            : Colors.white,
+            ? const Color(0xFF1E293B)
+            : const Color(0xFF0F172A),
         border: Border(
-          bottom: BorderSide(color: AppColors.divider.withValues(alpha: 0.5)),
+          bottom: BorderSide(color: const Color(0xFF1E293B)),
         ),
       ),
       child: Row(
@@ -167,12 +167,14 @@ class NotificationScreen extends StatelessWidget {
                       title,
                       style: AppStyles.bodyText.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                     Text(
                       time,
                       style: AppStyles.caption.copyWith(
                         fontSize: AppSizes.font10,
+                        color: const Color(0xFF94A3B8),
                       ),
                     ),
                   ],
@@ -185,6 +187,7 @@ class NotificationScreen extends StatelessWidget {
                         description,
                         style: AppStyles.bodyTextSecondary.copyWith(
                           fontSize: AppSizes.font12,
+                          color: const Color(0xFF94A3B8),
                         ),
                       ),
                     ),

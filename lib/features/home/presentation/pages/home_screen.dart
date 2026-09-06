@@ -1,17 +1,21 @@
 import 'package:cuan_track/core/utils/app_sizes.dart';
-import 'package:cuan_track/features/analytics/presentation/pages/financial_health_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../../../../core/constants/app_assets.dart';
 
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
+import '../../../../core/bloc/privacy_cubit.dart';
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/scene_1_receipt_anim.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
+import '../../../history/presentation/pages/financial_timeline_screen.dart';
+
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_float_widget.dart';
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_pulse_glow_widget.dart';
 import 'expense_analysis_screen.dart';
@@ -76,8 +80,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF020617),
       body: SafeArea(
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
+        child: BlocBuilder<PrivacyCubit, bool>(
+          builder: (context, isPrivacyEnabled) {
+            return BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
             double totalBalance = 0;
             double monthlyIncome = 0;
             double monthlyExpenses = 0;
@@ -97,34 +103,34 @@ class _HomeScreenState extends State<HomeScreen> {
               return _buildHomeShimmer();
             }
 
-            return AnimationLimiter(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(AppDimens.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: AnimationConfiguration.toStaggeredList(
-                    duration: const Duration(milliseconds: 375),
-                    childAnimationBuilder: (widget) => SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(child: widget),
-                    ),
-                    children: [
-                      _buildHeader(context),
-                      const SizedBox(height: AppDimens.lg),
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, 0),
+                  child: _buildHeader(context, isPrivacyEnabled),
+                ),
+                Expanded(
+                  child: AnimationLimiter(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, AppDimens.md),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: AnimationConfiguration.toStaggeredList(
+                          duration: const Duration(milliseconds: 375),
+                          childAnimationBuilder: (widget) => SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(child: widget),
+                          ),
+                          children: [
                       _buildBalanceCard(
                         totalBalance,
                         monthlyIncome,
                         monthlyExpenses,
+                        isPrivacyEnabled: isPrivacyEnabled,
                         showTrend: recentTrx.isNotEmpty,
                       ),
                       const SizedBox(height: AppDimens.lg),
                       _buildActionButtons(context),
-                      const SizedBox(height: AppDimens.lg),
-                      _buildFinancialHealthCard(
-                        context,
-                        monthlyIncome,
-                        monthlyExpenses,
-                      ),
                       const SizedBox(height: AppDimens.lg),
 
                       if (expenseData.isNotEmpty) ...[
@@ -165,6 +171,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+            ),
+          ),
+          ],
+          );
+          },
             );
           },
         ),
@@ -173,30 +184,35 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHomeShimmer() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppDimens.md),
-      child: AppShimmer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                AppShimmer.circular(radius: 24),
-                const SizedBox(width: AppDimens.md),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AppShimmer.rectangular(
-                      width: 80,
-                      height: AppSizes.paddingV12,
-                    ),
-                    SizedBox(height: AppSizes.paddingV4),
-                    AppShimmer.rectangular(width: 120, height: 18),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimens.lg),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, 0),
+          child: Row(
+            children: [
+              AppShimmer.circular(radius: 24),
+              const SizedBox(width: AppDimens.md),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppShimmer.rectangular(
+                    width: 80,
+                    height: AppSizes.paddingV12,
+                  ),
+                  SizedBox(height: AppSizes.paddingV4),
+                  AppShimmer.rectangular(width: 120, height: 18),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppDimens.md),
+            child: AppShimmer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
             AppShimmer.rectangular(
               height: 180,
               borderRadius: AppDimens.radiusL,
@@ -260,10 +276,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    ),
+    ),
+    ],
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, bool isPrivacyEnabled) {
     return Row(
       children: [
         CircleAvatar(
@@ -272,26 +291,48 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(Icons.receipt_long, color: Colors.orange),
         ),
         const SizedBox(width: AppDimens.md),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _getGreeting(),
-              style: AppStyles.bodyTextSecondary.copyWith(
-                fontSize: AppSizes.font12,
-                color: const Color(0xFFCBD5E1),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _getGreeting(),
+                style: AppStyles.bodyTextSecondary.copyWith(
+                  fontSize: AppSizes.font12,
+                  color: const Color(0xFFCBD5E1),
+                ),
               ),
-            ),
-            Text(
-              'Halo, $_userName!',
-              style: AppStyles.heading2.copyWith(
-                fontSize: AppSizes.font18,
-                color: Colors.white,
+              Text(
+                'Halo, $_userName!',
+                style: AppStyles.heading2.copyWith(
+                  fontSize: AppSizes.font18,
+                  color: Colors.white,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const Spacer(),
+        GestureDetector(
+          onTap: () {
+            context.read<PrivacyCubit>().togglePrivacy();
+          },
+          child: Container(
+            padding: EdgeInsets.all(AppSizes.padding8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0F172A),
+              shape: BoxShape.circle,
+              border: Border.all(color: const Color(0xFF1E293B)),
+            ),
+            child: Icon(
+              isPrivacyEnabled ? Icons.visibility_off : Icons.visibility,
+              size: 24,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        const SizedBox(width: AppDimens.sm),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -326,6 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
     double income,
     double expense, {
     bool showTrend = true,
+    bool isPrivacyEnabled = false,
   }) {
     return AnimatedFloatWidget(
       child: Container(
@@ -390,33 +432,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         if (showTrend)
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: AppSizes.paddingV4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(
-                                AppDimens.round,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const FinancialTimelineScreen()),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: AppSizes.paddingV4,
                               ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.trending_up,
-                                  color: Colors.white,
-                                  size: 14,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.round,
                                 ),
-                                SizedBox(width: AppSizes.padding4),
-                                Text(
-                                  '+ 2.5%',
-                                  style: AppStyles.caption.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                              ),
+                              child: SvgPicture.asset(
+                                AppAssets.iconMaps,
+                                width: AppSizes.font32,
+                                height: AppSizes.font32,
+                              ),
                             ),
                           ),
                       ],
@@ -427,7 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          _formatCurrency(totalBalance),
+                          isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(totalBalance),
                           style: AppStyles.heading1.copyWith(
                             color: Colors.white,
                             fontSize: 36,
@@ -449,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: _buildBalanceStat(
                               'PEMASUKAN',
-                              _formatCurrency(income),
+                              isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(income),
                               const Color(0xFFA7FFEB),
                             ),
                           ),
@@ -463,7 +501,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: _buildBalanceStat(
                               'PENGELUARAN',
-                              _formatCurrency(expense),
+                              isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(expense),
                               const Color(0xFFFFE0B2),
                             ),
                           ),
@@ -1157,148 +1195,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFinancialHealthCard(
-    BuildContext context,
-    double monthlyIncome,
-    double monthlyExpenses,
-  ) {
-    return BlocBuilder<SavingsBloc, SavingsState>(
-      builder: (context, savingsState) {
-        return BlocBuilder<DebtBloc, DebtState>(
-          builder: (context, debtState) {
-            double savings = 0;
-            double debt = 0;
-
-            if (savingsState is SavingsLoaded) {
-              savings = savingsState.goals.fold(
-                0.0,
-                (sum, goal) => sum + goal.currentAmount,
-              );
-            }
-
-            if (debtState is DebtLoaded) {
-              for (var d in debtState.debts) {
-                final remaining = d.amount - d.paidAmount;
-                if (remaining > 0 && d.type == 'hutang') {
-                  debt += remaining;
-                }
-              }
-            }
-
-            // Hitung Rasio
-            double denomIncome = monthlyIncome <= 0 ? 1.0 : monthlyIncome;
-            double savingRatio = savings / denomIncome;
-            double debtRatio = debt / denomIncome;
-            double emergencyFundRatio = monthlyExpenses > 0
-                ? (savings / monthlyExpenses)
-                : 0;
-
-            // Hitung Skor
-            double savingScore = savingRatio >= 0.20
-                ? 100
-                : (savingRatio / 0.20) * 100;
-            double debtScore = debtRatio <= 0.35
-                ? 100
-                : (debtRatio >= 1.0
-                      ? 0
-                      : (1.0 - (debtRatio - 0.35) / 0.65) * 100);
-            double emergencyScore = emergencyFundRatio >= 3.0
-                ? 100
-                : (emergencyFundRatio / 3.0) * 100;
-
-            double score = (savingScore + debtScore + emergencyScore) / 3;
-            if (score < 0) score = 0;
-            if (score > 100) score = 100;
-
-            String status = 'Bahaya';
-            Color statusColor = const Color(0xFFE53935);
-            if (score > 70) {
-              status = 'Sehat';
-              statusColor = const Color(0xFF4CAF50);
-            } else if (score > 35) {
-              status = 'Cukup Sehat';
-              statusColor = Colors.orange[800]!;
-            }
-
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FinancialHealthScreen(),
-                  ),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.all(AppSizes.padding16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0F172A),
-                  borderRadius: BorderRadius.circular(AppDimens.radiusL),
-                  border: Border.all(color: const Color(0xFF1E293B), width: 1),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(AppSizes.padding12),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFE8F5E9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.favorite,
-                        color: Color(0xFF1B5E20),
-                        size: 24,
-                      ),
-                    ),
-                    SizedBox(width: AppSizes.padding16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'KESEHATAN KEUANGAN',
-                            style: AppStyles.caption.copyWith(
-                              color: const Color(0xFF94A3B8),
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.0,
-                            ),
-                          ),
-                          SizedBox(height: AppSizes.paddingV4),
-                          Row(
-                            children: [
-                              Text(
-                                'Skor: ${score.toStringAsFixed(0)}/100',
-                                style: AppStyles.bodyText.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(width: AppSizes.padding8),
-                              Text(
-                                '($status)',
-                                style: AppStyles.caption.copyWith(
-                                  color: statusColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(
-                      Icons.chevron_right,
-                      color: AppColors.textSecondary,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }
 
 class DonutChartPainter extends CustomPainter {

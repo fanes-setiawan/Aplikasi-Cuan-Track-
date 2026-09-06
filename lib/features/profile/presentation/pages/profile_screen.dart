@@ -281,9 +281,7 @@ class ProfileScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 56,
                         child: ElevatedButton(
-                          onPressed: () {
-                            context.read<AuthBloc>().add(LogoutEvent());
-                          },
+                          onPressed: () => _showLogoutDialog(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0F172A),
                             elevation: 0,
@@ -608,7 +606,7 @@ class ProfileScreen extends StatelessWidget {
                   _buildBenefitItem(
                     Icons.analytics_outlined,
                     'Analisis Finansial Plus',
-                    'Laporan kesehatan keuangan tak terbatas.',
+                    'Laporan analisis pengeluaran tak terbatas.',
                   ),
                   SizedBox(height: AppSizes.paddingV24),
 
@@ -769,6 +767,78 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF0F172A),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusL),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(AppSizes.padding8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E293B),
+                borderRadius: BorderRadius.circular(AppSizes.radius8),
+              ),
+              child: const Icon(
+                Icons.logout_rounded,
+                color: Colors.white,
+                size: 22,
+              ),
+            ),
+            SizedBox(width: AppSizes.padding12),
+            Text(
+              'Keluar Akun',
+              style: AppStyles.heading2.copyWith(
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Apakah Anda yakin ingin keluar dari akun ini?',
+          style: AppStyles.bodyText.copyWith(
+            color: const Color(0xFF94A3B8),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Batal',
+              style: AppStyles.bodyText.copyWith(
+                color: const Color(0xFF94A3B8),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<AuthBloc>().add(LogoutEvent());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimens.radiusM),
+              ),
+            ),
+            child: Text(
+              'Keluar',
+              style: AppStyles.bodyText.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
