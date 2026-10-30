@@ -1,4 +1,5 @@
 import 'package:cuan_track/core/utils/app_sizes.dart';
+import 'package:cuan_track/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -56,326 +57,357 @@ class ProfileScreen extends StatelessWidget {
               style: AppStyles.heading2.copyWith(color: Colors.white),
             ),
           ),
-          body: AnimationLimiter(
-            child: SingleChildScrollView(
-              child: Column(
-                children: AnimationConfiguration.toStaggeredList(
-                  duration: const Duration(milliseconds: 375),
-                  childAnimationBuilder: (widget) => SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: FadeInAnimation(child: widget),
+          body: BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthActionSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: const Color(0xFF10b981),
                   ),
-                  children: [
-                    SizedBox(height: AppSizes.paddingV32),
-                    Center(
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(AppSizes.padding4),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color(
-                                      0xFF10B981,
-                                    ).withValues(alpha: 0.1),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: CircleAvatar(
-                                  radius: 55,
-                                  backgroundColor: const Color(0xFF1E293B),
-                                  backgroundImage: photoUrl != null
-                                      ? NetworkImage(photoUrl)
-                                      : null,
-                                  child: photoUrl == null
-                                      ? Icon(
-                                          Icons.person,
-                                          size: 50,
-                                          color: Colors.white.withValues(
-                                            alpha: 0.8,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 4,
-                                right: 4,
-                                child: Container(
-                                  padding: EdgeInsets.all(AppSizes.padding8),
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFF10B981),
+                );
+              } else if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: const Color(0xFFef4444),
+                  ),
+                );
+              }
+            },
+            child: AnimationLimiter(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: AnimationConfiguration.toStaggeredList(
+                    duration: const Duration(milliseconds: 375),
+                    childAnimationBuilder: (widget) => SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(child: widget),
+                    ),
+                    children: [
+                      SizedBox(height: AppSizes.paddingV32),
+                      Center(
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(AppSizes.padding4),
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.primary.withValues(alpha: 0.1),
+                                      width: 1,
+                                    ),
                                   ),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                    size: 16,
+                                  child: CircleAvatar(
+                                    radius: 55,
+                                    backgroundColor: const Color(0xFF1E293B),
+                                    backgroundImage: photoUrl != null
+                                        ? NetworkImage(photoUrl)
+                                        : null,
+                                    child: photoUrl == null
+                                        ? Icon(
+                                            Icons.person,
+                                            size: 50,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
+                                          )
+                                        : null,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: AppSizes.paddingV16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                name,
-                                style: AppStyles.heading1.copyWith(
-                                  fontSize: AppSizes.font24,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              if (isPremium) ...[
-                                SizedBox(width: AppSizes.padding8),
-                                const Icon(
-                                  Icons.workspace_premium,
-                                  color: Color(0xFFFFB300),
-                                  size: 24,
+                                Positioned(
+                                  bottom: 4,
+                                  right: 4,
+                                  child: Container(
+                                    padding: EdgeInsets.all(AppSizes.padding8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
                                 ),
                               ],
-                            ],
-                          ),
-                          SizedBox(height: AppSizes.paddingV4),
-                          Text(
-                            email,
-                            style: AppStyles.bodyTextSecondary.copyWith(
-                              color: const Color(0xFF94A3B8),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: AppSizes.paddingV24),
-                    if (user != null)
-                      _buildPremiumCard(context, isPremium, user.uid),
-                    SizedBox(height: AppSizes.paddingV24),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.md,
-                      ),
-                      child: Column(
-                        children: [
-                          _buildProfileMenuItem(
-                            icon: Icons.person_outline,
-                            title: 'Informasi Akun',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AccountInfoScreen(),
+                            SizedBox(height: AppSizes.paddingV16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  name,
+                                  style: AppStyles.heading1.copyWith(
+                                    fontSize: AppSizes.font24,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.payments_outlined,
-                            title: 'Metode Pembayaran',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PaymentMethodsScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.category_outlined,
-                            title: 'Kategori Kustom',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CustomCategoriesScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.file_upload_outlined,
-                            title: 'Import Transaksi Excel',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ImportExcelScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.fingerprint,
-                            title: 'Keamanan (Fingerprint/PIN)',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SecuritySettingsScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.notifications_none_outlined,
-                            title: 'Notifikasi',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NotificationSettingsScreen(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(height: AppSizes.paddingV12),
-                          _buildProfileMenuItem(
-                            icon: Icons.help_outline,
-                            title: 'Bantuan',
-                            onTap: () async {
-                              final url = remoteConfig.supportContactUrl;
-                              final uri = Uri.parse(url);
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(
-                                  uri,
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              } else {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Tidak dapat membuka: $url',
-                                      ),
-                                    ),
-                                  );
-                                }
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: AppSizes.paddingV32),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.md,
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 56,
-                        child: ElevatedButton(
-                          onPressed: () => _showLogoutDialog(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0F172A),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppDimens.radiusM,
+                                if (isPremium) ...[
+                                  SizedBox(width: AppSizes.padding8),
+                                  const Icon(
+                                    Icons.workspace_premium,
+                                    color: Color(0xFFFFB300),
+                                    size: 24,
+                                  ),
+                                ],
+                              ],
+                            ),
+                            SizedBox(height: AppSizes.paddingV4),
+                            Text(
+                              email,
+                              style: AppStyles.bodyTextSecondary.copyWith(
+                                color: const Color(0xFF94A3B8),
                               ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.logout,
-                                color: Color(0xFFEF4444),
-                              ),
-                              SizedBox(width: AppSizes.padding12),
-                              Text(
-                                'Keluar',
-                                style: AppStyles.bodyText.copyWith(
-                                  color: const Color(0xFFEF4444),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
                       ),
-                    ),
+                      SizedBox(height: AppSizes.paddingV24),
+                      if (user != null)
+                        _buildPremiumCard(context, isPremium, user.uid),
+                      SizedBox(height: AppSizes.paddingV24),
 
-                    SizedBox(height: AppSizes.paddingV24),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppDimens.md,
-                      ),
-                      child: InkWell(
-                        onTap: () => _showDeleteAccountDialog(context),
-                        borderRadius: BorderRadius.circular(AppDimens.radiusM),
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(AppDimens.md),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF0F172A),
-                            borderRadius: BorderRadius.circular(
-                              AppDimens.radiusM,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.md,
+                        ),
+                        child: Column(
+                          children: [
+                            _buildProfileMenuItem(
+                              icon: Icons.person_outline,
+                              title: 'Informasi Akun',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const AccountInfoScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                            border: Border.all(color: const Color(0xFF1E293B)),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF450a0a),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const Icon(
-                                  Icons.delete_forever_outlined,
-                                  color: Color(0xFFEF4444),
-                                  size: 22,
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.payments_outlined,
+                              title: 'Metode Pembayaran',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentMethodsScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.category_outlined,
+                              title: 'Kategori Kustom',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CustomCategoriesScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.file_upload_outlined,
+                              title: 'Import Transaksi Excel',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ImportExcelScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.fingerprint,
+                              title: 'Keamanan (Fingerprint/PIN)',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SecuritySettingsScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.link,
+                              title: 'Tautkan Akun Google',
+                              onTap: () {
+                                context.read<AuthBloc>().add(
+                                  LinkGoogleAccountEvent(),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.notifications_none_outlined,
+                              title: 'Notifikasi',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationSettingsScreen(),
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: AppSizes.paddingV12),
+                            _buildProfileMenuItem(
+                              icon: Icons.help_outline,
+                              title: 'Bantuan',
+                              onTap: () async {
+                                final url = remoteConfig.supportContactUrl;
+                                final uri = Uri.parse(url);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(
+                                    uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Tidak dapat membuka: $url',
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(height: AppSizes.paddingV32),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.md,
+                        ),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 56,
+                          child: ElevatedButton(
+                            onPressed: () => _showLogoutDialog(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0F172A),
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusM,
                                 ),
                               ),
-                              SizedBox(width: AppSizes.padding16),
-                              Expanded(
-                                child: Text(
-                                  'Hapus Akun',
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.logout,
+                                  color: Color(0xFFEF4444),
+                                ),
+                                SizedBox(width: AppSizes.padding12),
+                                Text(
+                                  'Keluar',
                                   style: AppStyles.bodyText.copyWith(
                                     color: const Color(0xFFEF4444),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                              const Icon(
-                                Icons.chevron_right,
-                                color: Color(0xFFEF4444),
-                                size: 20,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    SizedBox(height: AppSizes.paddingV24),
-                    Text(
-                      'VERSI ${packageInfo.version}',
-                      style: AppStyles.caption.copyWith(
-                        color: const Color(0xFF64748B),
-                        fontSize: AppSizes.font10,
-                        letterSpacing: 1.1,
+                      SizedBox(height: AppSizes.paddingV24),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppDimens.md,
+                        ),
+                        child: InkWell(
+                          onTap: () => _showDeleteAccountDialog(context),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusM,
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(AppDimens.md),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0F172A),
+                              borderRadius: BorderRadius.circular(
+                                AppDimens.radiusM,
+                              ),
+                              border: Border.all(
+                                color: const Color(0xFF1E293B),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF450a0a),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(
+                                    Icons.delete_forever_outlined,
+                                    color: Color(0xFFEF4444),
+                                    size: 22,
+                                  ),
+                                ),
+                                SizedBox(width: AppSizes.padding16),
+                                Expanded(
+                                  child: Text(
+                                    'Hapus Akun',
+                                    style: AppStyles.bodyText.copyWith(
+                                      color: const Color(0xFFEF4444),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.chevron_right,
+                                  color: Color(0xFFEF4444),
+                                  size: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: AppSizes.paddingV32),
-                  ],
+
+                      SizedBox(height: AppSizes.paddingV24),
+                      Text(
+                        'VERSI ${packageInfo.version}',
+                        style: AppStyles.caption.copyWith(
+                          color: const Color(0xFF64748B),
+                          fontSize: AppSizes.font10,
+                          letterSpacing: 1.1,
+                        ),
+                      ),
+                      SizedBox(height: AppSizes.paddingV32),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -795,17 +827,13 @@ class ProfileScreen extends StatelessWidget {
             SizedBox(width: AppSizes.padding12),
             Text(
               'Keluar Akun',
-              style: AppStyles.heading2.copyWith(
-                color: Colors.white,
-              ),
+              style: AppStyles.heading2.copyWith(color: Colors.white),
             ),
           ],
         ),
         content: Text(
           'Apakah Anda yakin ingin keluar dari akun ini?',
-          style: AppStyles.bodyText.copyWith(
-            color: const Color(0xFF94A3B8),
-          ),
+          style: AppStyles.bodyText.copyWith(color: const Color(0xFF94A3B8)),
         ),
         actions: [
           TextButton(
@@ -963,17 +991,16 @@ class ProfileScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppDimens.radiusM),
-          border: Border.all(color: const Color(0xFF1E293B)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withValues(alpha: 0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: const Color(0xFF10B981), size: 22),
+              child: Icon(icon, color: AppColors.primary, size: 22),
             ),
             SizedBox(width: AppSizes.padding16),
             Expanded(

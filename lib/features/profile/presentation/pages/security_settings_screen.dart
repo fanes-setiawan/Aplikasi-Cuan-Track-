@@ -49,20 +49,20 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text('Keamanan', style: AppStyles.heading2),
+        title: Text('Keamanan', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppDimens.lg),
@@ -95,8 +95,8 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                 setState(() => _pinEnabled = val);
                 _saveSetting('pinEnabled', val);
               },
-              iconColor: const Color(0xFF27AE60),
-              iconBgColor: const Color(0xFFF0FDF4),
+              iconColor: AppColors.primary,
+              iconBgColor: AppColors.primary.withValues(alpha: 0.1),
             ),
             SizedBox(height: AppSizes.paddingV12),
             _buildSecurityActionItem(
@@ -111,8 +111,8 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                   ),
                 );
               },
-              iconColor: const Color(0xFF27AE60),
-              iconBgColor: const Color(0xFFF0FDF4),
+              iconColor: AppColors.primary,
+              iconBgColor: AppColors.primary.withValues(alpha: 0.1),
             ),
             SizedBox(height: AppSizes.paddingV12),
             _buildSecurityToggleItem(
@@ -148,23 +148,23 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
               icon: Icons.timer_outlined,
               title: 'Otomatis Kunci',
               subtitle: 'Durasi sebelum terkunci otomatis',
-              iconColor: const Color(0xFF27AE60),
-              iconBgColor: const Color(0xFFF0FDF4),
+              iconColor: AppColors.primary,
+              iconBgColor: AppColors.primary.withValues(alpha: 0.1),
             ),
             SizedBox(height: AppSizes.paddingV32),
             Container(
               padding: EdgeInsets.all(AppSizes.padding16),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0FDF4),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppSizes.radius16),
-                border: Border.all(color: const Color(0xFFD1FAE5)),
+                border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.check_circle_outline,
-                    color: Color(0xFF27AE60),
+                    color: AppColors.primary,
                     size: 20,
                   ),
                   SizedBox(width: AppSizes.padding12),
@@ -172,7 +172,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                     child: Text(
                       'Kami menggunakan enkripsi tingkat bank untuk memastikan data keuangan Anda tetap aman dan pribadi.',
                       style: AppStyles.bodyTextSecondary.copyWith(
-                        color: const Color(0xFF1B5E20),
+                        color: Colors.white,
                         fontSize: 13,
                       ),
                     ),
@@ -198,8 +198,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     return Container(
       padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppSizes.radius16),
+        border: Border.all(color: const Color(0xFF1E293B)),
       ),
       child: Row(
         children: [
@@ -220,6 +221,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                   title,
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 Text(subtitle, style: AppStyles.caption),
@@ -230,7 +232,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
             value: value,
             onChanged: onChanged,
             activeThumbColor: Colors.white,
-            activeTrackColor: const Color(0xFF27AE60),
+            activeTrackColor: AppColors.primary,
           ),
         ],
       ),
@@ -251,8 +253,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       child: Container(
         padding: EdgeInsets.all(AppSizes.padding16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFF0F172A),
           borderRadius: BorderRadius.circular(AppSizes.radius16),
+          border: Border.all(color: const Color(0xFF1E293B)),
         ),
         child: Row(
           children: [
@@ -273,6 +276,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                     title,
                     style: AppStyles.bodyText.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                   Text(subtitle, style: AppStyles.caption),
@@ -303,8 +307,9 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
     return Container(
       padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppSizes.radius16),
+        border: Border.all(color: const Color(0xFF1E293B)),
       ),
       child: Row(
         children: [
@@ -325,6 +330,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                   title,
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 Text(subtitle, style: AppStyles.caption),
@@ -350,7 +356,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                 vertical: AppSizes.paddingV8,
               ),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFB),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(AppSizes.radius8),
               ),
               child: Row(
@@ -358,14 +364,14 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
                   Text(
                     _autoLockDuration,
                     style: AppStyles.bodyTextSecondary.copyWith(
-                      color: const Color(0xFF27AE60),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(width: AppSizes.padding4),
-                  const Icon(
+                  Icon(
                     Icons.keyboard_arrow_down,
-                    color: Color(0xFF27AE60),
+                    color: AppColors.primary,
                     size: 20,
                   ),
                 ],

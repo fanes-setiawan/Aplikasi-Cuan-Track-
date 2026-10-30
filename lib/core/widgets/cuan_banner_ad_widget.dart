@@ -5,7 +5,14 @@ import '../../injection_container.dart';
 import '../services/ad_service.dart';
 
 class CuanBannerAdWidget extends StatefulWidget {
-  const CuanBannerAdWidget({super.key});
+  final String? adUnitId;
+  final bool showCloseButton;
+
+  const CuanBannerAdWidget({
+    super.key,
+    this.adUnitId,
+    this.showCloseButton = false,
+  });
 
   @override
   State<CuanBannerAdWidget> createState() => _CuanBannerAdWidgetState();
@@ -15,6 +22,7 @@ class _CuanBannerAdWidgetState extends State<CuanBannerAdWidget> {
   final AdService _adService = sl<AdService>();
   BannerAd? _bannerAd;
   bool _isAdLoaded = false;
+  bool _isClosed = false;
 
   @override
   void initState() {
@@ -35,7 +43,7 @@ class _CuanBannerAdWidgetState extends State<CuanBannerAdWidget> {
     if (_adService.isPremium || _bannerAd != null) return;
 
     _bannerAd = BannerAd(
-      adUnitId: AdService.bannerAdUnitId,
+      adUnitId: widget.adUnitId ?? AdService.bannerAdUnitId,
       request: const AdRequest(),
       size: AdSize.banner,
       listener: BannerAdListener(
@@ -82,16 +90,47 @@ class _CuanBannerAdWidgetState extends State<CuanBannerAdWidget> {
     return ValueListenableBuilder<bool>(
       valueListenable: _adService.isPremiumNotifier,
       builder: (context, isPremium, child) {
-        if (isPremium || !_isAdLoaded || _bannerAd == null) {
+        if (isPremium || !_isAdLoaded || _bannerAd == null || _isClosed) {
           return const SizedBox.shrink();
         }
 
         return Container(
           alignment: Alignment.center,
-          width: _bannerAd!.size.width.toDouble(),
-          height: _bannerAd!.size.height.toDouble(),
           margin: EdgeInsets.symmetric(vertical: AppSizes.paddingV8),
-          child: AdWidget(ad: _bannerAd!),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              SizedBox(
+                width: _bannerAd!.size.width.toDouble(),
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
+              ),
+              if (widget.showCloseButton)
+                Positioned(
+                  top: -8,
+                  right: -8,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isClosed = true;
+                      });
+                    },
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: const Icon(
+                        Icons.close,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );

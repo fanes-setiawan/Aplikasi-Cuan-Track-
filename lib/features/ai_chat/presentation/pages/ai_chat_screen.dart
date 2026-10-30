@@ -26,6 +26,8 @@ import '../../../../core/theme/app_styles.dart';
 import '../bloc/ai_chat_bloc.dart';
 import '../bloc/ai_chat_state.dart';
 import '../../../../core/utils/app_helpers.dart';
+import '../../../../core/widgets/cuan_banner_ad_widget.dart';
+import '../../../../core/services/ad_service.dart';
 
 class AIChatScreen extends StatefulWidget {
   const AIChatScreen({super.key});
@@ -126,6 +128,10 @@ class _AIChatScreenState extends State<AIChatScreen> {
                   ),
                 ),
                 _buildQuickActions(),
+                CuanBannerAdWidget(
+                  adUnitId: AdService.chatBannerAdUnitId,
+                  showCloseButton: true,
+                ),
                 _buildInputSection(),
               ],
             ),

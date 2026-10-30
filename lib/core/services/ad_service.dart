@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AdService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -19,12 +19,40 @@ class AdService {
 
   static String get bannerAdUnitId {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'ca-app-pub-6679810659415180/9715489903';
+      return dotenv.env['ADMOB_BANNER_HOME_ANDROID'] ?? 'ca-app-pub-9764236696241623/9275430143';
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return 'ca-app-pub-3940256099942544/2934735716';
     }
     throw UnsupportedError('Unsupported platform');
   }
+
+  static String get chatBannerAdUnitId {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return dotenv.env['ADMOB_BANNER_CHAT_ANDROID'] ?? 'ca-app-pub-9764236696241623/6170843949';
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return 'ca-app-pub-3940256099942544/2934735716';
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
+
+  static String get statisticsBannerAdUnitId {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return dotenv.env['ADMOB_BANNER_STATISTICS_ANDROID'] ?? 'ca-app-pub-9764236696241623/8321441129';
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return 'ca-app-pub-3940256099942544/2934735716';
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
+
+  static String get transactionBannerAdUnitId {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return dotenv.env['ADMOB_BANNER_TRANSACTION_ANDROID'] ?? 'ca-app-pub-9764236696241623/8001876929';
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return 'ca-app-pub-3940256099942544/2934735716';
+    }
+    throw UnsupportedError('Unsupported platform');
+  }
+
 
   static String get interstitialAdUnitId {
     if (defaultTargetPlatform == TargetPlatform.android) {

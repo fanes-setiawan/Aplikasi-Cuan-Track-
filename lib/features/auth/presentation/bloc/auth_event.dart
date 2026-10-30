@@ -34,3 +34,14 @@ class LoginWithGoogleEvent extends AuthEvent {}
 class LogoutEvent extends AuthEvent {}
 
 class DeleteAccountEvent extends AuthEvent {}
+
+class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  const ForgotPasswordEvent(this.email);
+
+  @override
+  List<Object?> get props => [email];
+}
+
+class LinkGoogleAccountEvent extends AuthEvent {}

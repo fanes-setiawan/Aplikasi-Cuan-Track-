@@ -30,6 +30,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginWithGoogleEvent>(_onLoginWithGoogle);
     on<LogoutEvent>(_onLogout);
     on<DeleteAccountEvent>(_onDeleteAccount);
+    on<ForgotPasswordEvent>(_onForgotPassword);
+    on<LinkGoogleAccountEvent>(_onLinkGoogleAccount);
   }
 
   Future<void> _onCheckAuthStatus(
@@ -102,6 +104,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(Unauthenticated());
     } catch (e) {
       emit(AuthError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  Future<void> _onForgotPassword(
+    ForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await authRepository.sendPasswordResetEmail(event.email);
+      emit(const AuthActionSuccess('Email reset password telah dikirim.'));
+      emit(Unauthenticated());
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll('Exception: ', '')));
+      emit(Unauthenticated());
+    }
+  }
+
+  Future<void> _onLinkGoogleAccount(
+    LinkGoogleAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    try {
+      await authRepository.linkGoogleAccount();
+      emit(const AuthActionSuccess('Akun Google berhasil ditautkan.'));
+      // Reload user data after linking
+      final user = await getCurrentUserUseCase();
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(Unauthenticated());
+      }
+    } catch (e) {
+      emit(AuthError(e.toString().replaceAll('Exception: ', '')));
+      // Still emit authenticated state since the user is still logged in
+      final user = await getCurrentUserUseCase();
+      if (user != null) {
+        emit(Authenticated(user));
+      } else {
+        emit(Unauthenticated());
+      }
     }
   }
 }

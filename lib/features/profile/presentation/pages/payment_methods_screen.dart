@@ -40,20 +40,20 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text('Metode Pembayaran', style: AppStyles.heading2),
+        title: Text('Metode Pembayaran', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: BlocBuilder<PaymentMethodBloc, PaymentMethodState>(
         builder: (context, state) {
@@ -71,7 +71,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   if (methods.isEmpty)
                     const Padding(
                       padding: EdgeInsets.all(AppDimens.lg),
-                      child: Text("Belum ada metode pembayaran."),
+                      child: Text("Belum ada metode pembayaran.", style: TextStyle(color: Colors.white)),
                     )
                   else
                     ...methods.map(
@@ -80,8 +80,8 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                         name: method.name,
                         type: method.type,
                         amount: _formatCurrency(method.balance),
-                        iconBgColor: const Color(0xFFEFF6FF),
-                        iconColor: const Color(0xFF2563EB),
+                        iconBgColor: AppColors.primary.withValues(alpha: 0.1),
+                        iconColor: AppColors.primary,
                       ),
                     ),
                   SizedBox(height: AppSizes.paddingV32),
@@ -181,15 +181,9 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
       ),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: const Color(0xFF1E293B)),
       ),
       child: Row(
         children: [
@@ -210,6 +204,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
                   name,
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(height: AppSizes.paddingV4),
@@ -227,7 +222,7 @@ class _PaymentMethodsScreenState extends State<PaymentMethodsScreen> {
             children: [
               Text(
                 amount,
-                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+                style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               SizedBox(height: AppSizes.paddingV8),
               const Icon(Icons.more_vert, color: AppColors.textHint, size: 16),

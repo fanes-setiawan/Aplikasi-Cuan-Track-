@@ -1,7 +1,6 @@
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_styles.dart';
 import '../../../../core/constants/app_dimens.dart';
 import '../../../../core/widgets/custom_text_field.dart';
@@ -50,9 +49,9 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leadingWidth: 80,
         leading: Center(
@@ -63,12 +62,12 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
               padding: EdgeInsets.all(AppSizes.padding8),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(color: AppColors.divider, width: 1.5),
+                color: const Color(0xFF0F172A),
+                border: Border.all(color: const Color(0xFF1E293B), width: 1.5),
               ),
               child: const Icon(
                 Icons.chevron_left,
-                color: AppColors.textPrimary,
+                color: Colors.white,
               ),
             ),
           ),
@@ -76,7 +75,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
         centerTitle: true,
         title: Text(
           'Detail Informasi Akun',
-          style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18),
+          style: AppStyles.heading2.copyWith(fontSize: AppSizes.font18, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -145,6 +144,10 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 hintText: 'User Name',
                 controller: _nameController,
                 prefixIcon: Icons.person_outline,
+                fillColor: const Color(0xFF0F172A),
+                textColor: Colors.white,
+                labelColor: Colors.white,
+                borderColor: const Color(0xFF1E293B),
               ),
               SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
@@ -152,6 +155,10 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 hintText: 'username_id',
                 controller: _usernameController,
                 prefixIcon: Icons.alternate_email,
+                fillColor: const Color(0xFF0F172A),
+                textColor: Colors.white,
+                labelColor: Colors.white,
+                borderColor: const Color(0xFF1E293B),
               ),
               SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
@@ -160,6 +167,10 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 controller: _emailController,
                 prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
+                fillColor: const Color(0xFF0F172A),
+                textColor: Colors.white,
+                labelColor: Colors.white,
+                borderColor: const Color(0xFF1E293B),
               ),
               SizedBox(height: AppSizes.paddingV24),
               CustomTextField(
@@ -168,6 +179,10 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 controller: _phoneController,
                 prefixIcon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
+                fillColor: const Color(0xFF0F172A),
+                textColor: Colors.white,
+                labelColor: Colors.white,
+                borderColor: const Color(0xFF1E293B),
               ),
               const SizedBox(height: 48),
 

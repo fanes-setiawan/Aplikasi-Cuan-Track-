@@ -46,6 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           } else if (state is AuthError) {
             AppHelpers.showSnackBar(context, state.message, isError: true);
+          } else if (state is AuthActionSuccess) {
+            AppHelpers.showSnackBar(context, state.message);
           }
         },
         builder: (context, state) {
@@ -107,7 +109,56 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (dialogContext) {
+                            final resetEmailController = TextEditingController();
+                            return AlertDialog(
+                              backgroundColor: const Color(0xFF0f172a),
+                              title: const Text('Reset Password', style: TextStyle(color: Colors.white)),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Text(
+                                    'Masukkan email Anda untuk menerima link reset password.',
+                                    style: TextStyle(color: Color(0xFFcbd5e1), fontSize: 14),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  CustomTextField(
+                                    label: 'Email',
+                                    hintText: 'nama@email.com',
+                                    prefixIcon: Icons.email_outlined,
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: resetEmailController,
+                                    fillColor: const Color(0xFF1e293b),
+                                    textColor: Colors.white,
+                                    labelColor: Colors.white,
+                                    hintColor: const Color(0xFF64748b),
+                                    borderColor: const Color(0xFF334155),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(dialogContext),
+                                  child: const Text('Batal', style: TextStyle(color: Color(0xFF64748b))),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    final email = resetEmailController.text.trim();
+                                    if (email.isNotEmpty) {
+                                      Navigator.pop(dialogContext);
+                                      context.read<AuthBloc>().add(ForgotPasswordEvent(email));
+                                    }
+                                  },
+                                  child: const Text('Kirim', style: TextStyle(color: Color(0xFF34d399))),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       child: const Text(
                         'Lupa Password?',
                         style: TextStyle(

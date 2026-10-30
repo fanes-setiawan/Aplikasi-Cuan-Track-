@@ -14,7 +14,7 @@ class RemoteConfigService {
       await _remoteConfig.setDefaults(<String, dynamic>{
         'enable_ai_chat': true,
         'support_contact_url': '',
-        'min_app_version': '1.0.0',
+        'min_app_version': '9.9.9', // Ubah sementara ke versi tinggi untuk testing Force Update UI
         'maintenance_mode': false,
         'background': '0xFFFFFFFF',
         'maintenance_bg_start_color': '0xFFFFFFFF',

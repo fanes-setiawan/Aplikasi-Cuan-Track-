@@ -2,7 +2,7 @@ import 'package:cuan_track/features/main/presentation/pages/main_screen.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:cuan_track/core/presentation/pages/maintenance_screen.dart';
 import 'package:cuan_track/core/services/remote_config_service.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:new_version_plus/new_version_plus.dart';
 import 'package:cuan_track/injection_container.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_event.dart';
 import 'package:cuan_track/features/splash/presentation/bloc/splash_state.dart';
@@ -25,22 +25,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   bool _navigationTriggered = false;
 
-  bool _isVersionBelow(String current, String minimum) {
-    try {
-      final currentParts = current.split('.').map(int.parse).toList();
-      final minParts = minimum.split('.').map(int.parse).toList();
-
-      for (var i = 0; i < 3; i++) {
-        final currentVal = i < currentParts.length ? currentParts[i] : 0;
-        final minVal = i < minParts.length ? minParts[i] : 0;
-
-        if (currentVal < minVal) return true;
-        if (currentVal > minVal) return false;
-      }
-    } catch (_) {}
-    return false;
-  }
-
   Future<void> _handleNavigation(
     BuildContext context,
     AuthState authState,
@@ -60,21 +44,25 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
-    final packageInfo = sl<PackageInfo>();
-    final currentVersion = packageInfo.version;
-    final minVersion = remoteConfig.minAppVersion;
-
-    if (_isVersionBelow(currentVersion, minVersion)) {
-      if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                const MaintenanceScreen(isUpdateRequired: true),
-          ),
-        );
+    final newVersion = NewVersionPlus();
+    try {
+      final status = await newVersion.getVersionStatus();
+      if (status != null && status.canUpdate) {
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MaintenanceScreen(
+                isUpdateRequired: true,
+                storeUrl: status.appStoreLink,
+              ),
+            ),
+          );
+        }
+        return;
       }
-      return;
+    } catch (_) {
+      // Fallback: If new_version_plus fails, we can just proceed.
     }
 
     final prefs = await SharedPreferences.getInstance();

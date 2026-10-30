@@ -44,7 +44,7 @@
         <!-- Google Mobile Ads (AdMob) Production App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6679810659415180~7831562593"/>
+            android:value="ca-app-pub-9764236696241623~5975402826"/>
             
         <meta-data
             android:name="com.google.android.geo.API_KEY"

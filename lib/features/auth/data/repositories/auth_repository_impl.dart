@@ -127,6 +127,49 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> linkGoogleAccount() async {
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user == null) {
+        throw Exception('Tidak ada pengguna yang login saat ini.');
+      }
+
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception('Proses tautan akun Google dibatalkan.');
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await user.linkWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'provider-already-linked') {
+        throw Exception('Akun Google ini sudah ditautkan.');
+      } else if (e.code == 'credential-already-in-use') {
+        throw Exception('Akun Google ini sudah digunakan oleh akun lain.');
+      }
+      throw Exception(_mapFirebaseAuthError(e));
+    } catch (e) {
+      throw Exception('Gagal menautkan akun Google: $e');
+    }
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(_mapFirebaseAuthError(e));
+    } catch (e) {
+      throw Exception('Gagal mengirim email reset password: $e');
+    }
+  }
+
+  @override
   Future<void> deleteAccount() async {
     try {
       final user = firebaseAuth.currentUser;

@@ -30,20 +30,20 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text('Kategori Kustom', style: AppStyles.heading2),
+        title: Text('Kategori Kustom', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
@@ -99,16 +99,14 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF27AE60),
+                          backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                               AppDimens.radiusM,
                             ),
                           ),
                           elevation: 4,
-                          shadowColor: const Color(
-                            0xFF27AE60,
-                          ).withValues(alpha: 0.3),
+                          shadowColor: AppColors.primary.withValues(alpha: 0.3),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -165,15 +163,9 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
       ),
       padding: const EdgeInsets.all(AppDimens.md),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F172A),
         borderRadius: BorderRadius.circular(AppDimens.radiusL),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: const Color(0xFF1E293B)),
       ),
       child: Row(
         children: [
@@ -194,6 +186,7 @@ class _CustomCategoriesScreenState extends State<CustomCategoriesScreen> {
                   name,
                   style: AppStyles.bodyText.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(height: AppSizes.paddingV4),

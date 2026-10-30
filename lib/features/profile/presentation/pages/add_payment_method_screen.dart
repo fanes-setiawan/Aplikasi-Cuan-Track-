@@ -38,20 +38,20 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF020617),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new,
-            color: AppColors.textPrimary,
+            color: Colors.white,
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text('Detail Metode', style: AppStyles.heading2),
+        title: Text('Detail Metode', style: AppStyles.heading2.copyWith(color: Colors.white)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppDimens.lg),
@@ -61,21 +61,21 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             Container(
               padding: EdgeInsets.all(AppSizes.padding16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF0F172A),
                 borderRadius: BorderRadius.circular(AppSizes.radius16),
-                border: Border.all(color: AppColors.divider),
+                border: Border.all(color: const Color(0xFF1E293B)),
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF6FF),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppSizes.radius12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.account_balance,
-                      color: Color(0xFF2563EB),
+                      color: AppColors.primary,
                       size: 24,
                     ),
                   ),
@@ -89,6 +89,7 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                           widget.providerName,
                           style: AppStyles.bodyText.copyWith(
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -110,13 +111,17 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
             SizedBox(height: AppSizes.paddingV32),
             Text(
               'Informasi Akun',
-              style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold),
+              style: AppStyles.bodyText.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
             SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
               label: 'Nama Akun',
               hintText: 'Contoh: Tabungan Utama, GoPay Pribadi',
               controller: _nameController,
+              fillColor: const Color(0xFF0F172A),
+              textColor: Colors.white,
+              labelColor: Colors.white,
+              borderColor: const Color(0xFF1E293B),
             ),
             SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
@@ -124,6 +129,10 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
               hintText: 'Nomor rekening atau ID akun Anda',
               controller: _numberController,
               keyboardType: TextInputType.number,
+              fillColor: const Color(0xFF0F172A),
+              textColor: Colors.white,
+              labelColor: Colors.white,
+              borderColor: const Color(0xFF1E293B),
             ),
             SizedBox(height: AppSizes.paddingV16),
             CustomTextField(
@@ -131,13 +140,17 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
               hintText: '0',
               controller: _balanceController,
               keyboardType: TextInputType.number,
+              fillColor: const Color(0xFF0F172A),
+              textColor: Colors.white,
+              labelColor: Colors.white,
+              borderColor: const Color(0xFF1E293B),
               prefix: const Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Text(
                   'Rp',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -149,8 +162,9 @@ class _AddPaymentMethodScreenState extends State<AddPaymentMethodScreen> {
                 vertical: AppSizes.paddingV8,
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFF0F172A),
                 borderRadius: BorderRadius.circular(AppSizes.radius16),
+                border: Border.all(color: const Color(0xFF1E293B)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

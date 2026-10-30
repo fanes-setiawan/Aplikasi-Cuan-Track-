@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:cuan_track/core/utils/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +16,7 @@ import 'package:cuan_track/features/onboarding/presentation/widgets/animations/s
 import '../../../../core/constants/app_dimens.dart';
 import '../../../notification/presentation/pages/notification_screen.dart';
 import '../../../transaction/presentation/pages/add_transaction_screen.dart';
-import '../../../history/presentation/pages/financial_timeline_screen.dart';
+import '../../../../core/utils/app_helpers.dart';
 
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_float_widget.dart';
 import 'package:cuan_track/features/onboarding/presentation/widgets/animations/animated_pulse_glow_widget.dart';
@@ -34,14 +36,29 @@ import '../../../../core/widgets/app_shimmer.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/cuan_banner_ad_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+import 'package:showcaseview/showcaseview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return ShowCaseWidget(builder: (context) => const _HomeScreenContent());
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenContent extends StatefulWidget {
+  const _HomeScreenContent();
+
+  @override
+  State<_HomeScreenContent> createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<_HomeScreenContent> {
+  final GlobalKey _balanceKey = GlobalKey();
+  final GlobalKey _addTrxKey = GlobalKey();
+  final GlobalKey _scanKey = GlobalKey();
   String _userName = 'User';
 
   @override
@@ -52,6 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
       _userName = user.displayName ?? user.email?.split('@').first ?? 'User';
       context.read<HomeBloc>().add(StartListeningTransactions(user.uid));
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final prefs = await SharedPreferences.getInstance();
+      bool hasShown = prefs.getBool('has_shown_home_showcase') ?? false;
+      if (!hasShown) {
+        if (mounted) {
+          ShowCaseWidget.of(
+            context,
+          ).startShowCase([_balanceKey, _addTrxKey, _scanKey]);
+          await prefs.setBool('has_shown_home_showcase', true);
+        }
+      }
+    });
   }
 
   String _formatCurrency(double amount) {
@@ -84,98 +113,113 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, isPrivacyEnabled) {
             return BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
-            double totalBalance = 0;
-            double monthlyIncome = 0;
-            double monthlyExpenses = 0;
-            List recentTrx = [];
-            Map<String, double> expenseData = {};
-            bool isLoading = state is HomeLoading || state is HomeInitial;
+                double totalBalance = 0;
+                double monthlyIncome = 0;
+                double monthlyExpenses = 0;
+                List recentTrx = [];
+                Map<String, double> expenseData = {};
+                bool isLoading = state is HomeLoading || state is HomeInitial;
 
-            if (state is HomeLoaded) {
-              totalBalance = state.totalBalance;
-              monthlyIncome = state.monthlyIncome;
-              monthlyExpenses = state.monthlyExpenses;
-              recentTrx = state.recentTransactions;
-              expenseData = state.expenseChartData;
-            }
+                if (state is HomeLoaded) {
+                  totalBalance = state.totalBalance;
+                  monthlyIncome = state.monthlyIncome;
+                  monthlyExpenses = state.monthlyExpenses;
+                  recentTrx = state.recentTransactions;
+                  expenseData = state.expenseChartData;
+                }
 
-            if (isLoading) {
-              return _buildHomeShimmer();
-            }
+                if (isLoading) {
+                  return _buildHomeShimmer();
+                }
 
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, 0),
-                  child: _buildHeader(context, isPrivacyEnabled),
-                ),
-                Expanded(
-                  child: AnimationLimiter(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, AppDimens.md),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: AnimationConfiguration.toStaggeredList(
-                          duration: const Duration(milliseconds: 375),
-                          childAnimationBuilder: (widget) => SlideAnimation(
-                            verticalOffset: 50.0,
-                            child: FadeInAnimation(child: widget),
-                          ),
-                          children: [
-                      _buildBalanceCard(
-                        totalBalance,
-                        monthlyIncome,
-                        monthlyExpenses,
-                        isPrivacyEnabled: isPrivacyEnabled,
-                        showTrend: recentTrx.isNotEmpty,
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppDimens.md,
+                        AppDimens.md,
+                        AppDimens.md,
+                        0,
                       ),
-                      const SizedBox(height: AppDimens.lg),
-                      _buildActionButtons(context),
-                      const SizedBox(height: AppDimens.lg),
-
-                      if (expenseData.isNotEmpty) ...[
-                        _buildExpenseAnalysis(expenseData),
-                        const SizedBox(height: AppDimens.lg),
-                      ],
-
-                      _buildSummaryCards(
-                        context,
-                        isDataEmpty: recentTrx.isEmpty,
-                      ),
-                      const SizedBox(height: AppDimens.lg),
-
-                      if (recentTrx.isEmpty)
-                        EmptyState(
-                          title: 'Belum ada transaksi',
-                          subtitle:
-                              'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
-                          customAnimation: const Scene1ReceiptAnim(),
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppDimens.md,
+                      child: _buildHeader(context, isPrivacyEnabled),
+                    ),
+                    Expanded(
+                      child: AnimationLimiter(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppDimens.md,
+                            AppDimens.md,
+                            AppDimens.md,
+                            AppDimens.md,
                           ),
-                          onAction: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const AddTransactionScreen(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: AnimationConfiguration.toStaggeredList(
+                              duration: const Duration(milliseconds: 375),
+                              childAnimationBuilder: (widget) => SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(child: widget),
                               ),
-                            );
-                          },
-                          actionLabel: 'Tambah Transaksi',
-                        )
-                      else
-                        _buildRecentTransactions(context, recentTrx),
-                      const CuanBannerAdWidget(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          ],
-          );
-          },
+                              children: [
+                                Showcase(
+                                  key: _balanceKey,
+                                  description:
+                                      'Ini adalah total saldo keseluruhan, pemasukan, dan pengeluaran Anda',
+                                  child: _buildBalanceCard(
+                                    totalBalance,
+                                    monthlyIncome,
+                                    monthlyExpenses,
+                                    isPrivacyEnabled: isPrivacyEnabled,
+                                    showTrend: recentTrx.isNotEmpty,
+                                  ),
+                                ),
+                                const SizedBox(height: AppDimens.lg),
+                                _buildActionButtons(context),
+                                const SizedBox(height: AppDimens.lg),
+
+                                if (expenseData.isNotEmpty) ...[
+                                  _buildExpenseAnalysis(expenseData),
+                                  const SizedBox(height: AppDimens.lg),
+                                ],
+
+                                _buildSummaryCards(
+                                  context,
+                                  isDataEmpty: recentTrx.isEmpty,
+                                ),
+                                const SizedBox(height: AppDimens.lg),
+
+                                if (recentTrx.isEmpty)
+                                  EmptyState(
+                                    title: 'Belum ada transaksi',
+                                    subtitle:
+                                        'Mulai catat transaksi pertamamu untuk melihat ringkasan keuanganmu di sini!',
+                                    customAnimation: const Scene1ReceiptAnim(),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: AppDimens.md,
+                                    ),
+                                    onAction: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const AddTransactionScreen(),
+                                        ),
+                                      );
+                                    },
+                                    actionLabel: 'Tambah Transaksi',
+                                  )
+                                else
+                                  _buildRecentTransactions(context, recentTrx),
+                                const CuanBannerAdWidget(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             );
           },
         ),
@@ -187,7 +231,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(AppDimens.md, AppDimens.md, AppDimens.md, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppDimens.md,
+            AppDimens.md,
+            AppDimens.md,
+            0,
+          ),
           child: Row(
             children: [
               AppShimmer.circular(radius: 24),
@@ -213,72 +262,78 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-            AppShimmer.rectangular(
-              height: 180,
-              borderRadius: AppDimens.radiusL,
-            ),
-            const SizedBox(height: AppDimens.lg),
-            Row(
-              children: [
-                Expanded(
-                  child: AppShimmer.rectangular(
-                    height: 55,
-                    borderRadius: AppDimens.radiusM,
-                  ),
-                ),
-                const SizedBox(width: AppDimens.md),
-                Expanded(
-                  child: AppShimmer.rectangular(
-                    height: 55,
-                    borderRadius: AppDimens.radiusM,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimens.xl),
-            AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
-            const SizedBox(height: AppDimens.md),
-            AppShimmer.rectangular(
-              height: 150,
-              borderRadius: AppDimens.radiusL,
-            ),
-            const SizedBox(height: AppDimens.xl),
-            Row(
-              children: [
-                Expanded(
-                  child: AppShimmer.rectangular(
-                    height: 120,
+                  AppShimmer.rectangular(
+                    height: 180,
                     borderRadius: AppDimens.radiusL,
                   ),
-                ),
-                const SizedBox(width: AppDimens.md),
-                Expanded(
-                  child: AppShimmer.rectangular(
-                    height: 120,
+                  const SizedBox(height: AppDimens.lg),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppShimmer.rectangular(
+                          height: 55,
+                          borderRadius: AppDimens.radiusM,
+                        ),
+                      ),
+                      const SizedBox(width: AppDimens.md),
+                      Expanded(
+                        child: AppShimmer.rectangular(
+                          height: 55,
+                          borderRadius: AppDimens.radiusM,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+                  AppShimmer.rectangular(
+                    width: 150,
+                    height: AppSizes.paddingV24,
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  AppShimmer.rectangular(
+                    height: 150,
                     borderRadius: AppDimens.radiusL,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimens.xl),
-            AppShimmer.rectangular(width: 150, height: AppSizes.paddingV24),
-            const SizedBox(height: AppDimens.md),
-            ...List.generate(
-              3,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: AppDimens.md),
-                child: AppShimmer.rectangular(
-                  height: 70,
-                  borderRadius: AppDimens.radiusM,
-                ),
+                  const SizedBox(height: AppDimens.xl),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppShimmer.rectangular(
+                          height: 120,
+                          borderRadius: AppDimens.radiusL,
+                        ),
+                      ),
+                      const SizedBox(width: AppDimens.md),
+                      Expanded(
+                        child: AppShimmer.rectangular(
+                          height: 120,
+                          borderRadius: AppDimens.radiusL,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppDimens.xl),
+                  AppShimmer.rectangular(
+                    width: 150,
+                    height: AppSizes.paddingV24,
+                  ),
+                  const SizedBox(height: AppDimens.md),
+                  ...List.generate(
+                    3,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(bottom: AppDimens.md),
+                      child: AppShimmer.rectangular(
+                        height: 70,
+                        borderRadius: AppDimens.radiusM,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-    ),
-    ],
+      ],
     );
   }
 
@@ -373,11 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF10B981), Color(0xFF2DD4BF)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          gradient: AppColors.primaryGradient,
           borderRadius: BorderRadius.circular(AppDimens.radiusL),
           boxShadow: [
             BoxShadow(
@@ -432,28 +483,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         if (showTrend)
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const FinancialTimelineScreen()),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: AppSizes.paddingV4,
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(
+                                AppDimens.round,
                               ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(
-                                  AppDimens.round,
+                              onTap: () {
+                                AppHelpers.showSnackBar(
+                                  context,
+                                  'Fitur Segera Hadir',
+                                  isError: false,
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: AppSizes.paddingV4,
                                 ),
-                              ),
-                              child: SvgPicture.asset(
-                                AppAssets.iconMaps,
-                                width: AppSizes.font32,
-                                height: AppSizes.font32,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(
+                                    AppDimens.round,
+                                  ),
+                                ),
+                                child: SvgPicture.asset(
+                                  AppAssets.iconMaps,
+                                  width: AppSizes.font32,
+                                  height: AppSizes.font32,
+                                ),
                               ),
                             ),
                           ),
@@ -465,7 +523,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(totalBalance),
+                          isPrivacyEnabled
+                              ? 'Rp ••••••••'
+                              : _formatCurrency(totalBalance),
                           style: AppStyles.heading1.copyWith(
                             color: Colors.white,
                             fontSize: 36,
@@ -487,7 +547,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: _buildBalanceStat(
                               'PEMASUKAN',
-                              isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(income),
+                              isPrivacyEnabled
+                                  ? 'Rp ••••••••'
+                                  : _formatCurrency(income),
                               const Color(0xFFA7FFEB),
                             ),
                           ),
@@ -501,7 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: _buildBalanceStat(
                               'PENGELUARAN',
-                              isPrivacyEnabled ? 'Rp ••••••••' : _formatCurrency(expense),
+                              isPrivacyEnabled
+                                  ? 'Rp ••••••••'
+                                  : _formatCurrency(expense),
                               const Color(0xFFFFE0B2),
                             ),
                           ),
@@ -559,44 +623,52 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddTransactionScreen(),
-                ),
-              );
-            },
-            child: _buildActionButton(
-              'Tambah',
-              Icons.add_circle_outline,
-              const Color(0xFF0F172A),
-              const Color(0xFF10B981),
-              isOutlined: true,
-              borderColor: const Color(0xFF1E293B),
+          child: Showcase(
+            key: _addTrxKey,
+            description: 'Klik di sini untuk menambah transaksi baru',
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddTransactionScreen(),
+                  ),
+                );
+              },
+              child: _buildActionButton(
+                'Tambah',
+                Icons.add_circle_outline,
+                const Color(0xFF0F172A),
+                AppColors.primary,
+                isOutlined: true,
+                borderColor: const Color(0xFF1E293B),
+              ),
             ),
           ),
         ),
         const SizedBox(width: AppDimens.md),
         Expanded(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      const AddTransactionScreen(isIncome: false),
-                ),
-              );
-            },
-            child: _buildActionButton(
-              'Catat',
-              Icons.receipt_long,
-              const Color(0xFF0F172A),
-              const Color(0xFF2DD4BF),
-              isOutlined: true,
-              borderColor: const Color(0xFF1E293B),
+          child: Showcase(
+            key: _scanKey,
+            description: 'Klik di sini untuk mencatat struk secara cepat',
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        const AddTransactionScreen(isIncome: false),
+                  ),
+                );
+              },
+              child: _buildActionButton(
+                'Catat',
+                Icons.receipt_long,
+                const Color(0xFF0F172A),
+                AppColors.primary,
+                isOutlined: true,
+                borderColor: const Color(0xFF1E293B),
+              ),
             ),
           ),
         ),
@@ -710,7 +782,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Text(
                   _formatCurrencyCompact(totalSavings),
                   style: AppStyles.heading3.copyWith(
-                    color: const Color(0xFF34D399),
+                    color: AppColors.primary,
                   ),
                 );
               },
@@ -719,16 +791,16 @@ class _HomeScreenState extends State<HomeScreen> {
             if (showTrend)
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.keyboard_double_arrow_up,
-                    color: Color(0xFF1B5E20),
+                    color: AppColors.primary,
                     size: 12,
                   ),
                   SizedBox(width: AppSizes.padding4),
                   Text(
                     '+12% bln ini',
                     style: AppStyles.caption.copyWith(
-                      color: const Color(0xFF1B5E20),
+                      color: AppColors.primary,
                       fontSize: AppSizes.font10,
                       fontWeight: FontWeight.bold,
                     ),
@@ -888,11 +960,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final List<Color> chartColors = [
-      const Color(0xFF1B5E20),
-      const Color(0xFF2ECC71),
-      const Color(0xFFA5D6A7),
-      const Color(0xFF81C784),
-      const Color(0xFFC8E6C9),
+      AppColors.primaryDark,
+      AppColors.primary,
+      AppColors.primaryLight,
+      AppColors.primary.withOpacity(0.6),
+      AppColors.primary.withOpacity(0.3),
     ];
 
     List<double> ratios = [];
@@ -921,7 +993,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'Analisis Pengeluaran',
               style: AppStyles.heading2.copyWith(
                 fontSize: AppSizes.font18,
-                color: const Color(0xFF34D399),
+                color: AppColors.primary,
               ),
             ),
             TextButton(
@@ -1194,7 +1266,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 }
 
 class DonutChartPainter extends CustomPainter {

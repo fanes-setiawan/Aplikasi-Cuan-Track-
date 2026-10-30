@@ -29,11 +29,13 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF020617),
       appBar: AppBar(
-        title: Text('Import Transaksi Excel', style: AppStyles.heading3),
+        title: Text('Import Transaksi Excel', style: AppStyles.heading3.copyWith(color: Colors.white)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -113,7 +115,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
             color: AppColors.textSecondary.withValues(alpha: 0.3),
           ),
           SizedBox(height: AppSizes.paddingV16),
-          Text('Belum ada file yang dipilih', style: AppStyles.bodyText),
+          Text('Belum ada file yang dipilih', style: AppStyles.bodyText.copyWith(color: Colors.white)),
           SizedBox(height: AppSizes.paddingV8),
           Text(
             'Pilih file .xlsx untuk melihat preview',
@@ -138,7 +140,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
             children: [
               Text(
                 'Preview Data (${_previewData.length} Baris)',
-                style: AppStyles.heading3,
+                style: AppStyles.heading3.copyWith(color: Colors.white),
               ),
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
@@ -159,7 +161,7 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
               final item = _previewData[index];
               return ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: Text(item['title'], style: AppStyles.bodyText),
+                title: Text(item['title'], style: AppStyles.bodyText.copyWith(color: Colors.white)),
                 subtitle: Text(
                   '${item['categoryName']} • ${item['paymentMethodName']}',
                   style: AppStyles.caption,
@@ -195,14 +197,8 @@ class _ImportExcelScreenState extends State<ImportExcelScreen> {
     return Container(
       padding: EdgeInsets.all(AppSizes.padding16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
+        color: const Color(0xFF0F172A),
+        border: Border(top: BorderSide(color: const Color(0xFF1E293B))),
       ),
       child: SafeArea(
         child: ElevatedButton(
